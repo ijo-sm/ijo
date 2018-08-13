@@ -1,18 +1,12 @@
-# ijo
-IJO Server Manager. IJO means green, the symbol of environmentally friendly.
+# IJO
+This is the IJO, a lightweight and user-friendly server manager. IJO stands for green, the symbol of being environmentally friendly.
 
-Web Host Manager is the most important think we need to manage our server. cPanel was the most popular web host manager in the world, but it only running under centos or redhat and other redhat linux variant. So wee need other web host manager that can running in other linux distribution or other operating system.
+All websites need to be hosted. cPanel is currently the most popular web host manager in the world, but it only works if you're running centos or redhat, which are both using based on linux. This makes hosting servers less accessible to the everyday user. To fix this, IJO is available on all major platforms.
+The alternatives to cPanel often come with a lot of modules you really don't need. For example, when you're just installing an Apache Web Server to host your server it'll also install a SMTP server, FTP server, DNS server and other modules. IJO gives you a clutter-free and modular option to host your websites. 
+Another issue with many webhosting solutions is that they're very user-unfriendly because of their complicated UI's. With IJO we're focussing on creating a user-friendly UI for both hosting companies and their customers and self-hosting hobbyists.
 
-Many web host manager come with a lot of modules that actually not all we need. For example when i just want to manage Apache Web Server, but the web host manager apps also installed Mail Server, FTP Server, DNS Server, etc. So We need to develop lightweight web host manager that only install what we want to be installed.
-
-## Why not use Webmin or other server manager software?
-
-Webmin is very relevant, but the interfaces is very complicated by end user. I think cPanel still the best ui/ux for end user.
-
-Sentora is similiar to cPanel, but sentora installed everything on the first installation.
-
-## Join with us!
+## Join us on Slack!
 
 [![Slack](https://p9.zdassets.com/hc/theme_assets/138842/200037786/logo.png)](https://ijo-sm.slack.com)
 
-Slack Room Invitations: [Click Here](https://join.slack.com/t/ijo-sm/shared_invite/enQtNDE2MTc0MjIxNTU4LWI2MzlkODM2MThlMDY5YWU3MjBjMzRiNDVkYjM1NjgwNWQyZDA4ZDViNGVhM2Y2NmUzNjQ2OTU5NTRhMzExNmI)
+Creating a new account: [Click Here](https://join.slack.com/t/ijo-sm/shared_invite/enQtNDE2MTc0MjIxNTU4LWI2MzlkODM2MThlMDY5YWU3MjBjMzRiNDVkYjM1NjgwNWQyZDA4ZDViNGVhM2Y2NmUzNjQ2OTU5NTRhMzExNmI)
