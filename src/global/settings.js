@@ -10,9 +10,25 @@ module.exports = class GlobalSettingsManager {
 		}
 
 		return new Promise(function(resolve, reject) {
-			fs.readFile(settingsDestPath, function(err, data) {
+			fs.readFile(defaultSettingsPath, function(err, defaultData) {
 				if(err) reject(err);
-				else resolve(JSON.parse(data.toString()));
+
+				fs.readFile(settingsDestPath, function(err, settingsData) {
+					if(err) reject(err);
+					else {
+						var settings;
+						var defaultSettings;
+
+						try {
+							settings = JSON.parse(settingsData.toString());
+							defaultSettings = JSON.parse(defaultData.toString());
+						} catch(e) {
+							reject(new Error("The panel settings could not be parsed"));
+						}
+
+						resolve(Object.assign(defaultSettings, settings));
+					}
+				});
 			});
 		});
 	}
