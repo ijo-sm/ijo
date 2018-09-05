@@ -3,10 +3,13 @@ var HTTPServer = require("./http");
 module.exports = class ServerManager {
 	constructor() {
 		this.server = undefined;
+		this.sessionManager = new (require("./sessions"))();
 	}
 
 	start(settings) {
 		this.settings = settings;
+
+		this.sessionManager.init(settings.sessions);
 
 		if(this.settings.secure) {
 			// Create HTTPS server
