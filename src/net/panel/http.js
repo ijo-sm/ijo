@@ -12,6 +12,7 @@ module.exports = class HTTPServer extends Server {
 
 	start() {
 		super.start();
+		
 		this.server.listen(this.settings.port);
 	}
 
