@@ -1,0 +1,6 @@
+{
+	"server": {
+		"secure": false,
+		"port": 80
+	}
+}
