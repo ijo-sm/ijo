@@ -1,6 +1,10 @@
 {
 	"server": {
 		"secure": false,
-		"port": 80
+		"port": 80,
+		"sessions": {
+			"updateInterval": 1000,
+			"expireTime": 2678400000
+		}
 	}
 }
