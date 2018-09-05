@@ -1,0 +1,25 @@
+{
+	"name": "ijo",
+	"version": "1.0.0",
+	"description": "A lightweight and user-friendly server manager",
+	"main": "index.js",
+	"bin": {
+		"ijo": "./bin/cli.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ijo-sm/ijo.git"
+	},
+	"keywords": [
+		"server",
+		"manager",
+		"lightweight",
+		"user-friendly"
+	],
+	"author": "IJO",
+	"license": "GPL-3.0",
+	"bugs": {
+		"url": "https://github.com/ijo-sm/ijo/issues"
+	},
+	"homepage": "https://github.com/ijo-sm/ijo#readme"
+}
