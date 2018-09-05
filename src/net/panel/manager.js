@@ -15,32 +15,62 @@ module.exports = class ServerManager {
 			// Create HTTPS server
 		}
 		else {
-			this.server = new HTTPServer(this.settings, this.handle);
+			this.server = new HTTPServer(this.settings, this.handle.bind(this));
 			this.server.start();
 		}
 	}
 
 	async handle(request, response) {
-		prepareRequest(request);
+		this.prepareRequest(request, response);
+
+		response.end("Hello World!");
+	}
+
+	prepareRequest(request, response) {
+		request.getBody = function() {
+			return new Promise(function(resolve, reject) {
+				var body = "";
+	
+				request.on("data", function(chunk) {
+					body += chunk;
+				});
+		
+				request.on("error", function(err) {
+					reject(err);
+				});
+		
+				request.on("end", function() {
+					resolve(body);
+				});
+			});
+		}
+
+		request.cookies = parseCookies(request.headers);
+		request.session = this.sessionManager.get(
+			request.cookies.find(cookie => cookie.key === this.settings.sessions.cookie.name)
+		);
+
+		response.setHeader("Set-Cookie", this.settings.sessions.cookie.name + "=" + request.session.id + "; Path=/");
 	}
 }
 
-function prepareRequest(request) {
-	request.getBody = function() {
-		return new Promise(function(resolve, reject) {
-			var body = "";
+function parseCookies(headers) {
+	var cookies = [];
 
-			request.on("data", function(chunk) {
-				body += chunk;
-			});
-	
-			request.on("error", function(err) {
-				reject(err);
-			});
-	
-			request.on("end", function() {
-				resolve(body);
-			});
-		});
+	if(headers["cookie"] === undefined) {
+		return cookies;
 	}
+
+	cookies = headers["cookie"].split(";");
+
+	for(var i = 0; i < cookies.length; i++) {
+		var cookie = cookies[i].trim();
+
+		cookies[i] = {
+			key: cookie.substring(0, cookie.indexOf("=")),
+			value: cookie.substring(cookie.indexOf("=") + 1)
+		}
+	}
+
+	return cookies;
 }
