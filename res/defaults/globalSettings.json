@@ -4,7 +4,10 @@
 		"port": 80,
 		"sessions": {
 			"updateInterval": 1000,
-			"expireTime": 2678400000
+			"expireTime": 2678400000,
+			"cookie": {
+				"name": "_session"
+			}
 		}
 	}
 }
