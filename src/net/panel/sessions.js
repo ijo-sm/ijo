@@ -14,7 +14,7 @@ module.exports = class SessionManager {
 	get(id) {
 		var session;
 
-		if(id !== undefined && this.sessions.findIndex(item => item.id === id) > -1) {
+		if(id === undefined || this.sessions.findIndex(item => item.id === id) === -1) {
 			session = this.generate();
 			this.sessions.push(session);
 		}
