@@ -22,8 +22,6 @@ module.exports = class ServerManager {
 
 	async handle(request, response) {
 		prepareRequest(request);
-
-		console.log(await request.getBody());
 	}
 }
 
