@@ -22,12 +22,22 @@ module.exports = class ServerManager {
 	}
 
 	async handle(request, response) {
-		this.prepareRequest(request, response);
+		this.prepareRequest(request);
+		this.prepareResponse(response, request);
 
+		response.setHeader("Set-Cookie", response.cookies.buildCookies());
 		response.end("Hello World!");
 	}
 
-	prepareRequest(request, response) {
+	prepareResponse(response, request) {
+		response.cookies = new CookieManager();
+		response.cookies.setCookie(
+			this.settings.sessions.cookie.name, 
+			request.session.id
+		);
+	}
+
+	prepareRequest(request) {
 		request.getBody = function() {
 			return new Promise(function(resolve, reject) {
 				let body = "";
@@ -50,8 +60,6 @@ module.exports = class ServerManager {
 		request.session = this.sessionManager.get(
 			request.cookies.find(cookie => cookie.key === this.settings.sessions.cookie.name)
 		);
-
-		response.setHeader("Set-Cookie", this.settings.sessions.cookie.name + "=" + request.session.id + "; Path=/");
 	}
 }
 
