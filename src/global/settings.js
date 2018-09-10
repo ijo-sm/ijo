@@ -1,7 +1,7 @@
-var path = require("path");
-var defaultSettingsPath = path.resolve(__dirname, "../../res/defaults/globalSettings.json");
-var settingsDestPath = path.resolve(__dirname, "../../../panel.json");
-var fs = require("fs");
+let path = require("path");
+let defaultSettingsPath = path.resolve(__dirname, "../../res/defaults/globalSettings.json");
+let settingsDestPath = path.resolve(__dirname, "../../../panel.json");
+let fs = require("fs");
 
 module.exports = class GlobalSettingsManager {
 	async load() {
@@ -13,7 +13,7 @@ module.exports = class GlobalSettingsManager {
 			fs.readFile(settingsDestPath, function(err, settingsData) {
 				if(err) reject(err);
 				else {
-					var settings;
+					let settings;
 
 					try {
 						settings = JSON.parse(settingsData.toString());

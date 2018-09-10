@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-var args = process.argv;
-var app;
+let args = process.argv;
+let app;
 args.splice(0, 2)
 
 if(args[0] === "start") {

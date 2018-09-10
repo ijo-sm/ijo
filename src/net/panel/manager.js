@@ -1,4 +1,5 @@
-var HTTPServer = require("./http");
+let HTTPServer = require("./http");
+let CookieManager = require("./cookies");
 
 module.exports = class ServerManager {
 	constructor() {
@@ -29,7 +30,7 @@ module.exports = class ServerManager {
 	prepareRequest(request, response) {
 		request.getBody = function() {
 			return new Promise(function(resolve, reject) {
-				var body = "";
+				let body = "";
 	
 				request.on("data", function(chunk) {
 					body += chunk;
@@ -55,7 +56,7 @@ module.exports = class ServerManager {
 }
 
 function parseCookies(headers) {
-	var cookies = [];
+	let cookies = [];
 
 	if(headers["cookie"] === undefined) {
 		return cookies;
@@ -63,8 +64,8 @@ function parseCookies(headers) {
 
 	cookies = headers["cookie"].split(";");
 
-	for(var i = 0; i < cookies.length; i++) {
-		var cookie = cookies[i].trim();
+	for(let i = 0; i < cookies.length; i++) {
+		let cookie = cookies[i].trim();
 
 		cookies[i] = {
 			key: cookie.substring(0, cookie.indexOf("=")),

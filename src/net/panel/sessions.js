@@ -12,7 +12,7 @@ module.exports = class SessionManager {
 	}
 
 	get(id) {
-		var session;
+		let session;
 
 		if(id === undefined || this.sessions.findIndex(item => item.id === id) === -1) {
 			session = this.generate();
@@ -26,9 +26,9 @@ module.exports = class SessionManager {
 	}
 
 	update() {
-		var date = new Date().getDate();
+		let date = new Date().getDate();
 
-		for(var i = 0; i < this.sessions.length; i++) {
+		for(let i = 0; i < this.sessions.length; i++) {
 			if(date - this.sessions[i].date > this.settings.expireTime) {
 				this.settings.splice(i, 1);
 			}
@@ -36,8 +36,8 @@ module.exports = class SessionManager {
 	}
 
 	generate() {
-		var id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-			var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+		let id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
 
 			return v.toString(16);
 		});
