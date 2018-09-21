@@ -1,4 +1,4 @@
-var https = require("https");
+let https = require("https");
 
 module.exports = class Server {
 	start() {}
