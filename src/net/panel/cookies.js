@@ -24,7 +24,7 @@ module.exports = class CookieManager {
 	}
 
 	buildCookies() {
-		var cookies = [];
+		let cookies = [];
 
 		for(let cookie of this.map.values()) {
 			cookies.push(cookie.build());
@@ -42,7 +42,7 @@ class Cookie {
 	}
 
 	build() {
-		var cookie = this.name + "=" + this.value;
+		let cookie = this.name + "=" + this.value;
 
 		if(this.options.expires instanceof Date) {
 			cookie += "; Expires=" + this.options.expires.toString();
