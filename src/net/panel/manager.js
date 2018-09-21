@@ -5,36 +5,61 @@ module.exports = class ServerManager {
 	constructor() {
 		this.server = undefined;
 		this.sessionManager = new (require("./sessions"))();
+		this.routes = [];
 	}
 
-	start(settings) {
-		this.settings = settings;
+	start(config) {
+		this.config = config;
 
-		this.sessionManager.init(settings.sessions);
+		this.sessionManager.init(this.config);
 
-		if(this.settings.secure) {
+		if(this.config.get("server.secure")) {
 			// Create HTTPS server
 		}
 		else {
-			this.server = new HTTPServer(this.settings, this.handle.bind(this));
+			this.server = new HTTPServer(this.config, this.handle.bind(this));
 			this.server.start();
 		}
+	}
+
+	route(route) {
+		this.routes.push(route);
 	}
 
 	async handle(request, response) {
 		this.prepareRequest(request);
 		this.prepareResponse(response, request);
 
-		response.setHeader("Set-Cookie", response.cookies.buildCookies());
-		response.end("Hello World!");
+		let path = extractPath(request.url);
+		let method = request.method;
+		let next = function() {}
+
+		for(let i = 0; i < this.routes.length; i++) {
+			let route = this.routes[i];
+			
+			if((path === route.path || (route.path.endsWith("*") && path.startsWith(route.path.substring(0, route.path.indexOf("*"))))) && (method === route.method || method === "*")) {
+				route.callback(request, response, next);
+				return;
+			}
+		}
+
+		response.statusCode = 404;
+		response.end("Error: 404");
 	}
 
 	prepareResponse(response, request) {
+		let endFunction = response.end;
+
 		response.cookies = new CookieManager();
 		response.cookies.setCookie(
-			this.settings.sessions.cookie.name, 
+			this.config.get("server.sessions.cookie.name"),
 			request.session.id
 		);
+		response.end = function() {
+			response.setHeader("Set-Cookie", response.cookies.buildCookies());
+
+			endFunction.apply(response, arguments);
+		};
 	}
 
 	prepareRequest(request) {
@@ -58,7 +83,7 @@ module.exports = class ServerManager {
 
 		request.cookies = parseCookies(request.headers);
 		request.session = this.sessionManager.get(
-			request.cookies.find(cookie => cookie.key === this.settings.sessions.cookie.name)
+			request.cookies.find(cookie => cookie.key === this.config.get("server.sessions.cookie.name"))
 		);
 	}
 }
@@ -82,4 +107,8 @@ function parseCookies(headers) {
 	}
 
 	return cookies;
+}
+
+function extractPath(path) {
+	return require("url").parse(path).pathname;
 }
