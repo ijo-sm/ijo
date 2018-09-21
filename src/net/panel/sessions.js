@@ -3,12 +3,12 @@ module.exports = class SessionManager {
 		this.sessions = [];
 	}
 
-	init(settings) {
-		this.settings = settings;
+	init(config) {
+		this.config = config;
 
 		setInterval(function() {
 			this.update();
-		}.bind(this), this.settings.updateInterval);
+		}.bind(this), this.config.get("server.sessions.updateInterval"));
 	}
 
 	get(id) {
@@ -29,8 +29,8 @@ module.exports = class SessionManager {
 		let date = new Date().getDate();
 
 		for(let i = 0; i < this.sessions.length; i++) {
-			if(date - this.sessions[i].date > this.settings.expireTime) {
-				this.settings.splice(i, 1);
+			if(date - this.sessions[i].date > this.config.get("server.sessions.expireTime")) {
+				this.sessions.splice(i, 1);
 			}
 		}
 	}
