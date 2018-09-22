@@ -7,7 +7,7 @@ let DatabaseManager = require("./db/manager");
 module.exports = class Application {
 	constructor() {
 		this.listening = false;
-		this.serverManager = new ServerManager();
+		this.server = new ServerManager();
 		this.globalConfigManager = new GlobalConfigManager();
 		this.db = new DatabaseManager();
 	}
