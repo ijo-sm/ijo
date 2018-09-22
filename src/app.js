@@ -18,7 +18,7 @@ module.exports = class Application {
 		await this.db.load();
 		await this.db.defaults();
 
-		this.userManager.create("admin", "8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918");
+		this.userManager.create("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");
 
 		this.globalConfig = await this.globalConfigManager.load();
 
