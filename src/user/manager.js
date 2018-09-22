@@ -1,5 +1,5 @@
 function hashPassword(str) {
-	var hash = crypto.createHash("sha256");
+	let hash = require("crypto").createHash("sha256");
 	hash.update(str);
 	return hash.digest("hex");
 }
