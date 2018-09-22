@@ -1,3 +1,115 @@
+@import "defaults.scss";
+
+html, body {
+	height: 100%;
+}
+
 body {
-	background: black;
+	background: $color-background;
+	margin: 0;
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	height: 100%;
+
+	.menu {
+		padding: 48px;
+		border: 1px solid $color-foreground;
+		border-radius: 8px;
+
+		.menu-title {
+			font-family: 'Quicksand';
+			font-weight: 700;
+			font-size: 80px;
+			color: $color-foreground-important;
+			margin-bottom: 24px;
+		}
+
+		.menu-inputs {
+			display: flex;
+			flex-direction: column;
+
+			.input {
+				width: 250px;
+				margin-bottom: 16px;
+				position: relative;
+				overflow-x: hidden;
+
+				input {
+					font-family: 'Quicksand';
+					font-weight: 500;
+					font-size: 15px;
+					width: 100%;
+					box-sizing: border-box;
+					background: $color-background !important;
+					border: none;
+					border-bottom: 1px solid $color-foreground;
+					color: $color-foreground-important;
+					padding: 8px 16px;
+
+					@include pseudo-element("placeholder") {
+						font-style: italic;
+					}
+
+					&:focus {
+						outline: none;
+					}
+				}
+
+				&:before {
+					content: '';
+					position: absolute;
+					height: 2px;
+					bottom: 0px;
+					width: 100%;
+					background: $color-foreground-dark;
+					transform: translate3d(100%, 0, 0);
+					transition: 0.3s all;
+					opacity: 0.3;
+				}
+
+				&:focus-within:before {
+					transform: translate3d(0, 0, 0);
+					opacity: 1;
+				}
+			}
+
+			.submit {
+				width: 100%;
+				margin-top: 24px;
+
+				button {
+					background: $color-background;
+					border: 1px solid $color-foreground;
+					border-radius: 8px;
+					font-family: 'Quicksand';
+					font-weight: 500;
+					font-size: 15px;
+					color: $color-foreground-dark;
+					padding: 8px 16px;
+					cursor: pointer;
+					transition: .3s all;
+
+					&:hover {
+						background: $color-foreground;
+						color: $color-background;
+					}
+
+					&:focus {
+						outline: none;
+					}
+
+					&:active {
+						background: $color-foreground-dark;
+						border-color: $color-foreground-dark;
+					}
+				}
+			}
+		}
+	}
 }

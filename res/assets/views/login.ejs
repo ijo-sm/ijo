@@ -9,6 +9,21 @@
 		<title><%- (typeof title === "string" ? title : "IJO") -%> - Login</title>
 	</head>
 	<body>
-		
+		<div class="container">
+			<div class="menu">
+				<div class="menu-title"><%- (typeof title === "string" ? title : "IJO") -%></div>
+				<div class="menu-inputs">
+					<div class="input">
+						<input type="text" name="username" id="username" placeholder="Username...">
+					</div>
+					<div class="input">
+						<input type="password" name="password" id="password" placeholder="Password...">
+					</div>
+					<div class="submit">
+						<button id="submit">Login</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
