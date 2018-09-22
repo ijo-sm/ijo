@@ -44,12 +44,15 @@ rem if "%machine%"=="y" (
 rem 	echo "A machine has been intalled."
 rem )
 
-rem Install the ijo command
 pushd ".\test\panel\"
+rem Create the /data folder
+mkdir ".\data"
+
+rem Install the ijo command
 call npm install -g >nul 2>&1
 popd
 
 rem Start IJO
-pushd "./test"
+pushd ".\test"
 ijo start
 popd
