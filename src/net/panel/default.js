@@ -14,10 +14,11 @@ function asyncFileLoad(name) {
 	});
 }
 
-async function createStaticRoute(route, file) {
+async function createStaticRoute(route, file, type = "text/plain") {
 	var data = await asyncFileLoad(Path.resolve(__dirname, file));
 
 	let routeFunction = function(req, res, next) {
+		res.setHeader("Content-Type", type)
 		res.end(data);
 		next();
 	}
@@ -36,8 +37,8 @@ module.exports = class DefaultRoutes {
 			login: this.manager.ejs.template(await asyncFileLoad(Path.resolve(__dirname, "../../../res/assets/views/login.ejs")))
 		};
 
-		this.manager.route(await createStaticRoute("/css/index.css", "../../../res/assets/css/index.css"));
-		this.manager.route(await createStaticRoute("/css/login.css", "../../../res/assets/css/login.css"));
+		this.manager.route(await createStaticRoute("/css/index.css", "../../../res/assets/css/index.css", "text/css"));
+		this.manager.route(await createStaticRoute("/css/login.css", "../../../res/assets/css/login.css", "text/css"));
 
 		this.manager.route(new Route("/", "GET", this.index.bind(this)));
 		this.manager.route(new Route("/login", "GET", this.login.bind(this)));
