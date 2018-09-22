@@ -41,6 +41,11 @@ module.exports = class DefaultRoutes {
 		this.manager.route(await createStaticRoute("/css/index.css", "../../../res/assets/css/index.css", "text/css"));
 		this.manager.route(await createStaticRoute("/css/login.css", "../../../res/assets/css/login.css", "text/css"));
 
+		// Scripts
+		this.manager.route(await createStaticRoute("/js/panel.min.js", "../../../res/assets/js/panel.min.js", "application/javascript"));
+		this.manager.route(await createStaticRoute("/js/jquery.min.js", "../../../res/assets/js/jquery.min.js", "application/javascript"));
+		this.manager.route(await createStaticRoute("/js/login.js", "../../../res/assets/js/login.js", "application/javascript"));
+
 		// Fonts
 		this.manager.route(await createStaticRoute("/fonts/Quicksand-Bold.ttf", "../../../res/assets/fonts/Quicksand-Bold.ttf", "font/opentype"));
 		this.manager.route(await createStaticRoute("/fonts/Quicksand-Light.ttf", "../../../res/assets/fonts/Quicksand-Light.ttf", "font/opentype"));
