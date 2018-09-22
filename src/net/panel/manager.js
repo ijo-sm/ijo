@@ -53,7 +53,8 @@ module.exports = class ServerManager {
 		response.cookies = new CookieManager();
 		response.cookies.setCookie(
 			app.globalConfig.get("server.sessions.cookie.name"),
-			request.session.id
+			request.session.id,
+			{path: "/"}
 		);
 		response.end = function() {
 			response.setHeader("Set-Cookie", response.cookies.buildCookies());

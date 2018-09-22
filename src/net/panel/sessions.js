@@ -9,15 +9,15 @@ module.exports = class SessionManager {
 		}.bind(this), app.globalConfig.get("server.sessions.updateInterval"));
 	}
 
-	get(id) {
+	get(cookie) {
 		let session;
 
-		if(id === undefined || this.sessions.findIndex(item => item.id === id) === -1) {
+		if(cookie === undefined || cookie.value === undefined || this.sessions.findIndex(item => item.id === cookie.value) === -1) {
 			session = this.generate();
 			this.sessions.push(session);
 		}
 		else {
-			session = this.sessions.find(item => item.id === id);
+			session = this.sessions.find(item => item.id === cookie.value);
 		}
 
 		return session;
