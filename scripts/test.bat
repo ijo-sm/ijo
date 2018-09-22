@@ -1,8 +1,8 @@
 @echo off
 
 rem Parse all the sass files
-call sass --no-source-map res/assets/scss/index.scss:res/assets/css/index.css >nul 2>&1
-call sass --no-source-map res/assets/scss/login.scss:res/assets/css/login.css >nul 2>&1
+call sass --no-source-map --style=compressed res/assets/scss/index.scss:res/assets/css/index.css >nul 2>&1
+call sass --no-source-map --style=compressed res/assets/scss/login.scss:res/assets/css/login.css >nul 2>&1
 
 rem Cleanup and create the /test folder
 rmdir /s /q ".\test\" >nul 2>&1
