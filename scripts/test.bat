@@ -1,5 +1,22 @@
 @echo off
 
+rem Check if node and npm are installed
+where node >nul 2>nul
+if not errorlevel 0 (
+    echo NodeJS is not installed. Please install it first.
+	exit
+)
+
+rem Install missing modules
+where sass >nul 2>nul
+if not errorlevel 0 (
+    npm install -g sass
+)
+where uglifyjs-folder >nul 2>nul
+if not errorlevel 0 (
+    npm install -g uglifyjs-folder
+)
+
 rem Parse all the sass files
 call sass --no-source-map --style=compressed res/assets/scss/index.scss:res/assets/css/index.css >nul 2>&1
 call sass --no-source-map --style=compressed res/assets/scss/login.scss:res/assets/css/login.css >nul 2>&1
