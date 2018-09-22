@@ -28,6 +28,10 @@ module.exports = class EJS {
 	}
 
 	template(str, options) {
+		if(str instanceof Buffer) {
+			str = str.toString();
+		}
+
 		return new EJSTemplate(this.ejs, str, options);
 	}
 

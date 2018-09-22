@@ -9,7 +9,7 @@ function asyncFileLoad(name) {
 				return reject(err);
 			}
 
-			resolve(data.toString());
+			resolve(data);
 		});
 	});
 }
