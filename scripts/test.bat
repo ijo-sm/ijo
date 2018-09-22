@@ -18,8 +18,13 @@ if not errorlevel 0 (
 )
 
 rem Parse all the sass files
-call sass --no-source-map --style=compressed res/assets/scss/index.scss:res/assets/css/index.css >nul 2>&1
-call sass --no-source-map --style=compressed res/assets/scss/login.scss:res/assets/css/login.css >nul 2>&1
+call sass --no-source-map --style=compressed res\assets\scss\index.scss:res\assets\css\index.css >nul 2>&1
+call sass --no-source-map --style=compressed res\assets\scss\login.scss:res\assets\css\login.css >nul 2>&1
+
+rem Copy all the js files
+call xcopy /s /y res\assets\src\pages res\assets\js >nul 2>&1
+call copy res\assets\src\jquery.min.js res\assets\js\jquery.min.js >nul 2>&1
+call uglifyjs-folder -y -o res\assets\js\panel.min.js -- res\assets\src\panel\ >nul 2>&1
 
 rem Cleanup and create the /test folder
 rmdir /s /q ".\test\" >nul 2>&1
@@ -32,11 +37,11 @@ xcopy ".\*" "..\test\panel\" /exclude:.\exclude.txt /d /h /y /e >nul 2>&1
 xcopy "..\test\panel\*.*" ".\test\panel\" /d /h /y /e >nul 2>&1
 rmdir /s /q "..\test\panel\" >nul 2>&1
 del ".\exclude.txt" >nul 2>&1
+
 rem Ask user if machine needs to be installed
 rem set /P machine="Do you need a machine to be installed (y/n): "
-
 rem if "%machine%"=="y" (
-rem 	echo "A machine was intalled."
+rem 	echo "A machine has been intalled."
 rem )
 
 rem Install the ijo command
