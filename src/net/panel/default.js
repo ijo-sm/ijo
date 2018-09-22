@@ -53,12 +53,19 @@ module.exports = class DefaultRoutes {
 		//Views
 		app.server.route(new Route("/", "GET", this.index.bind(this)));
 		app.server.route(new Route("/login", "GET", this.login.bind(this)));
+
+		//Api
+		app.server.route(new Route("/api/login", "POST", this.apiLogin.bind(this)));
 	}
 
 	index(req, res, next) {
 		if(!req.session.data.userID) {
 			res.statusCode = 302;
 			res.setHeader("Location", "/login");
+			res.setHeader("Content-Type", "application/json");
+			res.end(JSON.stringify({code: 403, title: "Forbidden", reason: "User is not logged in."}));
+
+			return next();
 		}
 
 		res.end(this.templates["index"].render({}));
@@ -70,5 +77,41 @@ module.exports = class DefaultRoutes {
 		res.end(this.templates["login"].render({}));
 
 		next();
+	}
+
+	apiLogin(req, res, next) {
+		res.setHeader("Content-Type", "application/json");
+
+		req.getBody()
+		.then(function(body) {
+			if(req.session.data.userID) {
+				res.statusCode = 403;
+				res.end(JSON.stringify({code: 403, title: "Forbidden", reason: "User is already logged in."}));
+	
+				return next();
+			}
+
+			try {
+				body = JSON.parse(body);
+			}
+			catch(e) {
+				res.statusCode = 400;
+				res.end(JSON.stringify({code: 400, title: "Bad Request", reason: "The request body could not be parsed."}));
+	
+				return next();
+			}
+
+			if(!app.userManager.checkPassword(body.password)) {
+				res.statusCode = 400;
+				res.end(JSON.stringify({code: 400, title: "Bad Request", reason: "The username and/or password are incorrect ."}));
+	
+				return next();
+			}
+
+			res.sessions.data.userID = app.userManager.getUser("username", body.username).id;
+	
+			res.end(JSON.stringify());
+			next();
+		});
 	}
 }
