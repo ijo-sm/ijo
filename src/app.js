@@ -13,7 +13,9 @@ module.exports = class Application {
 	async start() {
 		this.globalConfig = await this.globalConfigManager.load();
 
-		new DefaultRoutes(this.serverManager);
+		this.defaultRoutes = new DefaultRoutes(this.serverManager);
+
+		await this.defaultRoutes.init();
 		
 		this.serverManager.start(this.globalConfig);
 

@@ -1,10 +1,12 @@
 let HTTPServer = require("./http");
 let CookieManager = require("./cookies");
+let EJS = require("./ejs");
 
 module.exports = class ServerManager {
 	constructor() {
 		this.server = undefined;
 		this.sessionManager = new (require("./sessions"))();
+		this.ejs = new EJS();
 		this.routes = [];
 	}
 

@@ -1,12 +1,62 @@
 let Route = require("./route");
+let FileSystem = require("fs");
+let Path = require("path");
+
+function asyncFileLoad(name) {
+	return new Promise(function(resolve, reject) {
+		FileSystem.readFile(name, function(err, data) {
+			if(err) {
+				return reject(err);
+			}
+
+			resolve(data.toString());
+		});
+	});
+}
+
+async function createStaticRoute(route, file) {
+	var data = await asyncFileLoad(Path.resolve(__dirname, file));
+
+	let routeFunction = function(req, res, next) {
+		res.end(data);
+		next();
+	}
+
+	return new Route(route, "GET", routeFunction);
+}
 
 module.exports = class DefaultRoutes {
 	constructor(manager) {
-		manager.route(new Route("/", "GET", this.index));
+		this.manager = manager;
+	}
+
+	async init() {
+		this.templates = {
+			index: this.manager.ejs.template(await asyncFileLoad(Path.resolve(__dirname, "../../../res/assets/views/index.ejs"))),
+			login: this.manager.ejs.template(await asyncFileLoad(Path.resolve(__dirname, "../../../res/assets/views/login.ejs")))
+		};
+
+		this.manager.route(await createStaticRoute("/css/index.css", "../../../res/assets/css/index.css"));
+		this.manager.route(await createStaticRoute("/css/login.css", "../../../res/assets/css/login.css"));
+
+		this.manager.route(new Route("/", "GET", this.index.bind(this)));
+		this.manager.route(new Route("/login", "GET", this.login.bind(this)));
 	}
 
 	index(req, res, next) {
-		res.end("TEST");
+		if(!req.session.data.userID) {
+			res.statusCode = 302;
+			res.setHeader("Location", "/login");
+		}
+
+		res.end(this.templates["index"].render({}));
+
+		next();
+	}
+
+	login(req, res, next) {
+		res.end(this.templates["login"].render({}));
+
 		next();
 	}
 }
