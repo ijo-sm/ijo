@@ -13,11 +13,11 @@ module.exports = class Application {
 	async start() {
 		this.globalConfig = await this.globalConfigManager.load();
 
-		this.defaultRoutes = new DefaultRoutes(this.serverManager);
+		this.defaultRoutes = new DefaultRoutes();
 
 		await this.defaultRoutes.init();
 		
-		this.serverManager.start(this.globalConfig);
+		this.server.start();
 
 		this.listening = true;
 	}

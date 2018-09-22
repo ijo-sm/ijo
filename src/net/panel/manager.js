@@ -10,16 +10,14 @@ module.exports = class ServerManager {
 		this.routes = [];
 	}
 
-	start(config) {
-		this.config = config;
+	start() {
+		this.sessionManager.init();
 
-		this.sessionManager.init(this.config);
-
-		if(this.config.get("server.secure")) {
+		if(app.globalConfig.get("server.secure")) {
 			// Create HTTPS server
 		}
 		else {
-			this.server = new HTTPServer(this.config, this.handle.bind(this));
+			this.server = new HTTPServer(this.handle.bind(this));
 			this.server.start();
 		}
 	}
@@ -54,7 +52,7 @@ module.exports = class ServerManager {
 
 		response.cookies = new CookieManager();
 		response.cookies.setCookie(
-			this.config.get("server.sessions.cookie.name"),
+			app.globalConfig.get("server.sessions.cookie.name"),
 			request.session.id
 		);
 		response.end = function() {
@@ -85,7 +83,7 @@ module.exports = class ServerManager {
 
 		request.cookies = parseCookies(request.headers);
 		request.session = this.sessionManager.get(
-			request.cookies.find(cookie => cookie.key === this.config.get("server.sessions.cookie.name"))
+			request.cookies.find(cookie => cookie.key === app.globalConfig.get("server.sessions.cookie.name"))
 		);
 	}
 }

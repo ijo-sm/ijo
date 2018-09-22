@@ -27,33 +27,32 @@ async function createStaticRoute(route, file, type = "text/plain") {
 }
 
 module.exports = class DefaultRoutes {
-	constructor(manager) {
-		this.manager = manager;
-	}
+	constructor() {}
 
 	async init() {
 		this.templates = {
-			index: this.manager.ejs.template(await asyncFileLoad(Path.resolve(__dirname, "../../../res/assets/views/index.ejs"))),
-			login: this.manager.ejs.template(await asyncFileLoad(Path.resolve(__dirname, "../../../res/assets/views/login.ejs")))
+			index: app.server.ejs.template(await asyncFileLoad(Path.resolve(__dirname, "../../../res/assets/views/index.ejs"))),
+			login: app.server.ejs.template(await asyncFileLoad(Path.resolve(__dirname, "../../../res/assets/views/login.ejs")))
 		};
 
 		// Stylesheets
-		this.manager.route(await createStaticRoute("/css/index.css", "../../../res/assets/css/index.css", "text/css"));
-		this.manager.route(await createStaticRoute("/css/login.css", "../../../res/assets/css/login.css", "text/css"));
+		app.server.route(await createStaticRoute("/css/index.css", "../../../res/assets/css/index.css", "text/css"));
+		app.server.route(await createStaticRoute("/css/login.css", "../../../res/assets/css/login.css", "text/css"));
 
 		// Scripts
-		this.manager.route(await createStaticRoute("/js/panel.min.js", "../../../res/assets/js/panel.min.js", "application/javascript"));
-		this.manager.route(await createStaticRoute("/js/jquery.min.js", "../../../res/assets/js/jquery.min.js", "application/javascript"));
-		this.manager.route(await createStaticRoute("/js/login.js", "../../../res/assets/js/login.js", "application/javascript"));
+		app.server.route(await createStaticRoute("/js/panel.min.js", "../../../res/assets/js/panel.min.js", "application/javascript"));
+		app.server.route(await createStaticRoute("/js/jquery.min.js", "../../../res/assets/js/jquery.min.js", "application/javascript"));
+		app.server.route(await createStaticRoute("/js/login.js", "../../../res/assets/js/login.js", "application/javascript"));
 
 		// Fonts
-		this.manager.route(await createStaticRoute("/fonts/Quicksand-Bold.ttf", "../../../res/assets/fonts/Quicksand-Bold.ttf", "font/opentype"));
-		this.manager.route(await createStaticRoute("/fonts/Quicksand-Light.ttf", "../../../res/assets/fonts/Quicksand-Light.ttf", "font/opentype"));
-		this.manager.route(await createStaticRoute("/fonts/Quicksand-Medium.ttf", "../../../res/assets/fonts/Quicksand-Medium.ttf", "font/opentype"));
-		this.manager.route(await createStaticRoute("/fonts/Quicksand-Regular.ttf", "../../../res/assets/fonts/Quicksand-Regular.ttf", "font/opentype"));
+		app.server.route(await createStaticRoute("/fonts/Quicksand-Bold.ttf", "../../../res/assets/fonts/Quicksand-Bold.ttf", "font/opentype"));
+		app.server.route(await createStaticRoute("/fonts/Quicksand-Light.ttf", "../../../res/assets/fonts/Quicksand-Light.ttf", "font/opentype"));
+		app.server.route(await createStaticRoute("/fonts/Quicksand-Medium.ttf", "../../../res/assets/fonts/Quicksand-Medium.ttf", "font/opentype"));
+		app.server.route(await createStaticRoute("/fonts/Quicksand-Regular.ttf", "../../../res/assets/fonts/Quicksand-Regular.ttf", "font/opentype"));
 
-		this.manager.route(new Route("/", "GET", this.index.bind(this)));
-		this.manager.route(new Route("/login", "GET", this.login.bind(this)));
+		//Views
+		app.server.route(new Route("/", "GET", this.index.bind(this)));
+		app.server.route(new Route("/login", "GET", this.login.bind(this)));
 	}
 
 	index(req, res, next) {

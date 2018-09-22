@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 let args = process.argv;
-let app;
 args.splice(0, 2)
 
 if(args[0] === "start") {
-	app = new (require("../src/app"))();
+	global.app = new (require("../src/app"))();
 	app.start()
 	.then(function() {
 		console.log("IJO has started.");

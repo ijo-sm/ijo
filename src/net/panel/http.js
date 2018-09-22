@@ -2,10 +2,8 @@ let Server = require("./server");
 let HTTP = require("http");
 
 module.exports = class HTTPServer extends Server {
-	constructor(config, handler) {
+	constructor(handler) {
 		super();
-
-		this.config = config;
 		this.server = HTTP.createServer();
 		this.server.on("request", handler);
 	}
@@ -13,7 +11,7 @@ module.exports = class HTTPServer extends Server {
 	start() {
 		super.start();
 		
-		this.server.listen(this.config.get("server.port"));
+		this.server.listen(app.globalConfig.get("server.port"));
 	}
 
 	stop() {
