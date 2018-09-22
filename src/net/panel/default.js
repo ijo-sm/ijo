@@ -101,16 +101,16 @@ module.exports = class DefaultRoutes {
 				return next();
 			}
 
-			if(!app.userManager.checkPassword(body.password)) {
+			if(!app.userManager.checkPassword(body.username, body.password)) {
 				res.statusCode = 400;
 				res.end(JSON.stringify({code: 400, title: "Bad Request", reason: "The username and/or password are incorrect ."}));
 	
 				return next();
 			}
 
-			res.sessions.data.userID = app.userManager.getUser("username", body.username).id;
+			req.session.data.userID = app.userManager.getUser("username", body.username).id;
 	
-			res.end(JSON.stringify());
+			res.end(JSON.stringify({code: 200, title: "Succes", userID: req.session.data.userID}));
 			next();
 		});
 	}
