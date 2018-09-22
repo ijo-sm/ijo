@@ -1,0 +1,7 @@
+@mixin pseudo-element($element) {
+	@each $prefix in $prefixes {
+        &::#{$prefix}#{$element} {
+            @content;
+        }
+    }
+}
