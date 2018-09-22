@@ -23,6 +23,7 @@
 	},
 	"homepage": "https://github.com/ijo-sm/ijo#readme",
 	"dependencies": {
-		"ejs": "^2.6.1"
+		"ejs": "^2.6.1",
+		"lowdb": "^1.0.0"
 	}
 }
