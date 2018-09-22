@@ -21,5 +21,8 @@
 	"bugs": {
 		"url": "https://github.com/ijo-sm/ijo/issues"
 	},
-	"homepage": "https://github.com/ijo-sm/ijo#readme"
+	"homepage": "https://github.com/ijo-sm/ijo#readme",
+	"dependencies": {
+		"ejs": "^2.6.1"
+	}
 }
