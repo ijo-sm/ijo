@@ -8,4 +8,8 @@ module.exports = class DatabaseManager {
 	async load() {
 		this.users = await low(new FileAsync(Path.resolve(__dirname, "../../data/users.json")));
 	}
+
+	async defaults() {
+		await this.users.defaults({users: []}).write();
+	}
 }
