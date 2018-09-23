@@ -2,7 +2,13 @@ const FileSystem = require("fs");
 const pify = require("pify");
 
 function loadPlugin(path) {
-	return require(app.utils.path.resolve("plugins/" + path + "/plugin.json"))
+	let plugin = require(app.utils.path.resolve("plugins/" + path + "/plugin.json"));
+
+	if(!validatePlugin(plugin) || !generatePluginParts(plugin)) {
+		return;
+	}
+
+	return new Plugin(plugin);
 }
 
 function generatePluginParts(plugin) {
@@ -62,7 +68,7 @@ class Plugin {
 
 module.exports = class PluginManager {
 	constructor() {
-		this.plugins = {};
+		this.plugins = new Map();
 	}
 
 	async load() {
@@ -71,11 +77,14 @@ module.exports = class PluginManager {
 		paths.forEach(function(path) {
 			let plugin = loadPlugin(path);
 
-			if(!validatePlugin(plugin) || !generatePluginParts(plugin)) {
+			if(plugin === undefined) {
 				return console.error("The plugin at /panel/plugins/" + path + " could not be loaded");
 			}
+			else if(this.plugins.has(plugin.name)) {
+				return console.error("The plugin " + plugin.name + " has already been loaded");
+			}
 
-			this.plugins[plugin.name] = new Plugin(plugin);
+			this.plugins.set(plugin.name, plugin);
 		}.bind(this));
 	}
 }
