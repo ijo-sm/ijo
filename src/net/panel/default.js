@@ -8,7 +8,7 @@ function asyncFileLoad(name) {
 }
 
 async function createStaticRoute(route, file, type = "text/plain") {
-	var data = await asyncFileLoad(Path.resolve(__dirname, file));
+	let data = await asyncFileLoad(Path.resolve(__dirname, file));
 
 	let routeFunction = function(req, res, next) {
 		res.setHeader("Content-Type", type)
@@ -20,8 +20,6 @@ async function createStaticRoute(route, file, type = "text/plain") {
 }
 
 module.exports = class DefaultRoutes {
-	constructor() {}
-
 	async init() {
 		this.templates = {
 			index: app.server.ejs.template(await asyncFileLoad(Path.resolve(__dirname, "../../../res/assets/views/index.ejs"))),
@@ -94,16 +92,16 @@ module.exports = class DefaultRoutes {
 				return next();
 			}
 
-			if(!app.userManager.checkPassword(body.username, body.password)) {
+			var user = app.users.getUser("username", body.username);
+
+			if(user === undefined || !user.checkPassword(body.password)) {
 				res.statusCode = 400;
 				res.end(JSON.stringify({code: 400, title: "Bad Request", reason: "The username and/or password are incorrect ."}));
 	
 				return next();
 			}
-
-			req.session.data.userID = app.userManager.getUser("username", body.username).id;
 	
-			res.end(JSON.stringify({code: 200, title: "Succes", userID: req.session.data.userID}));
+			res.end(JSON.stringify({code: 200, title: "Succes", userID: req.session.data.userID = user.id}));
 			next();
 		});
 	}
