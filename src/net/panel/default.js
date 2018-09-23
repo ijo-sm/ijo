@@ -1,4 +1,5 @@
 const Route = require("./route");
+const JSONResponse = require("./json");
 const FileSystem = require("fs");
 const Path = require("path");
 const pify = require("pify");
@@ -71,37 +72,29 @@ module.exports = class DefaultRoutes {
 	}
 
 	apiLogin(req, res, next) {
-		res.setHeader("Content-Type", "application/json");
+		var jsonResponse = new JSONResponse(req, res, next);
 
 		req.getBody()
 		.then(function(body) {
 			if(req.session.data.userID) {
-				res.statusCode = 403;
-				res.end(JSON.stringify({code: 403, title: "Forbidden", reason: "User is already logged in."}));
-	
-				return next();
+				return jsonResponse.error(403, "User is already logged in.");
 			}
 
 			try {
 				body = JSON.parse(body);
 			}
 			catch(e) {
-				res.statusCode = 400;
-				res.end(JSON.stringify({code: 400, title: "Bad Request", reason: "The request body could not be parsed."}));
-	
-				return next();
+				return jsonResponse.error(400, "The request body could not be parsed.");
 			}
 
 			var user = app.users.getUser("username", body.username);
 
 			if(user === undefined || !user.checkPassword(body.password)) {
-				res.statusCode = 400;
-				res.end(JSON.stringify({code: 400, title: "Bad Request", reason: "The username and/or password are incorrect ."}));
-	
-				return next();
+				return jsonResponse.error(400, "The username and/or password are incorrect .");
 			}
 	
 			res.end(JSON.stringify({code: 200, title: "Succes", userID: req.session.data.userID = user.id}));
+
 			next();
 		});
 	}
