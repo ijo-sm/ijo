@@ -7,32 +7,32 @@ const PluginManager = require("./plugin/manager");
 
 module.exports = class Application {
 	constructor() {
+		this.server = new Server();
+		this.db = new Database();
+		this.users = new UserManager();
+		this.plugins = new PluginManager();
+		this.globalConfig = new GlobalConfigFile();
+		this.defaultRoutes = new DefaultRoutes();
+
+		this.db.create("users");
+
 		this.listening = false;
-		this.server = new ServerManager();
-		this.globalConfigManager = new GlobalConfigManager();
-		this.db = new DatabaseManager();
-		this.userManager = new UserManager();
 	}
 
 	async start() {
 		await this.db.load();
-		await this.db.defaults();
-
-		this.userManager.create("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");
-
-		this.globalConfig = await this.globalConfigManager.load();
-
-		this.defaultRoutes = new DefaultRoutes();
-
+		await this.plugins.load();
+		await this.users.create("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");
+		await this.globalConfig.load();
 		await this.defaultRoutes.init();
-		
-		this.server.start();
+		await this.server.start();
 
 		this.listening = true;
 	}
 
 	async stop() {
-		await this.globalConfigManager.save(this.globalConfig);
+		await this.server.stop();
+		await this.globalConfig.save();
 		
 		this.listening = false;
 	}
