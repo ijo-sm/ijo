@@ -60,16 +60,18 @@ module.exports = class AbstractConfigFile {
 		
 			splitKeys.splice(0, 1);
 		
-			if(parent[originalKey] === undefined) parent[originalKey] = {};
+			if(parent[originalKey] === undefined) {
+				parent[originalKey] = {};
+			}
 		
 			let newObj = this.set(splitKeys.join("."), value, parent[originalKey]);
 			parent[originalKey] = newObj;
 		
 			return parent;
 		}
-		else {
-			parent[key] = value;
-			return parent;
-		}
+
+		parent[key] = value;
+
+		return parent;
 	}
 }
