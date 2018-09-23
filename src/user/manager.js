@@ -1,9 +1,3 @@
-function hashPassword(str) {
-	let hash = require("crypto").createHash("sha256");
-	hash.update(str);
-	return hash.digest("hex");
-}
-
 class User {
 	constructor(id, username, password) {
 		this.id = id;
@@ -12,7 +6,7 @@ class User {
 	}
 
 	checkPassword(password) {
-		return this.password === hashPassword(password);
+		return this.password === app.utils.crypto.hash(password);
 	}
 }
 
@@ -20,7 +14,7 @@ module.exports = class UserManager {
 	constructor() {}
 
 	create(username, password) {
-		let id = require("shortid").generate();
+		let id = app.utils.generate.shortid();
 
 		return app.db.get("users").push({
 			id, username, password
