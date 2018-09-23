@@ -50,7 +50,9 @@ module.exports = class Database {
 	}
 
 	get(name) {
-		if(!this.has(name)) return undefined;
+		if(!this.has(name)) {
+			return undefined;
+		}
 
 		return this.collections.get(name).collection;
 	}
