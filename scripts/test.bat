@@ -28,6 +28,7 @@ call uglifyjs-folder -y -o res\assets\js\panel.min.js -- res\assets\src\panel\ >
 
 rem Cleanup (and if non-existant, create) the /test folder
 mkdir ".\test\" >nul 2>&1
+mkdir ".\test\data\" >nul 2>&1
 del ".\test\panel.json" >nul 2>&1
 
 rem Copy the ijo to /test/panel
@@ -48,7 +49,7 @@ rem )
 pushd ".\test\panel\"
 rem Create the /data folder
 rmdir /s /q ".\data" >nul 2>&1
-mkdir ".\data"
+mkdir ".\plugins" >nul 2>&1
 
 rem Install the ijo command
 call npm install -g >nul 2>&1
