@@ -4,28 +4,36 @@ function hashPassword(str) {
 	return hash.digest("hex");
 }
 
+class User {
+	constructor(id, username, password) {
+		this.id = id;
+		this.username = username;
+		this.password = password;
+	}
+
+	checkPassword(password) {
+		return this.password === hashPassword(password);
+	}
+}
+
 module.exports = class UserManager {
 	constructor() {}
 
 	create(username, password) {
 		let id = require("shortid").generate();
 
-		return app.db.users.get("users").push({
+		return app.db.get("users").push({
 			id, username, password
 		}).write();
 	}
 
 	getUser(key, value) {
-		return app.db.users.get("users").find(user => user[key] === value).value();
-	}
-
-	checkPassword(username, password) {
-		let user = this.getUser("username", username);
+		var user = app.db.get("users").find(user => user[key] === value).value();
 
 		if(user === undefined) {
-			return false;
+			return undefined;
 		}
 
-		return user.password === hashPassword(password);
+		return new User(user.id, user.username, user.password);
 	}
 }
