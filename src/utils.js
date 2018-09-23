@@ -1,5 +1,6 @@
 const Crypto = require("crypto");
 const ShortID = require("shortid");
+const Path = require("path");
 
 class CryptoUtilities {
 	hash(data, options = {}) {
@@ -26,9 +27,16 @@ class GenerateUtilities {
 	}
 }
 
+class PathUtilities {
+	resolve(path) {
+		return Path.resolve(__dirname, "../", path);
+	}
+}
+
 module.exports = class Utilities {
 	constructor() {
 		this.crypto = new CryptoUtilities();
 		this.generate = new GenerateUtilities();
+		this.path = new PathUtilities();
 	}
 }

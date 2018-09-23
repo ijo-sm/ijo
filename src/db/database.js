@@ -1,6 +1,5 @@
 const low = require("lowdb");
 const FileAsync = require("lowdb/adapters/FileAsync");
-const Path = require("path");
 
 function loadDatabase(file) {
 	return low(new FileAsync(file));
@@ -32,7 +31,7 @@ module.exports = class Database {
 	}
 
 	async load() {
-		this.database = await loadDatabase(Path.resolve(__dirname, "../../../data/panel.json"));
+		this.database = await loadDatabase(app.utils.path.resolve("../data/panel.json"));
 
 		await this.database.defaults(mapToDefaults(this.collections)).write();
 
