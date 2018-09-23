@@ -11,10 +11,9 @@ function asyncFileLoad(name) {
 async function createStaticRoute(route, file, type = "text/plain") {
 	let data = await asyncFileLoad(Path.resolve(__dirname, file));
 
-	let routeFunction = function(req, res, next) {
+	let routeFunction = function(req, res) {
 		res.setHeader("Content-Type", type)
 		res.end(data);
-		next();
 	}
 
 	return new Route(route, "GET", routeFunction);
@@ -50,29 +49,25 @@ module.exports = class DefaultRoutes {
 		app.server.route(new Route("/api/login", "POST", this.apiLogin.bind(this)));
 	}
 
-	index(req, res, next) {
+	index(req, res) {
 		if(!req.session.data.userID) {
 			res.statusCode = 302;
 			res.setHeader("Location", "/login");
 			res.setHeader("Content-Type", "application/json");
 			res.end();
 
-			return next();
+			return;
 		}
 
 		res.end(this.templates["index"].render({}));
-
-		next();
 	}
 
-	login(req, res, next) {
+	login(req, res) {
 		res.end(this.templates["login"].render({}));
-
-		next();
 	}
 
-	apiLogin(req, res, next) {
-		var jsonResponse = new JSONResponse(req, res, next);
+	apiLogin(req, res) {
+		var jsonResponse = new JSONResponse(req, res);
 
 		req.getBody()
 		.then(function(body) {
@@ -94,8 +89,6 @@ module.exports = class DefaultRoutes {
 			}
 	
 			res.end(JSON.stringify({code: 200, title: "Succes", userID: req.session.data.userID = user.id}));
-
-			next();
 		});
 	}
 }
