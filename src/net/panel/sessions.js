@@ -20,7 +20,7 @@ module.exports = class SessionManager {
 	get(cookie) {
 		let session;
 
-		if(cookie === undefined || cookie.value === undefined || this.sessions.findIndex(item => item.id === cookie.value) === -1) {
+		if(!this.has(cookie)) {
 			session = this.generate();
 			this.sessions.push(session);
 		}
@@ -29,6 +29,14 @@ module.exports = class SessionManager {
 		}
 
 		return session;
+	}
+
+	has(cookie) {
+		if(cookie === undefined || cookie.value === undefined) {
+			return false;
+		}
+
+		return this.sessions.findIndex(item => item.id === cookie.value) > -1;
 	}
 
 	update() {
