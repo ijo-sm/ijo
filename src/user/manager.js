@@ -1,8 +1,8 @@
 class User {
-	constructor(id, username, password) {
-		this.id = id;
-		this.username = username;
-		this.password = password;
+	constructor(object) {
+		this.id = object.id;
+		this.username = object.username;
+		this.password = object.password;
 	}
 
 	checkPassword(password) {
@@ -28,6 +28,6 @@ module.exports = class UserManager {
 			return undefined;
 		}
 
-		return new User(user.id, user.username, user.password);
+		return new User(user);
 	}
 }
