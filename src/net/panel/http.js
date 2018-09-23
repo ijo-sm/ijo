@@ -2,17 +2,17 @@ const AbstractServer = require("./abstract");
 const HTTP = require("http");
 const pify = require("pify");
 
-module.exports = class HTTPServer extends Server {
+module.exports = class HTTPServer extends AbstractServer {
 	constructor(handler) {
 		super();
 		this.server = HTTP.createServer();
 		this.server.on("request", handler);
 	}
 
-	start() {
+	async start() {
 		super.start();
-		
-		this.server.listen(app.globalConfig.get("server.port"));
+
+		await pify(this.server.listen.bind(this.server))(app.globalConfig.get("server.port"));
 	}
 
 	stop() {
