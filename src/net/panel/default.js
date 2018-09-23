@@ -54,7 +54,6 @@ module.exports = class DefaultRoutes {
 			res.statusCode = 302;
 			res.setHeader("Location", "/login");
 			res.setHeader("Content-Type", "application/json");
-			res.end(JSON.stringify({code: 403, title: "Forbidden", reason: "User is not logged in."}));
 
 			return next();
 		}
