@@ -69,6 +69,26 @@ function prepareRequest(request, sessionManager) {
 	);
 }
 
+function checkRouteMatch(route, request) {
+	if(route.method !== "ALL" && route.method !== request.method) {
+		return false;
+	}
+
+	if(route.path === "*") {
+		return true;
+	}
+
+	if(request.path === route.path) {
+		return true;
+	} 
+	
+	if(route.path.endsWith("*") && request.path.startsWith(route.path.substring(0, route.path.indexOf("*")))) {
+		return true;	
+	}
+
+	return false;
+}
+
 module.exports = class Server {
 	constructor() {
 		this.sessions = new SessionManager();
@@ -110,8 +130,9 @@ module.exports = class Server {
 		for(let i = 0; i < this.routes.length; i++) {
 			let route = this.routes[i];
 			
-			if((path === route.path || (route.path.endsWith("*") && path.startsWith(route.path.substring(0, route.path.indexOf("*"))))) && (method === route.method || method === "*")) {
+			if(checkRouteMatch(route, {path, method})) {
 				route.callback(request, response, next);
+
 				return;
 			}
 		}
