@@ -1,39 +1,3 @@
-module.exports = class CookieManager {
-	constructor() {
-		this.map = new Map();
-	}
-
-	setCookie(name, value, options = {}) {
-		return this.map.set(name, new Cookie(name, value, options))
-	}
-
-	getCookie(name) {
-		return this.map.get(name);
-	}
-
-	hasCookie(name) {
-		return this.map.has(name);
-	}
-
-	removeCookie(name) {
-		return this.map.delete(name);
-	}
-
-	getCookies() {
-		return Array.from(this.map.values());
-	}
-
-	buildCookies() {
-		let cookies = [];
-
-		for(let cookie of this.map.values()) {
-			cookies.push(cookie.build());
-		}
-
-		return cookies;
-	}
-}
-
 class Cookie {
 	constructor(name, value, options) {
 		this.name = name;
@@ -69,5 +33,41 @@ class Cookie {
 		}
 
 		return cookie;
+	}
+}
+
+module.exports = class CookieManager {
+	constructor() {
+		this.map = new Map();
+	}
+
+	set(name, value, options = {}) {
+		return this.map.set(name, new Cookie(name, value, options))
+	}
+
+	get(name) {
+		return this.map.get(name);
+	}
+
+	has(name) {
+		return this.map.has(name);
+	}
+
+	remove(name) {
+		return this.map.delete(name);
+	}
+
+	get() {
+		return Array.from(this.map.values());
+	}
+
+	build() {
+		let cookies = [];
+
+		for(let cookie of this.map.values()) {
+			cookies.push(cookie.build());
+		}
+
+		return cookies;
 	}
 }
