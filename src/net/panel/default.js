@@ -54,6 +54,7 @@ module.exports = class DefaultRoutes {
 			res.statusCode = 302;
 			res.setHeader("Location", "/login");
 			res.setHeader("Content-Type", "application/json");
+			res.end();
 
 			return next();
 		}
