@@ -4,15 +4,7 @@ const Path = require("path");
 const pify = require("pify");
 
 function asyncFileLoad(name) {
-	return new Promise(function(resolve, reject) {
-		FileSystem.readFile(name, function(err, data) {
-			if(err) {
-				return reject(err);
-			}
-
-			resolve(data);
-		});
-	});
+	return pify(FileSystem.readFile)(name);
 }
 
 async function createStaticRoute(route, file, type = "text/plain") {
