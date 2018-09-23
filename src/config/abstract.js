@@ -5,6 +5,15 @@ function createDefaultConfig(defaultPath, destPath) {
 	return pify(FileSystem.copyFile)(defaultPath, destPath);
 }
 
+function parseConfigBuffer(buffer) {
+	try {
+		return JSON.parse(buffer.toString());
+	}
+	catch(e) {
+		return;
+	}
+}
+
 module.exports = class AbstractConfigFile {
 	constructor(defaultPath, destPath) {
 		this.defaultPath = defaultPath;
@@ -16,15 +25,11 @@ module.exports = class AbstractConfigFile {
 			await createDefaultConfig(this.defaultPath, this.destPath);
 		}
 
-		let configData = await pify(FileSystem.readFile)(this.destPath);
+		this.configData = parseConfigBuffer(await pify(FileSystem.readFile)(this.destPath));
 
-		try {
-			configData = JSON.parse(configData.toString());
-		} catch(e) {
-			throw new Error("The configuration file at " + this.destPath + " could not be parsed");
+		if(this.configData === undefined) {
+			throw new Error("The config at " + this.destPath + " could not be parsed");
 		}
-
-		this.configData = configData;
 
 		return this;
 	}
