@@ -1,5 +1,6 @@
-let Server = require("./server");
-let HTTP = require("http");
+const AbstractServer = require("./abstract");
+const HTTP = require("http");
+const pify = require("pify");
 
 module.exports = class HTTPServer extends Server {
 	constructor(handler) {

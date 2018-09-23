@@ -1,9 +1,9 @@
-let ServerManager = require("./net/panel/manager");
-let Route = require("./net/panel/route");
-let GlobalConfigManager = require("./config/global");
-let DefaultRoutes = require("./net/panel/default");
-let DatabaseManager = require("./db/manager");
-let UserManager = require("./user/manager");
+const Server = require("./net/panel/server");
+const GlobalConfigFile = require("./config/global");
+const DefaultRoutes = require("./net/panel/default");
+const Database = require("./db/database");
+const UserManager = require("./user/manager");
+const PluginManager = require("./plugin/manager");
 
 module.exports = class Application {
 	constructor() {

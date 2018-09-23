@@ -1,6 +1,7 @@
-let Route = require("./route");
-let FileSystem = require("fs");
-let Path = require("path");
+const Route = require("./route");
+const FileSystem = require("fs");
+const Path = require("path");
+const pify = require("pify");
 
 function asyncFileLoad(name) {
 	return new Promise(function(resolve, reject) {

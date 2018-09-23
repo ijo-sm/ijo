@@ -1,5 +1,5 @@
-let Path = require("path");
-let ConfigManager = require("./config");
+const Path = require("path");
+const AbstractConfigFile = require("./abstract");
 
 module.exports = class GlobalConfigManager extends ConfigManager {
 	constructor() {
