@@ -3,25 +3,23 @@ const CookieManager = require("./cookies");
 const SessionManager = require("./sessions");
 const EJS = require("./ejs");
 
-function parseCookies(headers) {
+function parseCookies(header) {
 	let cookies = [];
 
-	if(headers["cookie"] === undefined) {
+	if(header === undefined) {
 		return cookies;
 	}
 
-	cookies = headers["cookie"].split(";");
+	cookies = header.split(";");
 
-	for(let i = 0; i < cookies.length; i++) {
-		let cookie = cookies[i].trim();
+	return cookies.map(function(cookie) {
+		cookie = cookie.trim();
 
-		cookies[i] = {
+		return {
 			key: cookie.substring(0, cookie.indexOf("=")),
 			value: cookie.substring(cookie.indexOf("=") + 1)
 		}
-	}
-
-	return cookies;
+	});
 }
 
 function extractPath(path) {
@@ -37,6 +35,7 @@ function prepareResponse(response, request) {
 		request.session.id,
 		{path: "/"}
 	);
+
 	response.end = function() {
 		response.setHeader("Set-Cookie", response.cookies.build());
 
@@ -44,26 +43,27 @@ function prepareResponse(response, request) {
 	};
 }
 
-function prepareRequest(request, sessionManager) {
-	request.getBody = function() {
-		return new Promise(function(resolve, reject) {
-			let body = "";
+function getBody(request) {
+	return new Promise(function(resolve, reject) {
+		let body = "";
 
-			request.on("data", function(chunk) {
-				body += chunk;
-			});
-	
-			request.on("error", function(err) {
-				reject(err);
-			});
-	
-			request.on("end", function() {
-				resolve(body);
-			});
+		request.on("data", function(chunk) {
+			body += chunk;
 		});
-	}
 
-	request.cookies = parseCookies(request.headers);
+		request.on("error", function(err) {
+			reject(err);
+		});
+
+		request.on("end", function() {
+			resolve(body);
+		});
+	});
+}
+
+function prepareRequest(request, sessionManager) {
+	request.getBody = getBody;
+	request.cookies = parseCookies(request.headers["cookie"]);
 	request.session = sessionManager.get(
 		request.cookies.find(cookie => cookie.key === app.globalConfig.get("server.sessions.cookie.name"))
 	);
@@ -125,15 +125,13 @@ module.exports = class Server {
 
 		let path = extractPath(request.url);
 		let method = request.method;
-		let next = function() {}
+		let next = () => {};
 
 		for(let i = 0; i < this.routes.length; i++) {
 			let route = this.routes[i];
 			
 			if(checkRouteMatch(route, {path, method})) {
-				route.callback(request, response, next);
-
-				return;
+				return route.callback(request, response, next);
 			}
 		}
 
