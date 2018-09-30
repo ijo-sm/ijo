@@ -50,6 +50,7 @@ pushd ".\test\panel\"
 rem Create the /data folder
 rmdir /s /q ".\data" >nul 2>&1
 mkdir ".\plugins" >nul 2>&1
+mkdir ".\executors" >nul 2>&1
 
 rem Install the ijo command
 call npm install -g >nul 2>&1
