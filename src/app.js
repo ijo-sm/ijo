@@ -4,7 +4,7 @@ const DefaultRoutes = require("./net/panel/default");
 const Database = require("./db/database");
 const UserManager = require("./user/manager");
 const PluginManager = require("./plugin/manager");
-const Utilities = require("./utils");
+const Utilities = require("./utils/utils");
 
 module.exports = class Application {
 	constructor() {
