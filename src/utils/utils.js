@@ -31,7 +31,7 @@ class GenerateUtilities {
 
 class PathUtilities {
 	resolve(path) {
-		return Path.resolve(__dirname, "../", path);
+		return Path.resolve(__dirname, "../../", path);
 	}
 }
 
