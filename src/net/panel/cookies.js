@@ -62,12 +62,6 @@ module.exports = class CookieManager {
 	}
 
 	build() {
-		let cookies = [];
-
-		for(let cookie of this.map.values()) {
-			cookies.push(cookie.build());
-		}
-
-		return cookies;
+		return [...this.map.values()].map(cookie => cookie.build());
 	}
 }
