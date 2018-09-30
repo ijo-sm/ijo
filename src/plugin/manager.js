@@ -4,36 +4,34 @@ const pify = require("pify");
 function loadPlugin(path) {
 	let plugin = require(app.utils.path.resolve("plugins/" + path + "/plugin.json"));
 
-	if(!validatePlugin(plugin) || !generatePluginParts(plugin)) {
+	plugin.panel = generateEnvironments(plugin.panel);
+	plugin.machine = generateEnvironments(plugin.machine);
+
+	if(!validatePlugin(plugin) || !plugin.panel || !plugin.machine) {
 		return;
 	}
 
 	return new Plugin(plugin);
 }
 
-function generatePluginParts(plugin) {
-	if(plugin.parts) {
-		plugin.parts.map(function(part) {
-			if(typeof part.env !== "string" || typeof part.lang !== "string" || typeof part.index !== "string") {
+function generateEnvironments(env) {
+	if(env instanceof Array) {
+		env.map(function(env) {
+			if(typeof env.platform !== "string" || typeof env.lang !== "string" || typeof env.index !== "string") {
 				return;
 			}
 
-			return new PluginPart(part);
+			return new PluginEnvironment(env);
 		});
-
-		if(plugin.parts.includes(undefined)) {
-			return false;
-		}
-	}
-	else {
-		if(typeof plugin.env !== "string" || typeof plugin.lang !== "string" || typeof plugin.index !== "string") {
-			return false;
-		}
-
-		plugins.parts = [new PluginPart(plugin)];
+		
+		return env.includes(undefined) ? false : env;
 	}
 
-	return true;
+	if(typeof env !== "object" || typeof env.platform !== "string" || typeof env.lang !== "string" || typeof env.index !== "string") {
+		return;
+	}
+
+	return [new PluginEnvironment(env)];
 }
 
 function validatePlugin(plugin) {
@@ -48,17 +46,20 @@ function validatePlugin(plugin) {
 	return true;
 }
 
-class PluginPart {
+class PluginEnvironment {
 	constructor(object) {
-		this.environment = object.env;
+		this.platform = object.platform;
 		this.language = object.lang;
 		this.indexFile = object.index;
+		this.includes = object.includes;
+		this.excludes = object.excludes;
 	}
 }
 
 class Plugin {
 	constructor(object) {
 		this.name = object.name;
+		this.description = object.description;
 		this.version = object.version;
 		this.author = object.author;
 		this.license = object.license;
