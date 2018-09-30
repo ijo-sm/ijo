@@ -44,7 +44,7 @@ function prepareResponse(response, request) {
 }
 
 function getBody(request) {
-	return new Promise(function(resolve, reject) {
+	return () => new Promise(function(resolve, reject) {
 		let body = "";
 
 		request.on("data", function(chunk) {
@@ -62,7 +62,7 @@ function getBody(request) {
 }
 
 function prepareRequest(request, sessionManager) {
-	request.getBody = getBody;
+	request.getBody = getBody(request);
 	request.cookies = parseCookies(request.headers["cookie"]);
 	request.session = sessionManager.get(
 		request.cookies.find(cookie => cookie.key === app.globalConfig.get("server.sessions.cookie.name"))
