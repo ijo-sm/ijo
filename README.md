@@ -6,9 +6,10 @@ The alternatives to cPanel often come with a lot of modules you really don't nee
 Another issue with many webhosting solutions is that they're very user-unfriendly because of their complicated UI's. With IJO we're focussing on creating a user-friendly UI for both hosting companies and their customers and self-hosting hobbyists.
 
 ## Testing
-You can test all repositories using the @ijo-sm/ijo-test package from NPM. When in the repository you want to test, use the following command:
-```
-
+You can test all repositories using the @ijo-sm/ijo-test package from NPM. When in the repository you want to test, use the following commands:
+```bash
+$ npm i -g @ijo-sm/ijo-test
+$ ijo-test
 ```
 
 ## Join us on Slack!
