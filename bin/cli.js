@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 let args = process.argv;
-args.splice(0, 2)
+args.splice(0, 2);
 
 if(args[0] === "start") {
 	global.app = new (require("../src/app"))();
