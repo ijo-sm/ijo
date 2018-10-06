@@ -1,5 +1,8 @@
 global.app = new (require("./src/app"))();
-app.start();
+app.start()
+.then(function() {
+	console.log("IJO has started.");
+});
 
 process.on("exit", function() {
 	app.stop();
