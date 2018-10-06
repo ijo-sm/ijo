@@ -1,6 +1,6 @@
 {
 	"name": "ijo",
-	"version": "1.0.0",
+	"version": "0.0.1",
 	"description": "A lightweight and user-friendly server manager",
 	"main": "index.js",
 	"bin": {
