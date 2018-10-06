@@ -8,11 +8,7 @@ function loadExecutor(path) {
 		return;
 	}
 
-	executor.executor = require(app.utils.path.resolve("executors/" + path + "/" + executor.index));
-
-	if(typeof executor.executor !== "object") {
-		return;	
-	}
+	executor.module = require(app.utils.path.resolve("executors/" + path + "/" + executor.index));
 
 	return new Executor(executor, path);
 }
@@ -31,10 +27,26 @@ function validateExecutor(executor) {
 
 class Executor {
 	constructor(object, path) {
-		this.indexFile = object.index;
 		this.language = object.lang;
 		this.path = path;
-		this.executor = object.executor;
+		this.indexFile = object.index;
+		this.module = object.module;
+	}
+
+	init() {
+		if(typeof this.module.init !== "function") {
+			return console.error("The executor " + this.path + " does not have an .init() function");
+		}
+
+		this.module.init();
+	}
+
+	start(path) {
+		if(typeof this.module.init !== "function") {
+			return console.error("The executor " + this.path + " does not have a .start() function");
+		}
+
+		this.module.start(path);
 	}
 }
 
@@ -55,6 +67,8 @@ module.exports = class ExecutorManager {
 			else if(this.executors.has(executor.language)) {
 				return console.error("The executor " + executor.language + " has already been loaded");
 			}
+
+			executor.init();
 
 			this.executors.set(executor.language, executor);
 		}.bind(this));

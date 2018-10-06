@@ -5,8 +5,13 @@ All websites need to be hosted. cPanel is currently the most popular web host ma
 The alternatives to cPanel often come with a lot of modules you really don't need. For example, when you're just installing an Apache Web Server to host your server it'll also install a SMTP server, FTP server, DNS server and other modules. IJO gives you a clutter-free and modular option to host your websites.<br>
 Another issue with many webhosting solutions is that they're very user-unfriendly because of their complicated UI's. With IJO we're focussing on creating a user-friendly UI for both hosting companies and their customers and self-hosting hobbyists.
 
+## Testing
+You can test all repositories using the @ijo-sm/ijo-test package from NPM. When in the repository you want to test, use the following commands:
+```bash
+$ npm i -g @ijo-sm/ijo-test
+$ ijo-test
+```
+
 ## Join us on Slack!
-
-[![Slack](https://p9.zdassets.com/hc/theme_assets/138842/200037786/logo.png)](https://ijo-sm.slack.com)
-
+[![Slack](https://p9.zdassets.com/hc/theme_assets/138842/200037786/logo.png)](https://ijo-sm.slack.com)<br>
 For creating a new account: [Click Here](https://join.slack.com/t/ijo-sm/shared_invite/enQtNDE2MTc0MjIxNTU4LWI2MzlkODM2MThlMDY5YWU3MjBjMzRiNDVkYjM1NjgwNWQyZDA4ZDViNGVhM2Y2NmUzNjQ2OTU5NTRhMzExNmI)
