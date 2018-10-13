@@ -1,4 +1,4 @@
-const Server = require("./net/panel/server");
+const Server = require("./net/site/server");
 const GlobalConfigFile = require("./config/global");
 const DefaultRoutes = require("./net/panel/default");
 const Database = require("./db/database");
