@@ -89,7 +89,7 @@ function checkRouteMatch(route, request) {
 	return false;
 }
 
-module.exports = class Server {
+module.exports = class SiteServer {
 	constructor() {
 		this.sessions = new SessionManager();
 		this.ejs = new EJS();

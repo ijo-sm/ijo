@@ -1,4 +1,4 @@
-const Server = require("./net/site/server");
+const SiteServer = require("./net/site/server");
 const GlobalConfigFile = require("./config/global");
 const DefaultRoutes = require("./net/panel/default");
 const Database = require("./db/database");
@@ -8,7 +8,7 @@ const Utilities = require("./utils/utils");
 
 module.exports = class Application {
 	constructor() {
-		this.server = new Server();
+		this.siteServer = new SiteServer();
 		this.db = new Database();
 		this.users = new UserManager();
 		this.plugins = new PluginManager();
@@ -27,13 +27,13 @@ module.exports = class Application {
 		await this.users.create("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");
 		await this.globalConfig.load();
 		await this.defaultRoutes.init();
-		await this.server.start();
+		await this.siteServer.start();
 
 		this.listening = true;
 	}
 
 	async stop() {
-		await this.server.stop();
+		await this.siteServer.stop();
 		await this.globalConfig.save();
 		
 		this.listening = false;
