@@ -1,3 +1,5 @@
+const OS = require("os");
+
 const platformRankData = {
 	"win32.windows": ["7", "80", "81", "10"],
 	"linux.ubuntu": ["1404", "1604"],
@@ -6,10 +8,22 @@ const platformRankData = {
 	"linux.rhel": ["5", "6", "7"],
 	"linux.centos": ["5", "6", "7"],
 	"linux.fedora": ["19", "20", "21"],
-	"linux.cloud": ["6"],
 	"linux.amazon": ["201703", "201709", "201803"],
 	"linux.freebsd": ["110", "111", "112"],
 	"darwin.macos": ["10.11", "10.12", "10.13", "10.14"]
+}
+
+const linuxDistroPerFile = {
+	"/etc/lsb-release": ["ubuntu","mint"],
+	"/etc/system-release": ["amazon"],
+	"/etc/debian_version": ["debian"],
+	"/etc/fedora-release": ["fedora"],
+	"/etc/redhat-release": ["rhel","centos"],
+	"/linprocfs/version": ["freebsd"]
+}
+
+function getDistro() {
+
 }
 
 module.exports = class PlatformUtilities {
@@ -58,6 +72,7 @@ module.exports = class PlatformUtilities {
 		switch(platform) {
 			case "win32":
 				distro = "windows";
+				release = OS.release().split(".")[0];
 				break;
 
 			case "darwin":
