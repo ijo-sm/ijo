@@ -1,4 +1,4 @@
-const HTTPServer = require("./http");
+const HTTPServer = require("./../server/http");
 const CookieManager = require("./cookies");
 const SessionManager = require("./sessions");
 const EJS = require("./ejs");
@@ -106,6 +106,7 @@ module.exports = class Server {
 		}
 		else {
 			this.server = new HTTPServer(this.handle.bind(this));
+			this.server.port = app.globalConfig.get("server.port");
 
 			return this.server.start();
 		}
