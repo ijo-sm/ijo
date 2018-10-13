@@ -1,5 +1,6 @@
 const FileSystem = require("fs");
 const pify = require("pify");
+const {Plugin, PluginEnvironment} = require("./model");
 
 function loadPlugin(path) {
 	let plugin = require(app.utils.path.resolve("plugins/" + path + "/plugin.json"));
@@ -46,25 +47,7 @@ function validatePlugin(plugin) {
 	return true;
 }
 
-class PluginEnvironment {
-	constructor(object) {
-		this.platform = object.platform;
-		this.language = object.lang;
-		this.indexFile = object.index;
-		this.includes = object.includes;
-		this.excludes = object.excludes;
-	}
-}
 
-class Plugin {
-	constructor(object) {
-		this.name = object.name;
-		this.description = object.description;
-		this.version = object.version;
-		this.author = object.author;
-		this.license = object.license;
-		this.parts = object.parts;
-	}
 }
 
 module.exports = class PluginManager {
