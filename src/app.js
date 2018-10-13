@@ -4,7 +4,6 @@ const DefaultRoutes = require("./net/panel/default");
 const Database = require("./db/database");
 const UserManager = require("./user/manager");
 const PluginManager = require("./plugin/manager");
-const ExecutorManager = require("./executor/manager");
 const Utilities = require("./utils/utils");
 
 module.exports = class Application {
@@ -13,7 +12,6 @@ module.exports = class Application {
 		this.db = new Database();
 		this.users = new UserManager();
 		this.plugins = new PluginManager();
-		this.executors = new ExecutorManager();
 		this.globalConfig = new GlobalConfigFile();
 		this.defaultRoutes = new DefaultRoutes();
 		this.utils = new Utilities();
@@ -25,7 +23,6 @@ module.exports = class Application {
 
 	async start() {
 		await this.db.load();
-		await this.executors.load();
 		await this.plugins.load();
 		await this.users.create("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");
 		await this.globalConfig.load();
