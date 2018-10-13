@@ -1,7 +1,7 @@
-const Route = require("./route");
-const JSONResponse = require("./json");
 const FileSystem = require("fs");
 const pify = require("pify");
+const Route = require("./route");
+const JSONResponse = require("./json");
 
 function asyncFileLoad(name) {
 	return pify(FileSystem.readFile)(name);
