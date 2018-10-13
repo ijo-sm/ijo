@@ -27,8 +27,6 @@ class Plugin {
 		if(enviroment === undefined) {
 			return console.error(`The plugin ${plugin.name} has no matching environments for the panel`);
 		}
-
-		console.log(enviroment);
 	}
 }
 

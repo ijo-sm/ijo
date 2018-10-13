@@ -34,7 +34,6 @@ function generateEnvironments(environment) {
 }
 
 function validateEnvironment(environment) {
-	console.log(environment);
 	assert.equal(typeof environment, "object", "The environment is not an object");
 	assert.equal(typeof environment.lang, "string", "There is no language for the environment");
 	assert.equal(typeof environment.index, "string", "There is no index file for the environment");
