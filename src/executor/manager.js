@@ -2,13 +2,13 @@ const FileSystem = require("fs");
 const pify = require("pify");
 
 function loadExecutor(path) {
-	let executor = require(app.utils.path.resolve("executors/" + path + "/executor.json"));
+	let executor = require(app.utils.path.resolve(`executors/${path}/executor.json`));
 
 	if(!validateExecutor(executor)) {
 		return;
 	}
 
-	executor.module = require(app.utils.path.resolve("executors/" + path + "/" + executor.index));
+	executor.module = require(app.utils.path.resolve(`executors/${path}/${executor.index}`));
 
 	return new Executor(executor, path);
 }
@@ -35,7 +35,7 @@ class Executor {
 
 	init() {
 		if(typeof this.module.init !== "function") {
-			return console.error("The executor " + this.path + " does not have an .init() function");
+			return console.error(`The executor ${this.path} does not have an .init() function`);
 		}
 
 		this.module.init();
@@ -43,7 +43,7 @@ class Executor {
 
 	start(path) {
 		if(typeof this.module.init !== "function") {
-			return console.error("The executor " + this.path + " does not have a .start() function");
+			return console.error(`The executor ${this.path} does not have a .start() function`);
 		}
 
 		this.module.start(path);
@@ -62,10 +62,10 @@ module.exports = class ExecutorManager {
 			let executor = loadExecutor(path);
 
 			if(executor === undefined) {
-				return console.error("The executor at /panel/executors/" + path + " could not be loaded");
+				return console.error(`The executor at /panel/executors/${path} could not be loaded`);
 			}
 			else if(this.executors.has(executor.language)) {
-				return console.error("The executor " + executor.language + " has already been loaded");
+				return console.error(`The executor ${executor.language} has already been loaded`);
 			}
 
 			executor.init();

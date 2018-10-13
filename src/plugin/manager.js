@@ -79,10 +79,10 @@ module.exports = class PluginManager {
 			let plugin = loadPlugin(path);
 
 			if(plugin === undefined) {
-				return console.error("The plugin at /panel/plugins/" + path + " could not be loaded");
+				return console.error(`The plugin at /panel/plugins/${path} could not be loaded`);
 			}
 			else if(this.plugins.has(plugin.name)) {
-				return console.error("The plugin " + plugin.name + " has already been loaded");
+				return console.error(`The plugin ${plugin.name} has already been loaded`);
 			}
 
 			this.plugins.set(plugin.name, plugin);

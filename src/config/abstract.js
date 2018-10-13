@@ -28,7 +28,7 @@ module.exports = class AbstractConfigFile {
 		this.configData = parseConfigBuffer(await pify(FileSystem.readFile)(this.destPath));
 
 		if(this.configData === undefined) {
-			throw new Error("The config at " + this.destPath + " could not be parsed");
+			throw new Error(`The config at ${this.destPath} could not be parsed`);
 		}
 
 		return this;
