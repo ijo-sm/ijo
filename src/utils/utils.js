@@ -1,7 +1,6 @@
 const Crypto = require("crypto");
 const ShortID = require("shortid");
 const Path = require("path");
-const OS = require("os");
 const PlatformUtilities = require("./platform");
 
 class CryptoUtilities {
@@ -35,11 +34,27 @@ class PathUtilities {
 	}
 }
 
+class ArrayUtilities {
+	sortByObjectKey(key) {
+		return (a, b) => {
+			if(a[key] < b[key]) {
+				return -1;
+			}
+			else if(a[key] > b[key]) {
+				return 1;
+			}
+
+			return 0;
+		}
+	}
+}
+
 module.exports = class Utilities {
 	constructor() {
 		this.crypto = new CryptoUtilities();
 		this.generate = new GenerateUtilities();
 		this.path = new PathUtilities();
 		this.platform = new PlatformUtilities();
+		this.array = new ArrayUtilities();
 	}
 }
