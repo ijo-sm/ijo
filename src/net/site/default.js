@@ -11,7 +11,7 @@ async function createStaticRoute(route, file, type = "text/plain") {
 	let data = await asyncFileLoad(app.utils.path.resolve(file));
 
 	let routeFunction = function(req, res) {
-		res.setHeader("Content-Type", type)
+		res.setHeader("Content-Type", type);
 		res.end(data);
 	}
 
@@ -24,21 +24,25 @@ module.exports = class DefaultRoutes {
 			index: app.siteServer.ejs.template(await asyncFileLoad(app.utils.path.resolve("res/assets/views/index.ejs"))),
 			login: app.siteServer.ejs.template(await asyncFileLoad(app.utils.path.resolve("res/assets/views/login.ejs")))
 		};
+		
+		let staticRoutes = [
+			// Stylesheets
+			{route: "/css/index.css", file: "res/assets/css/index.css", type: "text/css"},
+			{route: "/css/login.css", file: "res/assets/css/login.css", type: "text/css"},
+			// Scripts
+			{route: "/js/panel.min.js", file: "res/assets/js/panel.min.js", type: "application/javascript"},
+			{route: "/js/jquery.min.js", file: "res/assets/js/jquery.min.js", type: "application/javascript"},
+			{route: "/js/login.js", file: "res/assets/js/login.js", type: "application/javascript"},
+			// Fonts
+			{route: "/fonts/Quicksand-Bold.ttf", file: "res/assets/fonts/Quicksand-Bold.ttf", type: "font/opentype"},
+			{route: "/fonts/Quicksand-Light.ttf", file: "res/assets/fonts/Quicksand-Light.ttf", type: "font/opentype"},
+			{route: "/fonts/Quicksand-Medium.ttf", file: "res/assets/fonts/Quicksand-Medium.ttf", type: "font/opentype"},
+			{route: "/fonts/Quicksand-Regular.ttf", file: "res/assets/fonts/Quicksand-Regular.ttf", type: "font/opentype"}
+		];
 
-		// Stylesheets
-		app.siteServer.route(await createStaticRoute("/css/index.css", "res/assets/css/index.css", "text/css"));
-		app.siteServer.route(await createStaticRoute("/css/login.css", "res/assets/css/login.css", "text/css"));
-
-		// Scripts
-		app.siteServer.route(await createStaticRoute("/js/panel.min.js", "res/assets/js/panel.min.js", "application/javascript"));
-		app.siteServer.route(await createStaticRoute("/js/jquery.min.js", "res/assets/js/jquery.min.js", "application/javascript"));
-		app.siteServer.route(await createStaticRoute("/js/login.js", "res/assets/js/login.js", "application/javascript"));
-
-		// Fonts
-		app.siteServer.route(await createStaticRoute("/fonts/Quicksand-Bold.ttf", "res/assets/fonts/Quicksand-Bold.ttf", "font/opentype"));
-		app.siteServer.route(await createStaticRoute("/fonts/Quicksand-Light.ttf", "res/assets/fonts/Quicksand-Light.ttf", "font/opentype"));
-		app.siteServer.route(await createStaticRoute("/fonts/Quicksand-Medium.ttf", "res/assets/fonts/Quicksand-Medium.ttf", "font/opentype"));
-		app.siteServer.route(await createStaticRoute("/fonts/Quicksand-Regular.ttf", "res/assets/fonts/Quicksand-Regular.ttf", "font/opentype"));
+		for(let route of staticRoutes) {
+			app.siteServer.route(await createStaticRoute(route.route, route.file, route.type));
+		}
 
 		//Views
 		app.siteServer.route(new Route("/", "GET", this.index.bind(this)));
