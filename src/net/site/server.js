@@ -69,26 +69,6 @@ function prepareRequest(request, sessionManager) {
 	);
 }
 
-function checkRouteMatch(route, request) {
-	if(route.method !== "ALL" && route.method !== request.method) {
-		return false;
-	}
-
-	if(route.path === "*") {
-		return true;
-	}
-
-	if(request.path === route.path) {
-		return true;
-	} 
-	
-	if(route.path.endsWith("*") && request.path.startsWith(route.path.substring(0, route.path.indexOf("*")))) {
-		return true;	
-	}
-
-	return false;
-}
-
 module.exports = class SiteServer {
 	constructor() {
 		this.sessions = new SessionManager();
@@ -128,10 +108,8 @@ module.exports = class SiteServer {
 		let method = request.method;
 		let next = () => {};
 
-		for(let i = 0; i < this.routes.length; i++) {
-			let route = this.routes[i];
-			
-			if(checkRouteMatch(route, {path, method})) {
+		for(let route of this.routes) {
+			if(route.match({path, method})) {
 				return route.callback(request, response, next);
 			}
 		}
