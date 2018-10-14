@@ -39,39 +39,35 @@ module.exports = class AbstractConfigFile {
 	}
 
 	get(key, parent = this.configData) {
-		let splitKeys = key.split(".");
+		let keysArray = key.split(".");
 
-		if(splitKeys.length > 1 && parent[splitKeys[0]] !== undefined) {
-			let originalKey = splitKeys[0];
-    
-			splitKeys.splice(0, 1);
-    
-			return this.get(splitKeys.join("."), parent[originalKey]);
+		if(keysArray.length === 1 || parent[keysArray[0]] !== undefined) {
+			return parent[key];
 		}
-  
-		return parent[key];
+		
+		let originalKey = keysArray.shift();
+    
+		return this.get(keysArray.join("."), parent[originalKey]);
 	}
 
 	set(key, value, parent = this.configData) {
-		let splitKeys = key.split(".");
+		let keysArray = key.split(".");
 		
-		if(splitKeys.length > 1) {
-			let originalKey = subKeys[0];
-		
-			splitKeys.splice(0, 1);
-		
-			if(parent[originalKey] === undefined) {
-				parent[originalKey] = {};
-			}
-		
-			let newObj = this.set(splitKeys.join("."), value, parent[originalKey]);
-			parent[originalKey] = newObj;
-		
+		if(keysArray.length === 1) {
+			parent[key] = value;
+
 			return parent;
 		}
 
-		parent[key] = value;
-
+		let originalKey = keysArray.shift();
+		
+		if(parent[originalKey] === undefined) {
+			parent[originalKey] = {};
+		}
+	
+		let newObj = this.set(keysArray.join("."), value, parent[originalKey]);
+		parent[originalKey] = newObj;
+	
 		return parent;
 	}
 }
