@@ -3,10 +3,14 @@ module.exports = class SessionManager {
 		this.sessions = [];
 	}
 
-	init() {
-		setInterval(function() {
+	start() {
+		this.interval = setInterval(function() {
 			this.update();
 		}.bind(this), app.globalConfig.get("server.sessions.updateInterval"));
+	}
+
+	stop() {
+		clearInterval(this.interval);
 	}
 
 	get(cookie) {

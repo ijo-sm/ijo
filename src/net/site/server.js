@@ -79,20 +79,17 @@ module.exports = class SiteServer {
 	}
 
 	start() {
-		this.sessions.init();
+		this.sessions.start();
 
-		if(app.globalConfig.get("server.secure")) {
-			// Create HTTPS server
-		}
-		else {
-			this.server = new HTTPServer(this.handle.bind(this));
-			this.server.port = app.globalConfig.get("server.port");
+		this.server = new HTTPServer(this.handle.bind(this));
+		this.server.port = app.globalConfig.get("server.port");
 
-			return this.server.start();
-		}
+		return this.server.start();
 	}
 
 	stop() {
+		this.sessions.stop();
+
 		return this.server.stop();
 	}
 
