@@ -25,7 +25,7 @@ function generateEnvironments(environment) {
 			return new PluginEnvironment(environment);
 		});
 		
-		return environment.includes(undefined) ? false : environment;
+		return environment;
 	}
 
 	validateEnvironment(environment);
