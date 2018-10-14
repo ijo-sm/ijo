@@ -1,6 +1,6 @@
 const OS = require("os");
 
-const platformRankData = {
+const platformRanks = {
 	"win32.windows": ["7", "80", "81", "10"],
 	"linux.ubuntu": ["1404", "1604"],
 	"linux.debian": ["9", "8"],
@@ -50,7 +50,7 @@ module.exports = class PlatformUtilities {
 			return true;
 		}
 	  
-		let masterPlatformRanks = platformRankData[masterArray.slice(0, 2).join(".")];
+		let masterPlatformRanks = platformRanks[masterArray.slice(0, 2).join(".")];
 		let masterRelease = masterArray[2].substring(0, masterArray[2].indexOf("+"));
 		let slaveRelease = slaveArray[2];
 		
