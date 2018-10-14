@@ -5,6 +5,7 @@ const AbstractServer = require("./abstract");
 module.exports = class TCPServer extends AbstractServer {
 	constructor(handler) {
 		super();
+		
 		this.server = net.createServer();
 		this.server.on("connection", handler);
 		this.port = 80;

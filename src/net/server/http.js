@@ -5,6 +5,7 @@ const AbstractServer = require("./abstract");
 module.exports = class HTTPServer extends AbstractServer {
 	constructor(handler) {
 		super();
+		
 		this.server = http.createServer();
 		this.server.on("request", handler);
 		this.port = 80;
