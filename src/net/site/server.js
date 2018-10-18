@@ -1,4 +1,4 @@
-const HTTPServer = require("./http");
+const HTTPServer = require("./../server/http");
 const CookieManager = require("./cookies");
 const SessionManager = require("./sessions");
 const EJS = require("./ejs");
@@ -69,27 +69,7 @@ function prepareRequest(request, sessionManager) {
 	);
 }
 
-function checkRouteMatch(route, request) {
-	if(route.method !== "ALL" && route.method !== request.method) {
-		return false;
-	}
-
-	if(route.path === "*") {
-		return true;
-	}
-
-	if(request.path === route.path) {
-		return true;
-	} 
-	
-	if(route.path.endsWith("*") && request.path.startsWith(route.path.substring(0, route.path.indexOf("*")))) {
-		return true;	
-	}
-
-	return false;
-}
-
-module.exports = class Server {
+module.exports = class SiteServer {
 	constructor() {
 		this.sessions = new SessionManager();
 		this.ejs = new EJS();
@@ -99,19 +79,17 @@ module.exports = class Server {
 	}
 
 	start() {
-		this.sessions.init();
+		this.sessions.start();
 
-		if(app.globalConfig.get("server.secure")) {
-			// Create HTTPS server
-		}
-		else {
-			this.server = new HTTPServer(this.handle.bind(this));
+		this.server = new HTTPServer(this.handle.bind(this));
+		this.server.port = app.globalConfig.get("server.port");
 
-			return this.server.start();
-		}
+		return this.server.start();
 	}
 
 	stop() {
+		this.sessions.stop();
+
 		return this.server.stop();
 	}
 
@@ -127,10 +105,8 @@ module.exports = class Server {
 		let method = request.method;
 		let next = () => {};
 
-		for(let i = 0; i < this.routes.length; i++) {
-			let route = this.routes[i];
-			
-			if(checkRouteMatch(route, {path, method})) {
+		for(let route of this.routes) {
+			if(route.match({path, method})) {
 				return route.callback(request, response, next);
 			}
 		}

@@ -6,22 +6,22 @@ class Cookie {
 	}
 
 	build() {
-		let cookie = this.name + "=" + this.value;
+		let cookie = `${this.name}=${this.value}`;
 
 		if(this.options.expires instanceof Date) {
-			cookie += "; Expires=" + this.options.expires.toString();
+			cookie += `; Expires=${this.options.expires.toString()}`;
 		}
 
 		if(typeof this.options.maxAge === "number") {
-			cookie += "; Max-Age=" + this.options.maxAge;
+			cookie += `; Max-Age=${this.options.maxAge}`;
 		}
 
 		if(typeof this.options.domain === "string") {
-			cookie += "; Domain=" + this.options.domain;
+			cookie += `; Domain=${this.options.domain}`;
 		}
 
 		if(typeof this.options.path === "string") {
-			cookie += "; Path=" + this.options.path;
+			cookie += `; Path=${this.options.path}`;
 		}
 
 		if(this.options.secure) {

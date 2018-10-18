@@ -1,70 +1,51 @@
 const FileSystem = require("fs");
 const pify = require("pify");
+const assert = require("assert");
+const {Plugin, PluginEnvironment} = require("./model");
 
 function loadPlugin(path) {
-	let plugin = require(app.utils.path.resolve("plugins/" + path + "/plugin.json"));
+	let plugin = require(Utils.path.resolve("plugins/" + path + "/plugin.json"));
 
 	plugin.panel = generateEnvironments(plugin.panel);
 	plugin.machine = generateEnvironments(plugin.machine);
 
-	if(!validatePlugin(plugin) || !plugin.panel || !plugin.machine) {
-		return;
-	}
+	validatePlugin(plugin);
 
 	return new Plugin(plugin);
 }
 
-function generateEnvironments(env) {
-	if(env instanceof Array) {
-		env.map(function(env) {
-			if(typeof env.platform !== "string" || typeof env.lang !== "string" || typeof env.index !== "string") {
-				return;
-			}
+function generateEnvironments(environment) {
+	if(environment === undefined) {
+		return [];
+	}
+	else if(environment instanceof Array) {
+		environment.map(function(environment) {
+			validateEnvironment(environment);
 
-			return new PluginEnvironment(env);
+			return new PluginEnvironment(environment);
 		});
 		
-		return env.includes(undefined) ? false : env;
+		return environment;
 	}
 
-	if(typeof env !== "object" || typeof env.platform !== "string" || typeof env.lang !== "string" || typeof env.index !== "string") {
-		return;
-	}
+	validateEnvironment(environment);
 
-	return [new PluginEnvironment(env)];
+	return [new PluginEnvironment(environment)];
+}
+
+function validateEnvironment(environment) {
+	assert.equal(typeof environment, "object", "The environment is not an object");
+	assert.equal(typeof environment.lang, "string", "There is no language for the environment");
+	assert.equal(typeof environment.index, "string", "There is no index file for the environment");
+	assert.equal(typeof environment.index, "string", "There is no index file for the environment");
 }
 
 function validatePlugin(plugin) {
-	if(plugin === undefined) {
-		return false;
-	}
+	assert.equal(typeof plugin, "object", "The config is not an object");
+	assert.equal(typeof plugin.name, "string", "There is no name in the config");
+	assert.equal(typeof plugin.version, "string", "There is no version in the config");
 
-	if(typeof plugin.name !== "string" || typeof plugin.version !== "string") {
-		return false;
-	}
-
-	return true;
-}
-
-class PluginEnvironment {
-	constructor(object) {
-		this.platform = object.platform;
-		this.language = object.lang;
-		this.indexFile = object.index;
-		this.includes = object.includes;
-		this.excludes = object.excludes;
-	}
-}
-
-class Plugin {
-	constructor(object) {
-		this.name = object.name;
-		this.description = object.description;
-		this.version = object.version;
-		this.author = object.author;
-		this.license = object.license;
-		this.parts = object.parts;
-	}
+	assert(plugin.panel instanceof Array, "The config doesn't contain any environments for the panel");
 }
 
 module.exports = class PluginManager {
@@ -73,17 +54,22 @@ module.exports = class PluginManager {
 	}
 
 	async load() {
-		var paths = await pify(FileSystem.readdir)(app.utils.path.resolve("plugins/"));
+		var paths = await pify(FileSystem.readdir)(Utils.path.resolve("plugins/"));
 
 		paths.forEach(function(path) {
-			let plugin = loadPlugin(path);
+			let plugin;
 
-			if(plugin === undefined) {
-				return console.error("The plugin at /panel/plugins/" + path + " could not be loaded");
+			try {
+				plugin = loadPlugin(path);
+			} catch(e) {
+				return console.error(`The plugin at /panel/plugins/${path} could not be loaded: ${e.message}`);
 			}
-			else if(this.plugins.has(plugin.name)) {
-				return console.error("The plugin " + plugin.name + " has already been loaded");
+			
+			if(this.plugins.has(plugin.name)) {
+				return console.error(`The plugin ${plugin.name} has already been loaded`);
 			}
+
+			plugin.initialize();
 
 			this.plugins.set(plugin.name, plugin);
 		}.bind(this));

@@ -3,10 +3,14 @@ module.exports = class SessionManager {
 		this.sessions = [];
 	}
 
-	init() {
-		setInterval(function() {
+	start() {
+		this.interval = setInterval(function() {
 			this.update();
 		}.bind(this), app.globalConfig.get("server.sessions.updateInterval"));
+	}
+
+	stop() {
+		clearInterval(this.interval);
 	}
 
 	get(cookie) {
@@ -42,7 +46,7 @@ module.exports = class SessionManager {
 	}
 
 	generate() {
-		let id = app.utils.generate.uuid();
+		let id = Utils.generate.uuid();
 
 		if(this.sessions.map(item => item.id).includes(id)) {
 			return this.generate();

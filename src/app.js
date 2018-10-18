@@ -1,42 +1,44 @@
-const Server = require("./net/panel/server");
+const SiteServer = require("./net/site/server");
+const MachineServer = require("./net/machine/server");
 const GlobalConfigFile = require("./config/global");
-const DefaultRoutes = require("./net/panel/default");
+const DefaultRoutes = require("./net/site/default");
 const Database = require("./db/database");
 const UserManager = require("./user/manager");
+const MachineManager = require("./machine/manager");
 const PluginManager = require("./plugin/manager");
-const ExecutorManager = require("./executor/manager");
-const Utilities = require("./utils/utils");
 
 module.exports = class Application {
 	constructor() {
-		this.server = new Server();
+		this.siteServer = new SiteServer();
+		this.machineServer = new MachineServer();
 		this.db = new Database();
 		this.users = new UserManager();
+		this.machines = new MachineManager();
 		this.plugins = new PluginManager();
-		this.executors = new ExecutorManager();
 		this.globalConfig = new GlobalConfigFile();
 		this.defaultRoutes = new DefaultRoutes();
-		this.utils = new Utilities();
-
-		this.db.create("users");
 
 		this.listening = false;
 	}
 
 	async start() {
+		this.users.initialize();
+		this.machines.initialize();
+
 		await this.db.load();
-		await this.executors.load();
 		await this.plugins.load();
 		await this.users.create("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");
 		await this.globalConfig.load();
 		await this.defaultRoutes.init();
-		await this.server.start();
+		await this.machineServer.start();
+		await this.siteServer.start();
 
 		this.listening = true;
 	}
 
 	async stop() {
-		await this.server.stop();
+		await this.machineServer.stop();
+		await this.siteServer.stop();
 		await this.globalConfig.save();
 		
 		this.listening = false;

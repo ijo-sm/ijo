@@ -1,9 +1,18 @@
+global.Utils = require("./src/utils/utils");
 global.app = new (require("./src/app"))();
 app.start()
-.then(function() {
-	console.log("IJO has started.");
+.then(() => {
+	console.log("IJO Panel has started.");
+})
+.catch((error) => {
+    console.log(`Startup has failed${error instanceof Error ? `: ${error.message}\n${error.stack}` : ""}`);
+
+    process.exit(1);
 });
 
-process.on("exit", function() {
-	app.stop();
+Utils.process.onExit(end => {
+    app.stop()
+    .then(() => {
+        end();
+    });
 });

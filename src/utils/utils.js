@@ -1,7 +1,6 @@
 const Crypto = require("crypto");
 const ShortID = require("shortid");
 const Path = require("path");
-const OS = require("os");
 const PlatformUtilities = require("./platform");
 
 class CryptoUtilities {
@@ -35,11 +34,46 @@ class PathUtilities {
 	}
 }
 
-module.exports = class Utilities {
+class ArrayUtilities {
+	sortByObjectKey(key) {
+		return (a, b) => {
+			if(a[key] < b[key]) {
+				return -1;
+			}
+			else if(a[key] > b[key]) {
+				return 1;
+			}
+
+			return 0;
+		}
+	}
+}
+
+class ProcessUtilities {
+	onExit(callback) {
+		process.on('message', message => {
+			if(typeof message !== "object" || message.message !== "kill") {
+				return;
+			}
+
+			callback(() => {
+				process.exit(123);
+			});
+		});
+
+		process.on("SIGINT", () => {});
+	}
+}
+
+class Utilities {
 	constructor() {
 		this.crypto = new CryptoUtilities();
 		this.generate = new GenerateUtilities();
 		this.path = new PathUtilities();
 		this.platform = new PlatformUtilities();
+		this.array = new ArrayUtilities();
+		this.process = new ProcessUtilities();
 	}
 }
+
+module.exports = new Utilities();
