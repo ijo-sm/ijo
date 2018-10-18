@@ -41,7 +41,7 @@ module.exports = class AbstractConfigFile {
 	get(key, parent = this.configData) {
 		let keysArray = key.split(".");
 
-		if(keysArray.length === 1 || parent[keysArray[0]] !== undefined) {
+		if(keysArray.length === 1 || parent[keysArray[0]] === undefined) {
 			return parent[key];
 		}
 		
