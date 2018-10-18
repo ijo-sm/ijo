@@ -16,12 +16,11 @@ module.exports = class Application {
 		this.globalConfig = new GlobalConfigFile();
 		this.defaultRoutes = new DefaultRoutes();
 
-		this.db.create("users");
-
 		this.listening = false;
 	}
 
 	async start() {
+		this.users.initialize();
 		await this.db.load();
 		await this.plugins.load();
 		await this.users.create("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");

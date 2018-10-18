@@ -11,9 +11,12 @@ class User {
 }
 
 module.exports = class UserManager {
-	constructor() {}
+	initialize() {
+		app.db.create("users");
+	}
 
 	create(username, password) {
+		let id = Utils.generate.shortid();
 
 		return app.db.get("users").push({
 			id, username, password
