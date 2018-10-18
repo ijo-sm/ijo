@@ -4,6 +4,7 @@ const GlobalConfigFile = require("./config/global");
 const DefaultRoutes = require("./net/site/default");
 const Database = require("./db/database");
 const UserManager = require("./user/manager");
+const MachineManager = require("./machine/manager");
 const PluginManager = require("./plugin/manager");
 
 module.exports = class Application {
@@ -12,6 +13,7 @@ module.exports = class Application {
 		this.machineServer = new MachineServer();
 		this.db = new Database();
 		this.users = new UserManager();
+		this.machines = new MachineManager();
 		this.plugins = new PluginManager();
 		this.globalConfig = new GlobalConfigFile();
 		this.defaultRoutes = new DefaultRoutes();
@@ -21,6 +23,8 @@ module.exports = class Application {
 
 	async start() {
 		this.users.initialize();
+		this.machines.initialize();
+
 		await this.db.load();
 		await this.plugins.load();
 		await this.users.create("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");
