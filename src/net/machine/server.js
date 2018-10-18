@@ -8,7 +8,7 @@ module.exports = class MachineServer {
 		return this.server.start();
 	}
 
-	handle(socket) {
+	stop() {}
 
-	}
+	handle(socket) {}
 }
