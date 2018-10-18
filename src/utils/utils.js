@@ -49,12 +49,31 @@ class ArrayUtilities {
 	}
 }
 
-module.exports = class Utilities {
+class ProcessUtilities {
+	onExit(callback) {
+		process.on('message', message => {
+			if(typeof message !== "object" || message.message !== "kill") {
+				return;
+			}
+
+			callback(() => {
+				process.exit(123);
+			});
+		});
+
+		process.on("SIGINT", () => {});
+	}
+}
+
+class Utilities {
 	constructor() {
 		this.crypto = new CryptoUtilities();
 		this.generate = new GenerateUtilities();
 		this.path = new PathUtilities();
 		this.platform = new PlatformUtilities();
 		this.array = new ArrayUtilities();
+		this.process = new ProcessUtilities();
 	}
 }
+
+module.exports = new Utilities();
