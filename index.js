@@ -1,8 +1,9 @@
 global.Utils = require("./src/utils/utils");
 global.app = new (require("./src/app"))();
 app.start()
-.then(function() {
-	console.log("IJO has started.");
+.then(() => {
+	console.log("IJO Panel has started.");
+})
 });
 
 process.on("exit", function() {
