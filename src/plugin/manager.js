@@ -4,7 +4,7 @@ const assert = require("assert");
 const {Plugin, PluginEnvironment} = require("./model");
 
 function loadPlugin(path) {
-	let plugin = require(app.utils.path.resolve("plugins/" + path + "/plugin.json"));
+	let plugin = require(Utils.path.resolve("plugins/" + path + "/plugin.json"));
 
 	plugin.panel = generateEnvironments(plugin.panel);
 	plugin.machine = generateEnvironments(plugin.machine);
@@ -54,7 +54,7 @@ module.exports = class PluginManager {
 	}
 
 	async load() {
-		var paths = await pify(FileSystem.readdir)(app.utils.path.resolve("plugins/"));
+		var paths = await pify(FileSystem.readdir)(Utils.path.resolve("plugins/"));
 
 		paths.forEach(function(path) {
 			let plugin;

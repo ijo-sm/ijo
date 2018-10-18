@@ -46,7 +46,7 @@ module.exports = class SessionManager {
 	}
 
 	generate() {
-		let id = app.utils.generate.uuid();
+		let id = Utils.generate.uuid();
 
 		if(this.sessions.map(item => item.id).includes(id)) {
 			return this.generate();

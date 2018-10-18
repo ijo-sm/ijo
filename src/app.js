@@ -5,7 +5,6 @@ const DefaultRoutes = require("./net/site/default");
 const Database = require("./db/database");
 const UserManager = require("./user/manager");
 const PluginManager = require("./plugin/manager");
-const Utilities = require("./utils/utils");
 
 module.exports = class Application {
 	constructor() {
@@ -16,7 +15,6 @@ module.exports = class Application {
 		this.plugins = new PluginManager();
 		this.globalConfig = new GlobalConfigFile();
 		this.defaultRoutes = new DefaultRoutes();
-		this.utils = new Utilities();
 
 		this.db.create("users");
 

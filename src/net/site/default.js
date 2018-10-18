@@ -8,7 +8,7 @@ function asyncFileLoad(name) {
 }
 
 async function createStaticRoute(route, file, type = "text/plain") {
-	let data = await asyncFileLoad(app.utils.path.resolve(file));
+	let data = await asyncFileLoad(Utils.path.resolve(file));
 
 	let routeFunction = function(req, res) {
 		res.setHeader("Content-Type", type);
@@ -21,8 +21,8 @@ async function createStaticRoute(route, file, type = "text/plain") {
 module.exports = class DefaultRoutes {
 	async init() {
 		this.templates = {
-			index: app.siteServer.ejs.template(await asyncFileLoad(app.utils.path.resolve("res/assets/views/index.ejs"))),
-			login: app.siteServer.ejs.template(await asyncFileLoad(app.utils.path.resolve("res/assets/views/login.ejs")))
+			index: app.siteServer.ejs.template(await asyncFileLoad(Utils.path.resolve("res/assets/views/index.ejs"))),
+			login: app.siteServer.ejs.template(await asyncFileLoad(Utils.path.resolve("res/assets/views/login.ejs")))
 		};
 		
 		let staticRoutes = [

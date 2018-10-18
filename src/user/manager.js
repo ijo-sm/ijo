@@ -6,7 +6,7 @@ class User {
 	}
 
 	checkPassword(password) {
-		return this.password === app.utils.crypto.hash(password);
+		return this.password === Utils.crypto.hash(password);
 	}
 }
 
@@ -14,7 +14,6 @@ module.exports = class UserManager {
 	constructor() {}
 
 	create(username, password) {
-		let id = app.utils.generate.shortid();
 
 		return app.db.get("users").push({
 			id, username, password

@@ -1,3 +1,4 @@
+global.Utils = require("./src/utils/utils");
 global.app = new (require("./src/app"))();
 app.start()
 .then(function() {

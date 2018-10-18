@@ -1,10 +1,10 @@
 function bestEnvironment(enviroments) {
-	let panelPlatform = app.utils.platform.get();
+	let panelPlatform = Utils.platform.get();
 
-	enviroments.sort(app.utils.array.sortByObjectKey("platform"));
+	enviroments.sort(Utils.array.sortByObjectKey("platform"));
 
 	for(let enviroment of enviroments) {
-		if(app.utils.platform.match(enviroment.platform, panelPlatform)) {
+		if(Utils.platform.match(enviroment.platform, panelPlatform)) {
 			return enviroment;
 		}
 	}
