@@ -1,15 +1,15 @@
 const TCPServer = require("./../server/tcp");
 const PacketHandler = require("./handler");
-const AuthenticationPackets = require("./packets/auth");
 const UserPackets = require("./packets/user");
+const MachinePackets = require("./packets/machine");
 
 module.exports = class MachineServer {
 	constructor() {
 		this.packetHandler = new PacketHandler();
 
 		let packetLists = [
-			new AuthenticationPackets(),
-			new UserPackets()
+			new UserPackets(),
+			new MachinePackets()
 		];
 		
 		for(let packetList of packetLists) {
