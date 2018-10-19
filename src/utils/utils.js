@@ -12,6 +12,15 @@ class CryptoUtilities {
 
 		return Crypto.createHash(options.algorithm).update(data).digest(options.output);
 	}
+
+	generateSecret(options) {
+		options = Object.assign({}, options, {
+			length: 32,
+			output: "hex"
+		});
+
+		return Crypto.randomBytes(options.length).toString(options.output);
+	}
 }
 
 class GenerateUtilities {
