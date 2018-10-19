@@ -1,3 +1,4 @@
+const assert = require("assert");
 const FileSystem = require("fs");
 const pify = require("pify");
 
@@ -27,9 +28,7 @@ module.exports = class AbstractConfigFile {
 
 		this.configData = parseConfigBuffer(await pify(FileSystem.readFile)(this.destPath));
 
-		if(this.configData === undefined) {
-			throw new Error(`The config at ${this.destPath} could not be parsed`);
-		}
+		assert(this.configData, `The config at ${this.destPath} could not be parsed`);
 
 		return this;
 	}
