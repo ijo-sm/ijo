@@ -19,8 +19,8 @@ module.exports = class MachineServer {
 
 	start() {
 		this.server = new TCPServer(this.handle.bind(this));
-		this.server.port = 4944;
-
+		this.server.port = app.globalConfig.get("machineServer.port");
+		
 		return this.server.start();
 	}
 
