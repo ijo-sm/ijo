@@ -5,7 +5,7 @@ module.exports = class Packet {
 		this.callback = callback;
 	}
 
-	handle(packet, machine) {
-		this.callback(packet, machine);
+	async handle(packet, machine) {
+		await this.callback(packet, machine);
 	}
 }

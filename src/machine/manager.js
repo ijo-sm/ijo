@@ -9,7 +9,7 @@ module.exports = class MachineManager {
 		app.db.create("machines");
 	}
 
-	handleMachine(socket) {
+	handle(socket) {
 		this.connected.push(new Machine(socket));
 	}
 }

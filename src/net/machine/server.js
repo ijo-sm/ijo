@@ -29,6 +29,6 @@ module.exports = class MachineServer {
 	}
 
 	handle(socket) {
-		app.machines.handleMachine(socket);
+		app.machines.handle(socket);
 	}
 }
