@@ -12,13 +12,22 @@ module.exports = class Machine {
 		});
 	}
 
+	load(data = {}) {
+		this.id = data.id;
+		this.secret = data.secret;
+	}
+
 	send(event, data = {}) {
-		data.event = event;
+		data._event = event;
 
 		this.socket.write(JSON.stringify(data));
 	}
 
-	disconnect() {
+	checkSecret(secret) {
+		return this.secret === Utils.crypto.hash(secret);
+	}
 
+	disconnect(reason) {
+		this.socket.end(reason);
 	}
 }
