@@ -2,7 +2,11 @@ const Machine = require("./model");
 
 module.exports = class MachineManager {
 	constructor() {
-		this.connected = [];
+		this.connectedMachines = [];
+	}
+	
+	initialize() {
+		app.db.create("machines");
 	}
 
 	async create(secret) {
@@ -16,12 +20,12 @@ module.exports = class MachineManager {
 		return this.get("id", id);
 	}
 
-	initialize() {
-		app.db.create("machines");
+	handle(socket) {
+		this.connectedMachines.push(new Machine(socket));
 	}
 
-	handle(socket) {
-		this.connected.push(new Machine(socket));
+	connected(key, value) {
+		return this.connectedMachines.find(machine => machine[key] === value);
 	}
 
 	get(key, value) {
