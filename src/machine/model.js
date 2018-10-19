@@ -27,6 +27,10 @@ module.exports = class Machine {
 		return this.secret === Utils.crypto.hash(secret);
 	}
 
+	matchState(state) {
+		return this.state === state;
+	}
+
 	disconnect(reason) {
 		this.socket.end(reason);
 	}

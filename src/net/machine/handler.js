@@ -29,7 +29,7 @@ module.exports = class PacketHandler {
 
 		let packet = this.packets.get(parsedPacket._event);
 
-		if(packet.state !== machine.state) {
+		if(machine.matchState(packet.state)) {
 			return;
 		}
 		
