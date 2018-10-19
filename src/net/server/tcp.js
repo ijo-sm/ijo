@@ -8,7 +8,7 @@ module.exports = class TCPServer extends AbstractServer {
 		
 		this.server = net.createServer();
 		this.server.on("connection", handler);
-		this.port = 80;
+		this.port = 71;
 	}
 
 	async start() {
