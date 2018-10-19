@@ -20,10 +20,14 @@ module.exports = class PacketHandler {
 		this.packets.delete(event);
 	}
 
+	hasPacket(packet) {
+		return this.packets.has(packet._event)
+	}
+
 	async handle(data, machine) {
 		let parsedPacket = parsePacket(data);
 
-		if(!this.packets.has(parsedPacket._event)) {
+		if(!this.hasPacket(parsedPacket)) {
 			return;
 		}
 
