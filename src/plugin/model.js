@@ -4,9 +4,11 @@ function bestEnvironment(enviroments) {
 	enviroments.sort(Utils.array.sortByObjectKey("platform"));
 
 	for(let enviroment of enviroments) {
-		if(Utils.platform.match(enviroment.platform, panelPlatform)) {
-			return enviroment;
+		if(!Utils.platform.match(enviroment.platform, panelPlatform)) {
+			continue;
 		}
+		
+		return enviroment;
 	}
 }
 

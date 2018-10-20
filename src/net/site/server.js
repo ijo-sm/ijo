@@ -106,9 +106,11 @@ module.exports = class SiteServer {
 		let next = () => {};
 
 		for(let route of this.routes) {
-			if(route.match({path, method})) {
-				return route.callback(request, response, next);
+			if(!route.match({path, method})) {
+				continue;
 			}
+
+			return route.callback(request, response, next);
 		}
 
 		response.statusCode = 404;
