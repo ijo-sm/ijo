@@ -24,7 +24,7 @@ module.exports = class UserManager {
 	}
 
 	getUser(key, value) {
-		var user = app.db.get("users").find(user => user[key] === value).value();
+		let user = app.db.get("users").find(user => user[key] === value).value();
 
 		if(user === undefined) {
 			return undefined;

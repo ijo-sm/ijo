@@ -54,7 +54,7 @@ module.exports = class PluginManager {
 	}
 
 	async load() {
-		var paths = await pify(FileSystem.readdir)(Utils.path.resolve("plugins/"));
+		let paths = await pify(FileSystem.readdir)(Utils.path.resolve("plugins/"));
 
 		paths.forEach(function(path) {
 			let plugin;

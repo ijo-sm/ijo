@@ -70,7 +70,7 @@ module.exports = class DefaultRoutes {
 	}
 
 	apiLogin(req, res) {
-		var jsonResponse = new JSONResponse(req, res);
+		let jsonResponse = new JSONResponse(req, res);
 
 		req.getBody()
 		.then(function(body) {
@@ -85,7 +85,7 @@ module.exports = class DefaultRoutes {
 				return jsonResponse.error(400, "The request body could not be parsed.");
 			}
 
-			var user = app.users.getUser("username", body.username);
+			let user = app.users.getUser("username", body.username);
 
 			if(user === undefined || !user.checkPassword(body.password)) {
 				return jsonResponse.error(400, "The username and/or password are incorrect .");

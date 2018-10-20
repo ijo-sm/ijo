@@ -6,7 +6,7 @@ function loadDatabase(file) {
 }
 
 function mapToDefaults(map) {
-	var defaults = {};
+	let defaults = {};
 
 	for(const [key, value] of map) {
 		defaults[key] = [];
