@@ -54,10 +54,12 @@ module.exports = class PlatformUtilities {
 		let masterRelease = masterArray[2].substring(0, masterArray[2].indexOf("+"));
 		let slaveRelease = slaveArray[2];
 		
-		if(!masterPlatformRanks || !masterPlatformRanks.includes(masterRelease) || !masterPlatformRanks.includes(slaveRelease)) {
+		if(!masterPlatformRanks || !masterPlatformRanks.includes(masterRelease) 
+		  || !masterPlatformRanks.includes(slaveRelease)) {
 			return false;
 		}
-		else if(masterArray[2].endsWith("+") && masterPlatformRanks.indexOf(masterRelease) <= masterPlatformRanks.indexOf(slaveRelease)) {
+		else if(masterArray[2].endsWith("+") 
+		  && masterPlatformRanks.indexOf(masterRelease) <= masterPlatformRanks.indexOf(slaveRelease)) {
 			return true;
 		}
 	  
