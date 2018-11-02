@@ -33,7 +33,7 @@ module.exports = class PacketHandler {
 
 		let packet = this.packets.get(parsedPacket._event);
 
-		if(machine.matchState(packet.state)) {
+		if(!machine.matchState(packet.state)) {
 			return;
 		}
 		
