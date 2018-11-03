@@ -29,6 +29,6 @@ module.exports = class MachineServer {
 	}
 
 	handle(socket) {
-		aijop.machines.handle(socket);
+		ijo.machines.handle(socket);
 	}
 }
