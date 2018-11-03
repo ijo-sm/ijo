@@ -2,16 +2,26 @@ const SiteServer = require("./net/site/server");
 const MachineServer = require("./net/machine/server");
 const GlobalConfigFile = require("./config/global");
 const DefaultRoutes = require("./net/site/default");
-const Database = require("./db/database");
+const Database = require("@ijo-sm/helper-database");
 const UserManager = require("./user/manager");
 const MachineManager = require("./machine/manager");
 const PluginManager = require("./plugin/manager");
+const UtilsManager = require("@ijo-sm/utils");
 
 module.exports = class Application {
 	constructor() {
+		this.utils = new UtilsManager();
+		
+		this.utils.use("process", require("@ijo-sm/utils-process"));
+		this.utils.use("path", require("@ijo-sm/utils-path"));
+		this.utils.use("array", require("@ijo-sm/utils-array"));
+		this.utils.use("crypto", require("@ijo-sm/utils-crypto"));
+		this.utils.use("generate", require("@ijo-sm/utils-generate"));
+		this.utils.use("platform", require("@ijo-sm/utils-platform"));
+		
 		this.siteServer = new SiteServer();
 		this.machineServer = new MachineServer();
-		this.db = new Database();
+		this.db = new Database(this.utils.path.resolve("../data/panel.json"));
 		this.users = new UserManager();
 		this.machines = new MachineManager();
 		this.plugins = new PluginManager();

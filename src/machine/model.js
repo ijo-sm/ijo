@@ -4,7 +4,7 @@ module.exports = class Machine {
 		this.state = "authenticating";
 
 		this.socket.on("data", packet => {
-			app.machineServer.packetHandler.handle(packet, this);
+			ijo.machineServer.packetHandler.handle(packet, this);
 		});
 
 		this.socket.on("end", () => {
@@ -24,7 +24,7 @@ module.exports = class Machine {
 	}
 
 	checkSecret(secret) {
-		return this.secret === Utils.crypto.hash(secret);
+		return this.secret === ijo.utils.crypto.hash(secret);
 	}
 
 	matchState(state) {

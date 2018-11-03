@@ -6,7 +6,7 @@ module.exports = class SessionManager {
 	start() {
 		this.interval = setInterval(function() {
 			this.update();
-		}.bind(this), app.globalConfig.get("siteServer.sessions.updateInterval"));
+		}.bind(this), ijo.globalConfig.get("siteServer.sessions.updateInterval"));
 	}
 
 	stop() {
@@ -39,14 +39,14 @@ module.exports = class SessionManager {
 		let date = new Date().getDate();
 
 		for(let i = 0; i < this.sessions.length; i++) {
-			if(date - this.sessions[i].date > app.globalConfig.get("siteServer.sessions.expireTime")) {
+			if(date - this.sessions[i].date > ijo.globalConfig.get("siteServer.sessions.expireTime")) {
 				this.sessions.splice(i, 1);
 			}
 		}
 	}
 
 	generate() {
-		let id = Utils.generate.uuid();
+		let id = ijo.utils.generate.uuid();
 
 		if(this.sessions.map(item => item.id).includes(id)) {
 			return this.generate();

@@ -4,7 +4,7 @@ const assert = require("assert");
 const {Plugin, PluginEnvironment} = require("./model");
 
 function loadPlugin(path) {
-	let plugin = require(Utils.path.resolve("plugins/" + path + "/plugin.json"));
+	let plugin = require(ijo.utils.path.resolve("plugins/" + path + "/plugin.json"));
 
 	plugin.panel = generateEnvironments(plugin.panel);
 	plugin.machine = generateEnvironments(plugin.machine);
@@ -53,7 +53,7 @@ module.exports = class PluginManager {
 	}
 
 	async load() {
-		let paths = await pify(FileSystem.readdir)(Utils.path.resolve("plugins/"));
+		let paths = await pify(FileSystem.readdir)(ijo.utils.path.resolve("plugins/"));
 
 		paths.forEach(function(path) {
 			let plugin;

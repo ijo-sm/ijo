@@ -6,14 +6,14 @@ module.exports = class MachineManager {
 	}
 	
 	initialize() {
-		app.db.create("machines");
+		ijo.db.create("machines");
 	}
 
 	async create(secret) {
-		let id = Utils.generate.shortid();
-		let hashedSecret = Utils.crypto.hash(secret);
+		let id = ijo.utils.generate.shortid();
+		let hashedSecret = ijo.utils.crypto.hash(secret);
 
-		await app.db.get("machines").push({
+		await ijo.db.get("machines").push({
 			id, secret: hashedSecret
 		}).write();
 
@@ -29,6 +29,6 @@ module.exports = class MachineManager {
 	}
 
 	get(key, value) {
-		return app.db.get("machines").find(machine => machine[key] === value).value();
+		return ijo.db.get("machines").find(machine => machine[key] === value).value();
 	}
 }

@@ -19,7 +19,7 @@ module.exports = class MachineServer {
 
 	start() {
 		this.server = new TCPServer(this.handle.bind(this));
-		this.server.port = app.globalConfig.get("machineServer.port");
+		this.server.port = ijo.globalConfig.get("machineServer.port");
 		
 		return this.server.start();
 	}
@@ -29,6 +29,6 @@ module.exports = class MachineServer {
 	}
 
 	handle(socket) {
-		app.machines.handle(socket);
+		aijop.machines.handle(socket);
 	}
 }

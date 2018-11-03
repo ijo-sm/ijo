@@ -11,9 +11,9 @@ module.exports = class MachinePacketList extends PacketList {
 	}
 
 	async create(packet, machine) {
-		let secret = Utils.crypto.generateSecret();
+		let secret = ijo.utils.crypto.generateSecret();
 
-		machine.load(await app.machines.create(secret));
+		machine.load(await ijo.machines.create(secret));
 		machine.send("machine/created", {id: machine.id, secret: secret});
 	}
 
@@ -21,7 +21,7 @@ module.exports = class MachinePacketList extends PacketList {
 		assert(packet.id, "The value id of the received packet is undefined");
 		assert(packet.secret, "The value secret of the received packet is undefined");
 
-		machine.load(app.machines.get("id", packet.id));
+		machine.load(ijo.machines.get("id", packet.id));
 
 		if(!machine.checkSecret(packet.secret)) {
 			machine.disconnect("The id and secret didn't match");

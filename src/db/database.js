@@ -31,7 +31,7 @@ module.exports = class Database {
 	}
 
 	async load() {
-		this.database = await loadDatabase(Utils.path.resolve("../data/panel.json"));
+		this.database = await loadDatabase(ijo.utils.path.resolve("../data/panel.json"));
 
 		await this.database.defaults(mapToDefaults(this.collections)).write();
 

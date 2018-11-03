@@ -6,25 +6,25 @@ class User {
 	}
 
 	checkPassword(password) {
-		return this.password === Utils.crypto.hash(password);
+		return this.password === ijo.utils.crypto.hash(password);
 	}
 }
 
 module.exports = class UserManager {
 	initialize() {
-		app.db.create("users");
+		ijo.db.create("users");
 	}
 
 	create(username, password) {
-		let id = Utils.generate.shortid();
+		let id = ijo.utils.generate.shortid();
 
-		return app.db.get("users").push({
+		return ijo.db.get("users").push({
 			id, username, password
 		}).write();
 	}
 
 	getUser(key, value) {
-		let user = app.db.get("users").find(user => user[key] === value).value();
+		let user = ijo.db.get("users").find(user => user[key] === value).value();
 
 		if(user === undefined) {
 			return undefined;

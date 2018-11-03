@@ -1,6 +1,5 @@
-global.Utils = require("./src/utils/utils");
-global.app = new (require("./src/app"))();
-app.start()
+global.ijo = new (require("./src/app"))();
+ijo.start()
 .then(() => {
 	console.log("IJO Panel has started.");
 })
@@ -10,8 +9,8 @@ app.start()
     process.exit(1);
 });
 
-Utils.process.onExit(end => {
-    app.stop()
+ijo.utils.process.onExit(end => {
+    ijo.stop()
     .then(() => {
         end();
     });

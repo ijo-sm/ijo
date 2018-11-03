@@ -8,7 +8,7 @@ function asyncFileLoad(name) {
 }
 
 async function createStaticRoute(route, file, type = "text/plain") {
-	let data = await asyncFileLoad(Utils.path.resolve(file));
+	let data = await asyncFileLoad(ijo.utils.path.resolve(file));
 
 	let routeFunction = function(req, res) {
 		res.setHeader("Content-Type", type);
@@ -21,8 +21,8 @@ async function createStaticRoute(route, file, type = "text/plain") {
 module.exports = class DefaultRoutes {
 	async init() {
 		this.templates = {
-			index: app.siteServer.ejs.template(await asyncFileLoad(Utils.path.resolve("res/assets/views/index.ejs"))),
-			login: app.siteServer.ejs.template(await asyncFileLoad(Utils.path.resolve("res/assets/views/login.ejs")))
+			index: ijo.siteServer.ejs.template(await asyncFileLoad(ijo.utils.path.resolve("res/assets/views/index.ejs"))),
+			login: ijo.siteServer.ejs.template(await asyncFileLoad(ijo.utils.path.resolve("res/assets/views/login.ejs")))
 		};
 		
 		let staticRoutes = [
@@ -41,15 +41,15 @@ module.exports = class DefaultRoutes {
 		];
 
 		for(let route of staticRoutes) {
-			app.siteServer.route(await createStaticRoute(route.route, route.file, route.type));
+			ijo.siteServer.route(await createStaticRoute(route.route, route.file, route.type));
 		}
 
 		//Views
-		app.siteServer.route(new Route("/", "GET", this.index.bind(this)));
-		app.siteServer.route(new Route("/login", "GET", this.login.bind(this)));
+		ijo.siteServer.route(new Route("/", "GET", this.index.bind(this)));
+		ijo.siteServer.route(new Route("/login", "GET", this.login.bind(this)));
 
 		//Api
-		app.siteServer.route(new Route("/api/login", "POST", this.apiLogin.bind(this)));
+		ijo.siteServer.route(new Route("/api/login", "POST", this.apiLogin.bind(this)));
 	}
 
 	index(req, res) {
@@ -85,13 +85,13 @@ module.exports = class DefaultRoutes {
 				return jsonResponse.error(400, "The request body could not be parsed.");
 			}
 
-			let user = app.users.getUser("username", body.username);
+			let user = ijo.users.getUser("username", body.username);
 
 			if(user === undefined || !user.checkPassword(body.password)) {
 				return jsonResponse.error(400, "The username and/or password are incorrect .");
 			}
 	
-			res.end(JSON.stringify({code: 200, title: "Succes", userID: req.session.data.userID = user.id}));
+			res.end(JSON.stringify({code: 200, title: "Success", userID: req.session.data.userID = user.id}));
 		});
 	}
 }

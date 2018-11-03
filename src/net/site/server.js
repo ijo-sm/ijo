@@ -31,7 +31,7 @@ function prepareResponse(response, request) {
 
 	response.cookies = new CookieManager();
 	response.cookies.set(
-		app.globalConfig.get("siteServer.sessions.cookie.name"),
+		ijo.globalConfig.get("siteServer.sessions.cookie.name"),
 		request.session.id,
 		{path: "/"}
 	);
@@ -65,7 +65,7 @@ function prepareRequest(request, sessionManager) {
 	request.getBody = getBody(request);
 	request.cookies = parseCookies(request.headers["cookie"]);
 	request.session = sessionManager.get(
-		request.cookies.find(cookie => cookie.key === app.globalConfig.get("siteServer.sessions.cookie.name"))
+		request.cookies.find(cookie => cookie.key === ijo.globalConfig.get("siteServer.sessions.cookie.name"))
 	);
 }
 
@@ -82,7 +82,7 @@ module.exports = class SiteServer {
 		this.sessions.start();
 
 		this.server = new HTTPServer(this.handle.bind(this));
-		this.server.port = app.globalConfig.get("siteServer.port");
+		this.server.port = ijo.globalConfig.get("siteServer.port");
 
 		return this.server.start();
 	}
