@@ -25,7 +25,7 @@ module.exports = class MachineServer {
 	}
 
 	stop() {
-
+		return this.server.stop();
 	}
 
 	handle(socket) {
