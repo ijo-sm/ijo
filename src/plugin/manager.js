@@ -53,7 +53,7 @@ module.exports = class PluginManager {
 	}
 
 	async load() {
-		let paths = await pify(FileSystem.readdir)(ijo.utils.path.resolve("plugins/"));
+		let paths = await NodeUtils.promisify(FileSystem.readdir)(ijo.utils.path.resolve("plugins/"));
 
 		paths.forEach(function(path) {
 			let plugin;

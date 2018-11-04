@@ -1,5 +1,5 @@
 const http = require("http");
-const pify = require("pify");
+const NodeUtils = require("util");
 const AbstractServer = require("./abstract");
 
 module.exports = class HTTPServer extends AbstractServer {
@@ -14,7 +14,7 @@ module.exports = class HTTPServer extends AbstractServer {
 	async start() {
 		super.start();
 
-		await pify(this.server.listen.bind(this.server))(this.port);
+		await NodeUtils.promisify(this.server.listen.bind(this.server))(this.port);
 	}
 
 	stop() {
