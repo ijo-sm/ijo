@@ -1,11 +1,4 @@
-global.include = (path) => {
-    if(path.startsWith("src/")) {
-        return require("./" + path);
-    }
-
-    return require(path);
-}
-
+global.include = require("@ijo-sm/helper-include");
 const Utils = include("@ijo-sm/utils");
 
 let ijo = new (require("./src/app"))();
