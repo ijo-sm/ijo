@@ -1,4 +1,7 @@
-module.exports = class SessionManager {
+const Utils = include("@ijo-sm/utils");
+const globalConfig = include("src/config/global");
+
+class SessionManager {
 	constructor() {
 		this.sessions = [];
 	}
@@ -6,7 +9,7 @@ module.exports = class SessionManager {
 	start() {
 		this.interval = setInterval(function() {
 			this.update();
-		}.bind(this), ijo.globalConfig.get("siteServer.sessions.updateInterval"));
+		}.bind(this), globalConfig.get("siteServer.sessions.updateInterval"));
 	}
 
 	stop() {
@@ -39,14 +42,14 @@ module.exports = class SessionManager {
 		let date = new Date().getDate();
 
 		for(let i = 0; i < this.sessions.length; i++) {
-			if(date - this.sessions[i].date > ijo.globalConfig.get("siteServer.sessions.expireTime")) {
+			if(date - this.sessions[i].date > globalConfig.get("siteServer.sessions.expireTime")) {
 				this.sessions.splice(i, 1);
 			}
 		}
 	}
 
 	generate() {
-		let id = ijo.utils.generate.uuid();
+		let id = Utils.generate.uuid();
 
 		if(this.sessions.map(item => item.id).includes(id)) {
 			return this.generate();
@@ -59,3 +62,5 @@ module.exports = class SessionManager {
 		};
 	}
 }
+
+module.exports = new SessionManager();

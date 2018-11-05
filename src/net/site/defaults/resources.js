@@ -1,24 +1,11 @@
-const NodeUtils = require("util");
-const FileSystem = require("fs");
-const DefaultRoutes = require("./model");
-const Route = require("../route");
+const DefaultRoutes = include("src/net/site/defaults/model");
+const Route = include("src/net/site/route");
+const NodeUtils = include("util");
+const FileSystem = include("fs");
+const Utils = include("@ijo-sm/utils");
+const siteServer = include("src/net/site/server");
 
-function asyncFileLoad(name) {
-	return NodeUtils.promisify(FileSystem.readFile)(name);
-}
-
-async function createStaticRoute(route, file, type = "text/plain") {
-	let data = await asyncFileLoad(ijo.utils.path.resolve(file));
-
-	let routeFunction = function(req, res) {
-		res.setHeader("Content-Type", type);
-		res.end(data);
-	}
-
-	return new Route(route, "GET", routeFunction);
-}
-
-module.exports = class ResourceRoutes extends DefaultRoutes {
+class ResourceRoutes extends DefaultRoutes {
 	async route() {
 		super.route();
 
@@ -38,7 +25,24 @@ module.exports = class ResourceRoutes extends DefaultRoutes {
 		];
 
 		for(let route of staticRoutes) {
-			ijo.siteServer.route(await createStaticRoute(route.route, route.file, route.type));
+			siteServer.route(await this._createStaticRoute(route.route, route.file, route.type));
 		}
 	}
+
+	_asyncFileLoad(name) {
+		return NodeUtils.promisify(FileSystem.readFile)(name);
+	}
+
+	async _createStaticRoute(route, file, type = "text/plain") {
+		let data = await this._asyncFileLoad(Utils.path.resolve(file));
+
+		let routeFunction = function(req, res) {
+			res.setHeader("Content-Type", type);
+			res.end(data);
+		}
+
+		return new Route(route, "GET", routeFunction);
+	}
 }
+
+module.exports = new ResourceRoutes();

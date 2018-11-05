@@ -1,38 +1,9 @@
-
-const Assert = require("assert");
-
-function bestEnvironment(enviroments) {
-	let panelPlatform = ijo.utils.platform.get();
-
-	enviroments.sort(ijo.utils.array.sortByObjectKey("platform"));
-
-	for(let enviroment of enviroments) {
-		if(!ijo.utils.platform.match(enviroment.platform, panelPlatform)) {
-			continue;
-		}
-		
-		return enviroment;
-	}
-}
-
-function parseEnvironments(environment) {
-	if(environment === undefined) {
-		return [];
-	}
-	else if(environment instanceof Array) {
-		environment.map(function(environment) {
-			return new PluginEnvironment(environment);
-		});
-		
-		return environment;
-	}
-
-	return [new PluginEnvironment(environment)];
-}
+const Assert = include("assert");
+const Utils = include("@ijo-sm/utils");
 
 class PluginEnvironment {
 	constructor(object) {
-		this.validate(object);
+		Assert.equal(typeof object, "object", "The argument object must be an object");
 
 		this.platform = object.platform;
 		this.language = object.lang;
@@ -41,41 +12,105 @@ class PluginEnvironment {
 		this.excludes = object.excludes;
 	}
 
-	validate(data) {
-		Assert.equal(typeof data, "object", "The environment is not an object");
-		Assert.equal(typeof data.lang, "string", "There is no language for the environment");
-		Assert.equal(typeof data.index, "string", "There is no index file for the environment");
+	set language(value) {
+		Assert.equal(typeof value, "string", "There variable language must be a string");
+
+		this._language = value;
+	}
+
+	get language() {
+		return this._language;
+	}
+
+	set indexFile(value) {
+		Assert.equal(typeof value, "string", "There variable indexFile must be a string");
+
+		this._indexFile = value;
+	}
+
+	get indexFile() {
+		return this._indexFile;
 	}
 }
 
 module.exports = class Plugin {
-	constructor(path) {
-		let object = require(ijo.utils.path.resolve(`plugins/${path}/plugin.json`));
-
-		this.validate(object);
+	constructor(object) {
+		Assert.equal(typeof object, "object", "The argument object must be an object");
 
 		this.name = object.name;
 		this.description = object.description;
 		this.version = object.version;
 		this.author = object.author;
 		this.license = object.license;
-		this.panel = parseEnvironments(object.panel);
-		this.machine = parseEnvironments(object.machine);
+		this.panel = this._parseEnvironments(object.panel);
+		this.machine = this._parseEnvironments(object.machine);
 	}
 
-	validate(data) {
-		Assert.equal(typeof data, "object", "The config is not an object");
-		Assert.equal(typeof data.name, "string", "There is no name in the config");
-		Assert.equal(typeof data.version, "string", "There is no version in the config");
-	}
-
-	initialize() {
-		let enviroment = bestEnvironment(this.panel);
+	load() {
+		let enviroment = this._findBestEnvironment();
 
 		if(enviroment === undefined) {
-			return console.error(`The plugin ${plugin.name} has no matching environments for the panel`);
+			return console.error(`The plugin ${this.name} has no matching environments for the panel`);
 		}
 
-		let indexFile = require(ijo.utils.path.resolve(`plugins/${path}/${enviroment.indexFile}`));
+		this.loadedIndexFile = require(Utils.path.resolve(`plugins/${this.name}/${enviroment.indexFile}`));
+
+		return this.executeEvent("load");
+	}
+
+	set name(value) {
+		Assert.equal(typeof value, "string", "There variable name must be a string");
+
+		this._name = value;
+	}
+
+	get name() {
+		return this._name;
+	}
+
+	set version(value) {
+		Assert.equal(typeof value, "string", "There variable version must be a string");
+
+		this._version = value;
+	}
+
+	get version() {
+		return this._version;
+	}
+
+	executeEvent(event) {
+		if(typeof this.loadedIndexFile !== "object" || !this.loadedIndexFile[event]) {
+			return;
+		}
+
+		return this.loadedIndexFile[event]();
+	}
+
+	_findBestEnvironment() {
+		let panelPlatform = Utils.platform.get();
+		let sortedEnvironments = this.panel.sort(Utils.array.sortByObjectKey("platform"));
+
+		for(let enviroment of sortedEnvironments) {
+			if(!Utils.platform.match(enviroment.platform, panelPlatform)) {
+				continue;
+			}
+			
+			return enviroment;
+		}
+	}
+
+	_parseEnvironments(environment) {
+		if(environment === undefined) {
+			return [];
+		}
+		else if(environment instanceof Array) {
+			environment.map(function(environment) {
+				return new PluginEnvironment(environment);
+			});
+			
+			return environment;
+		}
+	
+		return [new PluginEnvironment(environment)];
 	}
 }

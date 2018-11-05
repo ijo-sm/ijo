@@ -1,11 +1,13 @@
-const ViewRoutes = require("./defaults/views");
-const ResourceRoutes = require("./defaults/resources");
-const APIRoutes = require("./defaults/api");
+const viewRoutes = include("src/net/site/defaults/views");
+const resourceRoutes = include("src/net/site/defaults/resources");
+const apiRoutes = include("src/net/site/defaults/api");
 
-module.exports = class DefaultRoutes {
+class DefaultRoutes {
 	async init() {
-		await (new ResourceRoutes()).route();
-		await (new ViewRoutes()).route();
-		await (new APIRoutes()).route();
+		await viewRoutes.route();
+		await resourceRoutes.route();
+		await apiRoutes.route();
 	}
 }
+
+module.exports = new DefaultRoutes();

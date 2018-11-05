@@ -1,7 +1,7 @@
-const Path = require("path");
-const ConfigFile = require("@ijo-sm/helper-config");
+const Path = include("path");
+const ConfigFile = include("@ijo-sm/helper-config");
 
-module.exports = class GlobalConfigFile extends ConfigFile {
+class GlobalConfigFile extends ConfigFile {
 	constructor() {
 		let defaultGlobalConfigPath = Path.resolve(__dirname, "../../res/defaults/globalConfig.json");
 		let destGlobalConfigPath = Path.resolve(__dirname, "../../../panel.json");
@@ -9,3 +9,5 @@ module.exports = class GlobalConfigFile extends ConfigFile {
 		super(defaultGlobalConfigPath, destGlobalConfigPath);
 	}
 }
+
+module.exports = new GlobalConfigFile();

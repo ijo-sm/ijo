@@ -1,8 +1,10 @@
-const assert = require("assert");
-const PacketList = require("./model");
-const Packet = require("./../packet");
+const PacketList = include("src/net/machine/packets/model");
+const Packet = include("src/net/machine/packet");
+const Assert = include("assert");
+const Utils = include("@ijo-sm/utils");
+const machineManager = include("src/machine/manager");
 
-module.exports = class MachinePacketList extends PacketList {
+class MachinePacketList extends PacketList {
 	init(handler) {
 		super.init(handler);
 
@@ -11,17 +13,17 @@ module.exports = class MachinePacketList extends PacketList {
 	}
 
 	async create(packet, machine) {
-		let secret = ijo.utils.crypto.generateSecret();
+		let secret = Utils.crypto.generateSecret();
 
-		machine.load(await ijo.machines.create(secret));
+		machine.load(await machineManager.create(secret));
 		machine.send("machine/created", {id: machine.id, secret: secret});
 	}
 
 	auth(packet, machine) {
-		assert(packet.id, "The value id of the received packet is undefined");
-		assert(packet.secret, "The value secret of the received packet is undefined");
+		Assert(packet.id, "The value id of the received packet is undefined");
+		Assert(packet.secret, "The value secret of the received packet is undefined");
 
-		machine.load(ijo.machines.get("id", packet.id));
+		machine.load(machineManager.get("id", packet.id));
 
 		if(!machine.checkSecret(packet.secret)) {
 			machine.disconnect("The id and secret didn't match");
@@ -30,3 +32,5 @@ module.exports = class MachinePacketList extends PacketList {
 		machine.send("machine/authed");
 	}
 }
+
+module.exports = new MachinePacketList();

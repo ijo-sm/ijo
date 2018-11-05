@@ -1,10 +1,13 @@
+const Utils = include("@ijo-sm/utils");
+const machineServer = include("src/net/machine/server");
+
 module.exports = class Machine {
 	constructor(socket) {
 		this.socket = socket;
 		this.state = "authenticating";
 
 		this.socket.on("data", packet => {
-			ijo.machineServer.packetHandler.handle(packet, this);
+			machineServer.packetHandler.handle(packet, this);
 		});
 
 		this.socket.on("end", () => {
@@ -24,7 +27,7 @@ module.exports = class Machine {
 	}
 
 	checkSecret(secret) {
-		return this.secret === ijo.utils.crypto.hash(secret);
+		return this.secret === Utils.crypto.hash(secret);
 	}
 
 	matchState(state) {

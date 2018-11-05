@@ -1,12 +1,12 @@
-const net = require("net");
-const NodeUtils = require("util");
-const AbstractServer = require("./abstract");
+const Net = include("net");
+const NodeUtils = include("util");
+const AbstractServer = include("src/net/server/abstract");
 
 module.exports = class TCPServer extends AbstractServer {
 	constructor(handler) {
 		super();
 		
-		this.server = net.createServer();
+		this.server = Net.createServer();
 		this.server.on("connection", handler);
 		this.port = 71;
 	}

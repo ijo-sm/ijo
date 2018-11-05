@@ -1,23 +1,26 @@
-const NodeUtils = require("util");
-const FileSystem = require("fs");
-const DefaultRoutes = require("./model");
-const Route = require("../route");
+const DefaultRoutes = include("src/net/site/defaults/model");
+const Route = include("src/net/site/route");
+const NodeUtils = include("util");
+const FileSystem = include("fs");
+const Utils = include("@ijo-sm/utils");
+const siteServer = include("src/net/site/server");
+const ejs = include("src/net/site/ejs");
 
-function asyncFileLoad(name) {
-	return NodeUtils.promisify(FileSystem.readFile)(name);
-}
-
-module.exports = class ViewRoutes extends DefaultRoutes {
+class ViewRoutes extends DefaultRoutes {
 	async route() {
 		super.route();
 
 		this.templates = {
-			index: ijo.siteServer.ejs.template(await asyncFileLoad(ijo.utils.path.resolve("res/assets/views/index.ejs"))),
-			login: ijo.siteServer.ejs.template(await asyncFileLoad(ijo.utils.path.resolve("res/assets/views/login.ejs")))
+			index: ejs.template(await this._asyncFileLoad(Utils.path.resolve("res/assets/views/index.ejs"))),
+			login: ejs.template(await this._asyncFileLoad(Utils.path.resolve("res/assets/views/login.ejs")))
 		};
 
-		ijo.siteServer.route(new Route("/", "GET", this.index.bind(this)));
-		ijo.siteServer.route(new Route("/login", "GET", this.login.bind(this)));
+		siteServer.route(new Route("/", "GET", this.index.bind(this)));
+		siteServer.route(new Route("/login", "GET", this.login.bind(this)));
+	}
+
+	_asyncFileLoad(name) {
+		return NodeUtils.promisify(FileSystem.readFile)(name);
 	}
 
 	index(req, res) {
@@ -37,3 +40,5 @@ module.exports = class ViewRoutes extends DefaultRoutes {
 		res.end(this.templates["login"].render({}));
 	}
 }
+
+module.exports = new ViewRoutes();

@@ -1,4 +1,14 @@
-global.ijo = new (require("./src/app"))();
+global.include = (path) => {
+    if(path.startsWith("src/")) {
+        return require("./" + path);
+    }
+
+    return require(path);
+}
+
+const Utils = include("@ijo-sm/utils");
+
+let ijo = new (require("./src/app"))();
 ijo.start()
 .then(() => {
 	console.log("IJO Panel has started.");
@@ -9,7 +19,7 @@ ijo.start()
     process.exit(1);
 });
 
-ijo.utils.process.onExit(end => {
+Utils.process.onExit(end => {
     ijo.stop()
     .then(() => {
         end();

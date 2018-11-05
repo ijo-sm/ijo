@@ -1,12 +1,14 @@
-const DefaultRoutes = require("./model");
-const Route = require("../route");
-const UserAPI = require("./api/user");
+const DefaultRoutes = include("src/net/site/defaults/model");
+const Route = include("src/net/site/route");
+const userAPI = include("src/net/site/defaults/api/user");
+const siteServer = include("src/net/site/server");
 
-module.exports = class APIRoutes extends DefaultRoutes {
+class APIRoutes extends DefaultRoutes {
 	async route() {
 		super.route();
 
-		let userAPI = new UserAPI();
-		ijo.siteServer.route(new Route("/api/login", "POST", userAPI.login));
+		siteServer.route(new Route("/api/login", "POST", userAPI.login));
 	}
 }
+
+module.exports = new APIRoutes();

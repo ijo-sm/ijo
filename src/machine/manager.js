@@ -1,26 +1,28 @@
-const Machine = require("./model");
+const Machine = include("src/machine/model");
+const Utils = include("@ijo-sm/utils");
+const database = include("src/database/database");
 
-module.exports = class MachineManager {
+class MachineManager {
 	constructor() {
 		this.connectedMachines = [];
 	}
 	
 	initialize() {
-		ijo.db.create("machines");
+		database.create("machines");
 	}
 
 	async create(secret) {
-		let id = ijo.utils.generate.shortid();
-		let hashedSecret = ijo.utils.crypto.hash(secret);
+		let id = Utils.generate.shortid();
+		let hashedSecret = Utils.crypto.hash(secret);
 
-		await ijo.db.get("machines").push({
+		await database.get("machines").push({
 			id, secret: hashedSecret
 		}).write();
 
 		return this.get("id", id);
 	}
 
-	handle(socket) {
+	handleConnection(socket) {
 		this.connectedMachines.push(new Machine(socket));
 	}
 
@@ -29,6 +31,8 @@ module.exports = class MachineManager {
 	}
 
 	get(key, value) {
-		return ijo.db.get("machines").find(machine => machine[key] === value).value();
+		return database.get("machines").find(machine => machine[key] === value).value();
 	}
 }
+
+module.exports = new MachineManager();

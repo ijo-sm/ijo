@@ -1,7 +1,7 @@
-const PacketList = require("./model");
-const Packet = require("./../packet");
+const PacketList = include("src/net/machine/packets/model");
+const Packet = include("src/net/machine/packet");
 
-module.exports = class UserPacketList extends PacketList {
+class UserPacketList extends PacketList {
 	init(handler) {
 		super.init(handler);
 
@@ -12,3 +12,5 @@ module.exports = class UserPacketList extends PacketList {
 		
 	}
 }
+
+module.exports =  new UserPacketList();

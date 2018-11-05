@@ -1,6 +1,7 @@
-const JSONResponse = require("../../json");
+const JSONResponse = include("src/net/site/json");
+const userManager = include("src/user/manager");
 
-module.exports = class UserAPI {
+class UserAPI {
 	login(req, res) {
 		let jsonResponse = new JSONResponse(req, res);
 
@@ -17,7 +18,7 @@ module.exports = class UserAPI {
 				return jsonResponse.error(400, "The request body could not be parsed.");
 			}
 
-			let user = ijo.users.getUser("username", body.username);
+			let user = userManager.getUser("username", body.username);
 
 			if(user === undefined || !user.checkPassword(body.password)) {
 				return jsonResponse.error(400, "The username and/or password are incorrect.");
@@ -27,3 +28,5 @@ module.exports = class UserAPI {
 		});
 	}
 }
+
+module.exports = new UserAPI();

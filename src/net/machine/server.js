@@ -1,16 +1,15 @@
-const TCPServer = require("./../server/tcp");
-const PacketHandler = require("./handler");
-const UserPackets = require("./packets/user");
-const MachinePackets = require("./packets/machine");
+const TCPServer = include("src/net/server/tcp");
+const PacketHandler = include("src/net/machine/handler");
+const userPackets = include("src/net/machine/packets/user");
+const machinePackets = include("src/net/machine/packets/machine");
+const globalConfig = include("src/config/global");
+const machineManager = include("src/machine/manager");
 
-module.exports = class MachineServer {
+class MachineServer {
 	constructor() {
 		this.packetHandler = new PacketHandler();
 
-		let packetLists = [
-			new UserPackets(),
-			new MachinePackets()
-		];
+		let packetLists = [userPackets, machinePackets];
 		
 		for(let packetList of packetLists) {
 			packetList.init(this.packetHandler);
@@ -19,7 +18,7 @@ module.exports = class MachineServer {
 
 	start() {
 		this.server = new TCPServer(this.handle.bind(this));
-		this.server.port = ijo.globalConfig.get("machineServer.port");
+		this.server.port = globalConfig.get("machineServer.port");
 		
 		return this.server.start();
 	}
@@ -29,6 +28,8 @@ module.exports = class MachineServer {
 	}
 
 	handle(socket) {
-		ijo.machines.handle(socket);
+		machineManager.handleConnection(socket);
 	}
 }
+
+module.exports = new MachineServer();

@@ -1,12 +1,3 @@
-function parsePacket(packet) {
-	try {
-		return JSON.parse(packet.toString());
-	}
-	catch(e) {
-		throw e;
-	}
-}
-
 module.exports = class PacketHandler {
 	constructor() {
 		this.packets = new Map();
@@ -25,7 +16,7 @@ module.exports = class PacketHandler {
 	}
 
 	async handle(data, machine) {
-		let parsedPacket = parsePacket(data);
+		let parsedPacket = this._parsePacket(data);
 
 		if(!this.hasPacket(parsedPacket)) {
 			return;
@@ -38,5 +29,14 @@ module.exports = class PacketHandler {
 		}
 		
 		await packet.handle(parsedPacket, machine);
+	}
+
+	_parsePacket(packet) {
+		try {
+			return JSON.parse(packet.toString());
+		}
+		catch(e) {
+			throw e;
+		}
 	}
 }

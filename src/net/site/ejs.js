@@ -11,9 +11,9 @@ class EJSTemplate {
 	}
 }
 
-module.exports = class EJS {
+class EJS {
 	constructor() {
-		this.ejs = require("ejs");
+		this.ejs = include("ejs");
 		this.includes = {};
 
 		this.ejs.originalFileLoader = this.ejs.fileLoader;
@@ -51,3 +51,5 @@ module.exports = class EJS {
 		delete this.includes[name];
 	}
 }
+
+module.exports = new EJS();

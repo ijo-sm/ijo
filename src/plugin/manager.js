@@ -1,21 +1,21 @@
-const FileSystem = require("fs");
-const NodeUtils = require("util");
-const Plugin = require("./model");
+const FileSystem = include("fs");
+const NodeUtils = include("util");
+const Plugin = include("src/plugin/model");
+const Utils = include("@ijo-sm/utils");
 
-
-module.exports = class PluginManager {
+class PluginManager {
 	constructor() {
 		this.plugins = new Map();
 	}
 
 	async load() {
-		let paths = await NodeUtils.promisify(FileSystem.readdir)(ijo.utils.path.resolve("plugins/"));
+		let paths = await NodeUtils.promisify(FileSystem.readdir)(Utils.path.resolve("plugins/"));
 
-		paths.forEach(function(path) {
-			let plugin 
+		paths.forEach(async (path) => {
+			let plugin;
 
 			try {
-				plugin = new Plugin(path);
+				plugin = new Plugin(require(Utils.path.resolve(`plugins/${path}/plugin.json`)));
 			} catch(e) {
 				return console.error(`The plugin at /panel/plugins/${path} could not be loaded: ${e.message}`);
 			}
@@ -24,9 +24,29 @@ module.exports = class PluginManager {
 				return console.error(`The plugin ${plugin.name} has already been loaded`);
 			}
 
-			plugin.initialize();
+			await plugin.load();
 
 			this.plugins.set(plugin.name, plugin);
-		}.bind(this));
+		});
+	}
+
+	async enable() {
+		this.plugins.forEach(plugin => {
+			plugin.executeEvent("enable");
+		});
+	}
+
+	async disable() {
+		this.plugins.forEach(plugin => {
+			plugin.executeEvent("disable");
+		});
+	}
+
+	async unload() {
+		this.plugins.forEach(plugin => {
+			plugin.executeEvent("unload");
+		});
 	}
 }
+
+module.exports = new PluginManager();
