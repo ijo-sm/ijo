@@ -1,17 +1,24 @@
-# IJO
-This is the IJO, a lightweight and user-friendly server manager. IJO stands for green, the symbol of being environmentally friendly.
+<p align="center">
+	<img height="100" width="250" src="https://i.imgur.com/TJ60yFz.png">
+	<p align="center"><i>This is the IJO, a lightweight and user-friendly server manager.</i></p>
+</p>
 
-All websites need to be hosted. cPanel is currently the most popular web host manager in the world, but it only works if you're running centos or redhat, which are both  based on linux. This makes hosting servers less accessible to the everyday user. To fix this, IJO is available on all major platforms.<br>
-The alternatives to cPanel often come with a lot of modules you really don't need. For example, when you're just installing an Apache Web Server to host your server it'll also install a SMTP server, FTP server, DNS server and other modules. IJO gives you a clutter-free and modular option to host your websites.<br>
-Another issue with many webhosting solutions is that they're very user-unfriendly because of their complicated UI's. With IJO we're focussing on creating a user-friendly UI for both hosting companies and their customers and self-hosting hobbyists.
+All websites need to be hosted. cPanel is currently the most popular web host manager there is, but it only works if you're running centos or redhat, which are both linux-based. This makes hosting servers less accessible to the everyday user. To fix this, **IJO is available on all major platforms.**<br>
+The alternatives to cPanel often come with a lot of modules you really don't need. For example, when you're just installing an Apache Web Server to host your server it'll also install a SMTP server, FTP server, DNS server and other modules. **IJO gives you a clutter-free and modular option to host your websites.**<br>
+Another issue with many webhosting solutions is that they're very user-unfriendly because of their complicated UI's. **With IJO we're focussing on creating a user-friendly UI for both hosting companies and their customers and self-hosting hobbyists.**
 
 ## Testing
-You can test all repositories using the @ijo-sm/ijo-test package from NPM. When in the repository you want to test, use the following commands:
+You can test all repositories, like ijo and ijo-machine, using the [@ijo-sm/ijo-test](https://www.npmjs.com/package/@ijo-sm/ijo-test) package from NPM. Before testing make sure that your console's working directory is the repository you want to test. Install and run ijo-test with the following commands:
 ```bash
+# Installs the latest version of @ijo-sm/ijo-test
 $ npm i -g @ijo-sm/ijo-test
+# Runs the test command
 $ ijo-test
 ```
+For more information about testing click [here](https://github.com/ijo-sm/ijo-test).
+
+## Contributers
+IJO is being created by [JortvD]() and [AG]().
 
 ## Join us on Slack!
-[![Slack](https://p9.zdassets.com/hc/theme_assets/138842/200037786/logo.png)](https://ijo-sm.slack.com)<br>
-For creating a new account: [Click Here](https://join.slack.com/t/ijo-sm/shared_invite/enQtNDE2MTc0MjIxNTU4LWI2MzlkODM2MThlMDY5YWU3MjBjMzRiNDVkYjM1NjgwNWQyZDA4ZDViNGVhM2Y2NmUzNjQ2OTU5NTRhMzExNmI)
+[Direct link](https://ijo-sm.slack.com) | [New user](https://join.slack.com/t/ijo-sm/shared_invite/enQtNDE2MTc0MjIxNTU4LWI2MzlkODM2MThlMDY5YWU3MjBjMzRiNDVkYjM1NjgwNWQyZDA4ZDViNGVhM2Y2NmUzNjQ2OTU5NTRhMzExNmI)<br>
