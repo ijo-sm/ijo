@@ -1,5 +1,5 @@
 {
-	"server": {
+	"siteServer": {
 		"secure": false,
 		"port": 80,
 		"sessions": {
@@ -9,5 +9,8 @@
 				"name": "_session"
 			}
 		}
+	},
+	"machineServer": {
+		"port": 4944
 	}
 }

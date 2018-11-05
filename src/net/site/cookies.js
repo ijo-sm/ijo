@@ -42,7 +42,7 @@ module.exports = class CookieManager {
 	}
 
 	set(name, value, options = {}) {
-		return this.map.set(name, new Cookie(name, value, options))
+		return this.map.set(name, new Cookie(name, value, options));
 	}
 
 	get(name) {

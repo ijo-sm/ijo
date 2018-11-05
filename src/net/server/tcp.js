@@ -1,20 +1,20 @@
-const net = require("net");
-const pify = require("pify");
-const AbstractServer = require("./abstract");
+const Net = include("net");
+const NodeUtils = include("util");
+const AbstractServer = include("src/net/server/abstract");
 
 module.exports = class TCPServer extends AbstractServer {
 	constructor(handler) {
 		super();
 		
-		this.server = net.createServer();
+		this.server = Net.createServer();
 		this.server.on("connection", handler);
-		this.port = 80;
+		this.port = 71;
 	}
 
 	async start() {
 		super.start();
 
-		await pify(this.server.listen.bind(this.server))(this.port);
+		await NodeUtils.promisify(this.server.listen.bind(this.server))(this.port);
 	}
 
 	stop() {
