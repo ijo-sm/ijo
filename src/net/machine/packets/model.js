@@ -1,3 +1,5 @@
 module.exports = class PacketList {
-	init(handler) {}
+	init(handler) {
+		this.handler = handler;
+	}
 }

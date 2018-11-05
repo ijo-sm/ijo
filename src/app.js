@@ -14,7 +14,7 @@ module.exports = class Application {
 
 	async start() {
 		userManager.initialize();
-		machineManager.initialize();
+		machineManager.initialize(machineServer);
 
 		await database.load();
 		await pluginManager.load();

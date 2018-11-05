@@ -7,7 +7,9 @@ class MachineManager {
 		this.connectedMachines = [];
 	}
 	
-	initialize() {
+	initialize(machineServer) {
+		this.machineServer = machineServer;
+		
 		database.create("machines");
 	}
 
@@ -23,7 +25,7 @@ class MachineManager {
 	}
 
 	handleConnection(socket) {
-		this.connectedMachines.push(new Machine(socket));
+		this.connectedMachines.push(new Machine(this.machineServer, socket));
 	}
 
 	connected(key, value) {

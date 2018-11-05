@@ -8,8 +8,8 @@ class MachinePacketList extends PacketList {
 	init(handler) {
 		super.init(handler);
 
-		handler.addPacket(new Packet("machine/create", "authenticating", this.create));
-		handler.addPacket(new Packet("machine/auth", "authenticating", this.auth));
+		this.handler.addPacket(new Packet("machine/create", "authenticating", this.create));
+		this.handler.addPacket(new Packet("machine/auth", "authenticating", this.auth));
 	}
 
 	async create(packet, machine) {

@@ -1,8 +1,7 @@
 const Utils = include("@ijo-sm/utils");
-const machineServer = include("src/net/machine/server");
 
 module.exports = class Machine {
-	constructor(socket) {
+	constructor(machineServer, socket) {
 		this.socket = socket;
 		this.state = "authenticating";
 
