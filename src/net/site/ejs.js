@@ -17,7 +17,6 @@ class EJS {
 		this.includes = {};
 
 		this.ejs.originalFileLoader = this.ejs.fileLoader;
-
 		this.ejs.fileLoader = function(name) {
 			if(this.includes[name]) {
 				return this.includes[name];

@@ -3,10 +3,10 @@ const Utils = include("@ijo-sm/utils");
 
 class GlobalConfigFile extends ConfigFile {
 	constructor() {
-		let defaultGlobalConfigPath = Utils.path.resolve("res/defaults/globalConfig.json");
-		let destGlobalConfigPath = Utils.path.resolve("../panel.json");
+		let defaultPath = Utils.path.resolve("res/defaults/globalConfig.json");
+		let destPath = Utils.path.resolve("../panel.json");
 
-		super(defaultGlobalConfigPath, destGlobalConfigPath);
+		super(defaultPath, destPath);
 	}
 }
 

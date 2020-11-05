@@ -8,6 +8,7 @@ class APIRoutes extends DefaultRoutes {
 		super.route();
 
 		siteServer.route(new Route("/api/login", "POST", userAPI.login));
+		siteServer.route(new Route("/api/logout", "POST", userAPI.logout));
 	}
 }
 

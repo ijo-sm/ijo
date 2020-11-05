@@ -46,20 +46,20 @@ module.exports = class Plugin {
 		this.machine = this._parseEnvironments(object.machine);
 	}
 
-	load() {
+	loadIndexFile() {
 		let enviroment = this._findBestEnvironment();
 
 		if(enviroment === undefined) {
 			return console.error(`The plugin ${this.name} has no matching environments for the panel`);
 		}
 
-		this.loadedIndexFile = require(Utils.path.resolve(`plugins/${this.name}/${enviroment.indexFile}`));
+		let indexFilePath = Utils.path.resolve(`plugins/${this.name}/${enviroment.indexFile}`);
 
-		return this.executeEvent("load");
+		this.loadedIndexFile = require(indexFilePath);
 	}
 
 	set name(value) {
-		Assert.equal(typeof value, "string", "There variable name must be a string");
+		Assert.equal(typeof value, "string", "The variable name must be a string");
 
 		this._name = value;
 	}
@@ -69,7 +69,7 @@ module.exports = class Plugin {
 	}
 
 	set version(value) {
-		Assert.equal(typeof value, "string", "There variable version must be a string");
+		Assert.equal(typeof value, "string", "The variable version must be a string");
 
 		this._version = value;
 	}
@@ -79,11 +79,23 @@ module.exports = class Plugin {
 	}
 
 	executeEvent(event) {
-		if(typeof this.loadedIndexFile !== "object" || !this.loadedIndexFile[event]) {
+		if(!this._isEventCallable(event)) {
 			return;
 		}
 
-		return this.loadedIndexFile[event]();
+		let args = [];
+
+		switch(event) {
+			case "enable":
+				args.push("test");
+				break;
+		}
+
+		return this.loadedIndexFile[event](...args);
+	}
+
+	_isEventCallable(event) {
+		return typeof this.loadedIndexFile === "object" && typeof this.loadedIndexFile[event] === "function";
 	}
 
 	_findBestEnvironment() {

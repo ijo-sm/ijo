@@ -1,4 +1,5 @@
 global.include = require("@ijo-sm/helper-include");
+
 const Utils = include("@ijo-sm/utils");
 
 let ijo = new (include("src/app"))();
