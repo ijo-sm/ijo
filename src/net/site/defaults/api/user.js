@@ -27,6 +27,18 @@ class UserAPI {
 			res.end(JSON.stringify({code: 200, title: "Success", userID: req.session.data.userID = user.id}));
 		});
 	}
+
+	logout(req, res) {
+		let jsonResponse = new JSONResponse(req, res);
+
+		if(!req.session.data.userID) {
+			return jsonResponse.error(400, "User is not logged in yet.");
+		}
+
+		req.session.data.userID = undefined;
+
+		res.end(JSON.stringify({code: 200, title: "Success"}));
+	}
 }
 
 module.exports = new UserAPI();

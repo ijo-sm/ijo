@@ -11,40 +11,51 @@ class PluginManager {
 	async load() {
 		let paths = await NodeUtils.promisify(FileSystem.readdir)(Utils.path.resolve("plugins/"));
 
-		paths.forEach(async (path) => {
-			let plugin;
-
-			try {
-				plugin = new Plugin(require(Utils.path.resolve(`plugins/${path}/plugin.json`)));
-			} catch(e) {
-				return console.error(`The plugin at /panel/plugins/${path} could not be loaded: ${e.message}`);
-			}
-			
-			if(this.plugins.has(plugin.name)) {
-				return console.error(`The plugin ${plugin.name} has already been loaded`);
-			}
-
-			await plugin.load();
-
-			this.plugins.set(plugin.name, plugin);
-		});
+		paths.forEach(this._loadPlugin.bind(this));
 	}
 
-	async enable() {
-		this.plugins.forEach(plugin => {
-			plugin.executeEvent("enable");
-		});
+	async _loadPlugin(path) {
+		let plugin;
+
+		try {
+			plugin = new Plugin(require(Utils.path.resolve(`plugins/${path}/plugin.json`)));
+		} catch(e) {
+			return console.error(`The plugin at /panel/plugins/${path} could not be loaded: ${e.message}`);
+		}
+		
+		if(this.plugins.has(plugin.name)) {
+			return console.error(`The plugin ${plugin.name} has already been loaded`);
+		}
+
+		await plugin.loadIndexFile();
+		await plugin.executeEvent("load");
+
+		this.plugins.set(plugin.name, plugin);
 	}
 
-	async disable() {
-		this.plugins.forEach(plugin => {
-			plugin.executeEvent("disable");
-		});
+	enable(name) {
+		return this._executeEvent(name, "enable");
 	}
 
-	async unload() {
-		this.plugins.forEach(plugin => {
-			plugin.executeEvent("unload");
+	disable(name) {
+		return this._executeEvent(name, "disable");
+	}
+
+	unload(name) {
+		return this._executeEvent(name, "unload");
+	}
+
+	_executeEvent(name, event) {
+		if(typeof name !== "string") {
+			return this._executeGlobalEvent(event);
+		}
+
+		return this.plugins.get(name).executeEvent(event);
+	}
+
+	async _executeGlobalEvent(event) {
+		this.plugins.forEach(async plugin => {
+			await plugin.executeEvent(event);
 		});
 	}
 }
