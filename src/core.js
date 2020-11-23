@@ -7,9 +7,11 @@ const ConfigFile = require("./utils/configFile");
 class Core {
 	constructor() {
 		this.api = new Api();
-		this.configs = {
-			main: new ConfigFile(path.join(this.root, "./config.json"), {defaults: {api: {port: 8080}, database: {type: "json", path: "./data/"}}})
-		};
+		this.config = new ConfigFile(path.join(this.root, "./config.json"), {
+			defaults: {api: {port: 8080}}, 
+			database: {type: "json", path: "./data/"}, 
+			plugins: {}
+		});
 		this.databaseTypes = new DatabaseTypes();
 		this.databaseTypes.register("json", JSONDatabase);
 	}
@@ -20,14 +22,14 @@ class Core {
 	}
 
 	async initialize() {
-		await this.configs.main.load();
+		await this.config.load();
 		this.api.initialize();
-		this.database = this.databaseTypes.getDatabase(this.configs.main.get("database"));
+		this.database = this.databaseTypes.getDatabase(this.config.get("database"));
 	}
 
 	async start() {
 		await this.database.connect();
-		await this.api.startServer({port: this.configs.main.get("api").port});
+		await this.api.startServer({port: this.config.get("api").port});
 	}
 
 	async stop() {
