@@ -1,5 +1,5 @@
 const path = require("path");
-const JSONDatabase = require("./database/json");
+const JSONDatabase = require("./database/jsonDatabase");
 const DatabaseTypes = require("./database/types");
 const Api = require("./net/api");
 const ConfigFile = require("./utils/configFile");
@@ -22,19 +22,7 @@ class Core {
 	async initialize() {
 		await this.configs.main.load();
 		this.api.initialize();
-		this.database = this.getDatabase();
-	}
-
-	getDatabase() {
-		const databaseConfig = this.configs.main.get("database");
-
-		if(databaseConfig === undefined) throw Error("There is no configuration for the database.");
-
-		const databaseClass = this.databaseTypes.getDatabaseClass(databaseConfig.type);
-
-		if(databaseClass === undefined) throw Error("Database type specified in config doesn't exist.");
-
-		return new (databaseClass)(databaseConfig, {root: this.root});
+		this.database = this.databaseTypes.getDatabase(this.configs.main.get("database"));
 	}
 
 	async start() {
