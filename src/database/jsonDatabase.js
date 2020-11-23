@@ -3,6 +3,7 @@ const fs = require("fs");
 const ConfigFile = require("../utils/configFile");
 const Collection = require("./collection");
 const Database = require("./database");
+const FSUtils = require("../utils/fsUtils");
 
 class JSONCollection extends Collection {
 	constructor(name, modelClass, path) {
@@ -127,29 +128,11 @@ class JSONDatabase extends Database {
 	}
 
 	async connect() {
-		if(fs.existsSync() && await this.isFolder().catch(err => {throw err})) {
+		if(fs.existsSync(this.path) && await FSUtils.isFolder(this.path).catch(err => {throw err})) {
 			return;
 		}
 
-		await this.createFolder().catch(err => {throw err});
-	}
-
-	isFolder() {
-		return new Promise((resolve, reject) => {
-			fs.stat(this.path, (err, stats) => {
-				if(err) reject(err);
-				else resolve(stats.isDirectory());
-			});
-		});
-	}
-
-	createFolder() {
-		return new Promise((resolve, reject) => {
-			fs.mkdir(this.path, err => {
-				if(err) reject(err);
-				else resolve();
-			});
-		});
+		await FSUtils.createFolder(this.path).catch(err => {throw err});
 	}
 
 	async close() {

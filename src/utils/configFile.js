@@ -1,4 +1,5 @@
 const fs = require("fs");
+const FSUtils = require("./fsUtils");
 
 class ConfigFile {
 	constructor(path, {defaults = {}} = {}) {
@@ -13,7 +14,7 @@ class ConfigFile {
 	}
 
 	async load() {
-		if(!this.exists() || !(await this.isFile().catch(err => {throw err}))) {
+		if(!FSUtils.exists(this.path) || !(await FSUtils.isFile(this.path).catch(err => {throw err}))) {
 			if(!this.options.defaults) throw Error("File not found.");
 
 			this.data = this.options.defaults;
@@ -40,7 +41,7 @@ class ConfigFile {
 	}
 
 	loadSync() {
-		if(!this.exists() || !this.isFileSync()) {
+		if(!FSUtils.exists(this.path) || !this.isFileSync()) {
 			if(!this.options.defaults) throw Error("File not found.");
 
 			this.data = this.options.defaults;
@@ -62,19 +63,6 @@ class ConfigFile {
 
 	isFileSync() {
 		return fs.statSync(this.path).isFile();
-	}
-
-	isFile() {
-		return new Promise((resolve, reject) => {
-			fs.stat(this.path, (err, stats) => {
-				if(err) reject(err);
-				else resolve(stats.isFile());
-			});
-		});
-	}
-
-	exists() {
-		return fs.existsSync(this.path);
 	}
 
 	save() {
