@@ -5,6 +5,7 @@ class ConfigFile {
 		this.path = path;
 		this.data = undefined;
 		this.options = {defaults};
+		this.loaded = false;
 	}
 
 	get(key) {
@@ -16,6 +17,7 @@ class ConfigFile {
 			if(!this.options.defaults) throw Error("File not found.");
 
 			this.data = this.options.defaults;
+			this.loaded = true;
 			await this.save().catch(err => {throw err});
 
 			return;
@@ -34,6 +36,7 @@ class ConfigFile {
 				}
 			});
 		}).catch(err => {throw err});
+		this.loaded = true;
 	}
 
 	loadSync() {
@@ -41,6 +44,7 @@ class ConfigFile {
 			if(!this.options.defaults) throw Error("File not found.");
 
 			this.data = this.options.defaults;
+			this.loaded = true;
 			this.saveSync();
 
 			return;
@@ -49,6 +53,7 @@ class ConfigFile {
 		try {
 			const data = fs.readFileSync(this.path);
 			this.data = JSON.parse(data.toString());
+			this.loaded = true;
 		}
 		catch(err) {
 			throw err;
