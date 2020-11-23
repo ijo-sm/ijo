@@ -2,18 +2,20 @@ const path = require("path");
 const JSONDatabase = require("./database/jsonDatabase");
 const DatabaseTypes = require("./database/types");
 const Api = require("./net/api");
+const PluginManager = require("./plugin/pluginManager");
 const ConfigFile = require("./utils/configFile");
 
 class Core {
 	constructor() {
 		this.api = new Api();
-		this.config = new ConfigFile(path.join(this.root, "./config.json"), {
-			defaults: {api: {port: 8080}}, 
-			database: {type: "json", path: "./data/"}, 
-			plugins: {}
-		});
+		this.config = new ConfigFile(path.join(this.root, "./config.json"), {defaults: {
+			api: {port: 8080},
+			database: {type: "json", path: "./data/"},
+			plugins: {path: "./plugins/"}
+		}});
 		this.databaseTypes = new DatabaseTypes();
 		this.databaseTypes.register("json", JSONDatabase);
+		this.pluginManager = new PluginManager();
 	}
 
 	// TODO: Root will be inaccurate if ijo is not started using npm start.
@@ -24,7 +26,8 @@ class Core {
 	async initialize() {
 		await this.config.load();
 		this.api.initialize();
-		this.database = this.databaseTypes.getDatabase(this.config.get("database"));
+		await this.pluginManager.load(this.config.get("plugins"), {root: this.root});
+		this.database = this.databaseTypes.getDatabase(this.config.get("database"), {root: this.root});
 	}
 
 	async start() {
