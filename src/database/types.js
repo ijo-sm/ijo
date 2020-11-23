@@ -25,14 +25,14 @@ class DatabaseTypes {
 		return type.databaseClass;
 	}
 
-	getDatabase(databaseConfig) {
+	getDatabase(databaseConfig, {root} = {}) {
 		if(databaseConfig === undefined) throw Error("There is no configuration for the database.");
 
 		const databaseClass = this.getDatabaseClass(databaseConfig.type);
 
 		if(databaseClass === undefined) throw Error("Database type specified in config doesn't exist.");
 
-		return new (databaseClass)(databaseConfig, {root: this.root});
+		return new (databaseClass)(databaseConfig, {root});
 	}
 }
 
