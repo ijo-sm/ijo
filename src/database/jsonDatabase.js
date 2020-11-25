@@ -104,6 +104,10 @@ class JSONCollection extends Collection {
 	}
 }
 
+/**
+ * This is the JSON implementation for databasing. As this implementation is relatively small, since it relies on the 
+ * ConfigFile class, it is included by default.
+ */
 class JSONDatabase extends Database {
 	constructor({path} = {}, {root} = {}) {
 		super();
@@ -127,7 +131,7 @@ class JSONDatabase extends Database {
 		return this.collections.find(collection => collection.name === name);
 	}
 
-	async connect() {
+	async load() {
 		if(fs.existsSync(this.path) && await FSUtils.isFolder(this.path).catch(err => {throw err})) {
 			return;
 		}

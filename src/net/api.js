@@ -7,12 +7,24 @@ class Api {
 		this.stack = [];
 	}
 
+	/**
+	 * Registers a new path and matching method to the api. This path will then be checked when handling an incoming 
+	 * request. if the request matches this path and method it will call the method with the request, response and path 
+	 * data as arguments. The path data contains information about the url of the incoming request. The path may add
+	 * arguments using ":NAME", which wille be included in the path data object. For example: the request 
+	 * "/user/123/rename" will be matched to the path "/user/:id/rename" and the path data will be: {id: 123}. When an
+	 * asterisk is added to the end of the specified path the handler will match all requests that begin with the text
+	 * before the asterisk. By default the method matches all incoming methods, specified as "*".
+	 */
 	register(path, method = "*", callback) {
 		this.stack.push({
 			path, method, callback
 		});
 	}
 
+	/**
+	 * Unregisters the specified path.
+	 */
 	unregister(path) {
 		const handlerIndex = this.stack.findIndex(handler => handler.path === path);
 
@@ -21,6 +33,9 @@ class Api {
 		this.stack.splice(handlerIndex);
 	}
 
+	/**
+	 * Initializes the api by creating the server and starting error handling.
+	 */
 	initialize() {
 		this.server = http.createServer((req, res) => {
 			this.handle(req, res).catch(err => this.handleError(err))
@@ -28,6 +43,10 @@ class Api {
 		this.server.on("error", err => this.handleError(err));
 	}
 
+	/**
+	 * Handles the incoming request. This function may only be used internally as it is called by the server when there 
+	 * is a new incoming request.
+	 */
 	async handle(req, res) {
 		const url = new URL(req.url, "http://localhost/");
 
@@ -45,6 +64,11 @@ class Api {
 		res.end();
 	}
 
+	/**
+	 * Parses the given requested path using the specified template, also retreiving the arguments included in the 
+	 * requested path. If the template does not match the given path it will return undefined. For more information 
+	 * about the parsing see .register().
+	 */
 	parsePath(template, path) {
 		const templateParts = template.split("/");
 		const pathParts = path.split("/");
@@ -67,10 +91,18 @@ class Api {
 		return data;
 	}
 
+	/**
+	 * Handles the specified error by throwing it.
+	 * TODO: Less damaging error handling?
+	 */
 	handleError(err) {
 		throw err;
 	}
 
+	/**
+	 * Starts the api server created after initialization on the specified port. This is done async and this function 
+	 * returns a Promise.
+	 */
 	startServer({port} = {}) {
 		const options = {
 			port
@@ -79,6 +111,9 @@ class Api {
 		return util.promisify(this.server.listen.bind(this.server))(options).catch(err => this.handleError(err));
 	}
 
+	/**
+	 * Closes the api server. This is done async and this function returns a Promise.
+	 */
 	closeServer() {
 		return util.promisify(this.server.close.bind(this.server))().catch(err => this.handleError(err));
 	}

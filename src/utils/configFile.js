@@ -1,7 +1,14 @@
 const fs = require("fs");
 const FSUtils = require("./fsUtils");
 
+/**
+ * This is utility for managing a configuration file.
+ */
 class ConfigFile {
+	/**
+	 * On construction this will not only add the specified path and options to the instance, but will also set loaded 
+	 * to false. This value will become true when the configuration file is loaded.
+	 */
 	constructor(path, {defaults = {}} = {}) {
 		this.path = path;
 		this.data = undefined;
@@ -9,10 +16,21 @@ class ConfigFile {
 		this.loaded = false;
 	}
 
+	/**
+	 * Returns the specified key from the loaded configuration file.
+	 */
 	get(key) {
+		// TODO: Maybe throw error here?
+		if(!this.loaded) return undefined;
+
 		return this.data[key];
 	}
 
+	/**
+	 * Loads the configuration file asynchronously. If the file is not found and there are defaults that have been 
+	 * defined then these will be used and also saved to the file. When the configuration has been loaded the loaded
+	 * state is changed to true.
+	 */
 	async load() {
 		if(!FSUtils.exists(this.path) || !(await FSUtils.isFile(this.path).catch(err => {throw err}))) {
 			if(!this.options.defaults) throw Error("File not found.");
@@ -40,6 +58,9 @@ class ConfigFile {
 		this.loaded = true;
 	}
 
+	/**
+	 * Loads the configuration file synchronously.
+	 */
 	loadSync() {
 		if(!FSUtils.exists(this.path) || !this.isFileSync()) {
 			if(!this.options.defaults) throw Error("File not found.");
@@ -61,10 +82,16 @@ class ConfigFile {
 		}
 	}
 
+	/**
+	 * Returns synchronously if the specified path is actually a file.
+	 */
 	isFileSync() {
 		return fs.statSync(this.path).isFile();
 	}
 
+	/**
+	 * Saves the configuration file asynchronously and adds some spacing for better readability.
+	 */
 	save() {
 		return new Promise((resolve, reject) => {
 			fs.writeFile(this.path, this.toString({space: "  "}), err => {
@@ -74,10 +101,16 @@ class ConfigFile {
 		});
 	}
 
+	/**
+	 * Saves the configuration file synchronously.
+	 */
 	saveSync() {
 		fs.writeFileSync(this.path, this.toString({space: "  "}));
 	}
 
+	/**
+	 * Stringifies the data in this configuration file using the optional settings.
+	 */
 	toString({replacer, space} = {}) {
 		return JSON.stringify(this.data, replacer, space);
 	}

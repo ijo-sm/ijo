@@ -5,7 +5,14 @@ const Api = require("./net/api");
 const PluginManager = require("./plugin/pluginManager");
 const ConfigFile = require("./utils/configFile");
 
+/**
+ * This core class manages all the subsystems for IJO.
+ */
 class Core {
+	/**
+	 * On creation the instances of the static, meaning independent of user input, subsytems are created and added to 
+	 * the core. For some subsystem static parameters are also supplied.
+	 */
 	constructor() {
 		this.api = new Api();
 		this.config = new ConfigFile(path.join(this.root, "./config.json"), {defaults: {
@@ -14,7 +21,6 @@ class Core {
 			plugins: {path: "./plugins/"}
 		}});
 		this.databaseTypes = new DatabaseTypes();
-		this.databaseTypes.register("json", JSONDatabase);
 		this.pluginManager = new PluginManager();
 	}
 
@@ -23,18 +29,28 @@ class Core {
 		return process.cwd();
 	}
 	
+	/**
+	 * Initializes all subsystems for IJO.
+	 */
 	async initialize() {
 		await this.config.load();
 		this.api.initialize();
 		await this.pluginManager.load(this.config.get("plugins"), {root: this.root});
+		this.databaseTypes.register("json", JSONDatabase);
 		this.database = this.databaseTypes.getDatabase(this.config.get("database"), {root: this.root});
 	}
 
+	/**
+	 * Starts IJO.
+	 */
 	async start() {
-		await this.database.connect();
+		await this.database.load();
 		await this.api.startServer({port: this.config.get("api").port});
 	}
 
+	/**
+	 * Stops IJO.
+	 */
 	async stop() {
 		await this.api.closeServer();
 		await this.database.close();
