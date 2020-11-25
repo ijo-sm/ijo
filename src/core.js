@@ -22,7 +22,7 @@ class Core {
 	get root() {
 		return process.cwd();
 	}
-
+	
 	async initialize() {
 		await this.config.load();
 		this.api.initialize();
