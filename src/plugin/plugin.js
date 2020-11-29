@@ -10,7 +10,7 @@ class Plugin {
     }
 
     addTrueDependencies(plugins) {
-        this.trueDependencies = this.addTrueDependencies(plugins);
+        this.trueDependencies = this.getTrueDependencies(plugins);
     }
 
     /**
