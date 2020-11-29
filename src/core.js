@@ -3,6 +3,7 @@ const JSONDatabase = require("./database/jsonDatabase");
 const DatabaseTypes = require("./database/types");
 const Api = require("./net/api");
 const PluginManager = require("./plugin/pluginManager");
+const UserModel = require("./user/userModel");
 const ConfigFile = require("./utils/configFile");
 
 /**
@@ -42,6 +43,7 @@ class Core {
 		await this.pluginManager.initialize(this.config.get("plugins"), {root: this.root}, this).catch(e => {throw e});
 		this.databaseTypes.register("json", JSONDatabase);
 		this.database = this.databaseTypes.getDatabase(this.config.get("database"), {root: this.root});
+		this.database.register("users", UserModel);
 	}
 
 	/**

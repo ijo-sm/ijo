@@ -1,6 +1,7 @@
 const http = require("http");
 const util = require("util");
 const {URL} = require("url");
+const UserApi = require("../user/userApi");
 const Database = require("../database/database");
 
 class Api {
@@ -48,6 +49,8 @@ class Api {
 			this.handle(req, res).catch(err => this.handleError(err));
 		});
 		this.server.on("error", err => this.handleError(err));
+		this.apis.user = new UserApi();
+		this.apis.user.initialize(this);
 	}
 
 	/**
