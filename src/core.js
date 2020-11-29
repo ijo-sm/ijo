@@ -26,11 +26,10 @@ class Core {
 
 	/**
 	 * Returns the root for IJO.
-	 * TODO: Root will be inaccurate if ijo is not started using npm start.
 	 * @returns {String} The root for IJO.
 	 */
 	get root() {
-		return process.cwd();
+		return path.join(path.dirname(require.main.filename), "../");
 	}
 	
 	/**
