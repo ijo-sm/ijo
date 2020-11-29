@@ -1,6 +1,7 @@
 const nodePath = require("path");
 const ConfigFile = require("../utils/configFile");
 const FSUtils = require("../utils/fsUtils");
+const Plugin = require("./plugin");
 
 /**
  * This the class managing all plugins added to this instance of IJO.
@@ -10,24 +11,16 @@ class PluginManager {
 		this.plugins = [];
 	}
 
-	/**
-	 * Finds and loads all plugins in the specified folder, meanwhile checking if the plugin configuration is correct 
-	 * and won't cause any trouble. Also some arguments, like the root location, that are not from the user's 
-	 * configuration should be included.
-	 * TODO: Split up find and load to different methods.
-	 */
-	async load({path} = {}, {root} = {}) {
-		this.path = nodePath.join(root, path);
-
-		// Check if folder exists and create it if it doesn't.
-		if(!FSUtils.exists(this.path) || !(await FSUtils.isFolder(this.path).catch(err => {throw err}))) {
-			await FSUtils.createFolder(this.path).catch(err => {throw err});
+	async findPlugins(path) {
+		if(!FSUtils.exists(path) || !(await FSUtils.isFolder(path).catch(err => {throw err}))) {
+			await FSUtils.createFolder(path).catch(err => {throw err});
 		}
 
-		const folders = await FSUtils.readdir(this.path).catch(err => {throw err});
+		const folders = await FSUtils.readdir(path).catch(err => {throw err});
+		const plugins = [];
 
 		for(const folder of folders) {
-			const pluginPath = nodePath.join(this.path, folder);
+			const pluginPath = nodePath.join(path, folder);
 			const configPath = nodePath.join(pluginPath, "plugin.json");
 
 			if(!FSUtils.exists(configPath) || !(await FSUtils.isFile(configPath).catch(err => {throw err}))) {
@@ -38,46 +31,37 @@ class PluginManager {
 			await config.load();
 
 			// TODO: Check plugin correctness
-
-			this.plugins.push({
+			const plugin = new Plugin({
 				name: config.get("name"),
 				dependencies: config.get("dependencies") || [],
 				author: config.get("author"),
 				path: pluginPath
 			});
-		}
-		
-		// Add the true dependencies, meaning all recursively found children dependencies are included.
-		for(const plugin of this.plugins) {
-			try {
-				plugin.trueDependencies = this.getTrueDependencies(plugin.dependencies);
-			}
-			catch(err) {
-				// If two dependencies depend on eachother this may cause a loop, which is catched using this catch clause.
-				// TODO: It may be useful to catch without a clause.
-				throw Error(`The plugin ${plugin.name} creates a dependency loop.`);
-			}
+
+			plugins.push(plugin);
 		}
 
-		// Sorts all the plugins depending on which plugins depends on eachother. This enables them to be loaded in the correct order.
-		this.plugins = this.plugins.sort((a, b) => this.compareDependencies(a, b));
-
-		// TODO: Actually load plugins.
+		return plugins;
 	}
 
 	/**
-	 * Recursively get the dependencies of the supplied list of dependencies. These "true" dependencies are then 
-	 * returned as a flattened array.
+	 * Finds and loads all plugins in the specified folder, meanwhile checking if the plugin configuration is correct 
+	 * and won't cause any trouble. Also some arguments, like the root location, that are not from the user's 
+	 * configuration should be included.
 	 */
-	getTrueDependencies(dependencies) {
-		const trueDependencies = [];
+	async initialize({path} = {}, {root} = {}) {
+		this.path = nodePath.join(root, path);
 
-		for(const dependency of dependencies) {
-			trueDependencies.push(dependency);
-			trueDependencies.push(...this.getTrueDependencies(this.plugins.find(plugin => plugin.name === dependency).dependencies));
-		}
+		// Check if folder exists and create it if it doesn't.
+		const plugins = await this.findPlugins(this.path).catch(err => {throw err});
+		
+		// Add the true dependencies, meaning all recursively found children dependencies are included.
+		plugins.forEach(plugin => plugin.addTrueDependencies(plugins));
 
-		return trueDependencies;
+		// Sorts all the plugins depending on which plugins depends on eachother. This enables them to be loaded in the correct order.
+		this.plugins.push(...plugins.sort((a, b) => this.compareDependencies(a, b)));
+
+		// TODO: Actually load plugins.
 	}
 
 	/**

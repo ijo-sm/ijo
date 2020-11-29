@@ -35,7 +35,7 @@ class Core {
 	async initialize() {
 		await this.config.load();
 		this.api.initialize();
-		await this.pluginManager.load(this.config.get("plugins"), {root: this.root});
+		await this.pluginManager.initialize(this.config.get("plugins"), {root: this.root});
 		this.databaseTypes.register("json", JSONDatabase);
 		this.database = this.databaseTypes.getDatabase(this.config.get("database"), {root: this.root});
 	}
