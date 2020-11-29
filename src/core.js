@@ -25,7 +25,7 @@ class Core {
 	}
 
 	get root() {
-		return path.dirname(require.main.filename);
+		return path.join(path.dirname(require.main.filename), "../");
 	}
 	
 	/**
