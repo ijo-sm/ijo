@@ -21,6 +21,7 @@ class ConfigFile {
 
 	/**
 	 * Returns the specified key from the loaded configuration file.
+	 * @param {String} key The key to get a value for.
 	 * @returns {any} The value for that key.
 	 */
 	get(key) {
