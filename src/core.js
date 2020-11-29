@@ -24,9 +24,8 @@ class Core {
 		this.pluginManager = new PluginManager();
 	}
 
-	// TODO: Root will be inaccurate if ijo is not started using npm start.
 	get root() {
-		return process.cwd();
+		return path.dirname(require.main.filename);
 	}
 	
 	/**
