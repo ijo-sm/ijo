@@ -24,23 +24,29 @@ class Core {
 		this.pluginManager = new PluginManager();
 	}
 
+	/**
+	 * Returns the root for IJO.
+	 * @returns {String} The root for IJO.
+	 */
 	get root() {
 		return path.join(path.dirname(require.main.filename), "../");
 	}
 	
 	/**
 	 * Initializes all subsystems for IJO.
+	 * @returns {Promise} A promise that resolves after initialization.
 	 */
 	async initialize() {
 		await this.config.load();
 		this.api.initialize();
-		await this.pluginManager.load(this.config.get("plugins"), {root: this.root});
+		await this.pluginManager.initialize(this.config.get("plugins"), {root: this.root});
 		this.databaseTypes.register("json", JSONDatabase);
 		this.database = this.databaseTypes.getDatabase(this.config.get("database"), {root: this.root});
 	}
 
 	/**
 	 * Starts IJO.
+	 * @returns {Promise} A promise that resolves when IJO has started.
 	 */
 	async start() {
 		await this.database.load();
@@ -49,6 +55,7 @@ class Core {
 
 	/**
 	 * Stops IJO.
+	 * @returns {Promise} A promise that resolves when IJO has stopped.
 	 */
 	async stop() {
 		await this.api.closeServer();

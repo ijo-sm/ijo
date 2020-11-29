@@ -2,6 +2,8 @@ const fs = require("fs");
 
 /**
  * Asynchronously returns the statistics object for the specified path.
+ * @param {String} path The path to get the statistics object for.
+ * @returns {Promise<fs.Stats>} A promise that resolves with the statistics object.
  */
 const stat = path => {
 	return new Promise((resolve, reject) => {
@@ -14,6 +16,8 @@ const stat = path => {
 
 /**
  * Asynchronously returns if the specified path is a folder.
+ * @param {String} path The path to check if it is a folder.
+ * @returns {Promise<Boolean>} A promise that resolves with if the path is a folder or not.
  */
 const isFolder = path => {
 	return new Promise((resolve, reject) => {
@@ -25,6 +29,8 @@ const isFolder = path => {
 
 /**
  * Asynchronously creates a folder at the specified path.
+ * @param {String} path The path to create a folder at.
+ * @returns {Promise} A promise that is resolved when the folder has been created.
  */
 const createFolder = path => {
 	return new Promise((resolve, reject) => {
@@ -37,6 +43,8 @@ const createFolder = path => {
 
 /**
  * Asynchronously returns if the specified path is a file.
+ * @param {String} path The path to check if it is a file.
+ * @returns {Promise<Boolean>} A promise that resolves with if the path is a file or not.
  */
 const isFile = path => {
 	return new Promise((resolve, reject) => {
@@ -48,6 +56,8 @@ const isFile = path => {
 
 /**
  * Synchronously returns if the specified path exists (for both folders and files).
+ * @param {String} path The path to check if it exists.
+ * @returns {Boolean} If the path exists or not.
  */
 const exists = path => {
 	return fs.existsSync(path);
@@ -55,6 +65,9 @@ const exists = path => {
 
 /**
  * Asynchronously returns all the files and folders in the specified folder. This is not done recursively.
+ * @param {String} path The path of the directory to read.
+ * @returns {Promise<Array<String>>} A promise that resolves with an array of files and directories inside the given 
+ * path.
  */
 const readdir = path => {
 	return new Promise((resolve, reject) => {

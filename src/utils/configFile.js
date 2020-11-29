@@ -8,6 +8,9 @@ class ConfigFile {
 	/**
 	 * On construction this will not only add the specified path and options to the instance, but will also set loaded 
 	 * to false. This value will become true when the configuration file is loaded.
+	 * @param {String} path The path of the config file.
+	 * @param {Object} options The options for config file.
+	 * @param {Object} options.defaults The defaults that will be used if no config file was found.
 	 */
 	constructor(path, {defaults = {}} = {}) {
 		this.path = path;
@@ -18,6 +21,7 @@ class ConfigFile {
 
 	/**
 	 * Returns the specified key from the loaded configuration file.
+	 * @returns {any} The value for that key.
 	 */
 	get(key) {
 		// TODO: Maybe throw error here?
@@ -30,6 +34,7 @@ class ConfigFile {
 	 * Loads the configuration file asynchronously. If the file is not found and there are defaults that have been 
 	 * defined then these will be used and also saved to the file. When the configuration has been loaded the loaded
 	 * state is changed to true.
+	 * @returns {Promise} A promise that is resolved when the config has been loaded.
 	 */
 	async load() {
 		if(!FSUtils.exists(this.path) || !(await FSUtils.isFile(this.path).catch(err => {throw err}))) {
@@ -84,6 +89,7 @@ class ConfigFile {
 
 	/**
 	 * Returns synchronously if the specified path is actually a file.
+	 * @returns {Boolean} A boolean if the config file is actually a file.
 	 */
 	isFileSync() {
 		return fs.statSync(this.path).isFile();
@@ -91,6 +97,7 @@ class ConfigFile {
 
 	/**
 	 * Saves the configuration file asynchronously and adds some spacing for better readability.
+	 * @returns {Promise} A promise that is resolved after the config file has been saved.
 	 */
 	save() {
 		return new Promise((resolve, reject) => {
@@ -110,6 +117,10 @@ class ConfigFile {
 
 	/**
 	 * Stringifies the data in this configuration file using the optional settings.
+	 * @param {Object} options The options for stringifying.
+	 * @param {Function} options.replacer See {@link JSON.stringify}.
+	 * @param {String} options.space See {@link JSON.stringify}.
+	 * @returns {String} The stringified version of the config.
 	 */
 	toString({replacer, space} = {}) {
 		return JSON.stringify(this.data, replacer, space);
