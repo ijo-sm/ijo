@@ -1,3 +1,5 @@
+const Model = require("./model");
+
 /**
  * This is the abstract Collection class. Databasing implementations have to create a class extending this one, as this 
  * class contains all the required functions for a collection. The code for IJO and its plugins will only call these 
@@ -18,7 +20,7 @@ class Collection {
 	/**
 	 * Finds the items in this collection that match the specified query. This function is expected to be async.
 	 * @param {Object} query The query to search for.
-	 * @returns {Promise} A promise that is resolved with the found items.
+	 * @returns {Promise<Array<Model>} A promise that is resolved with the found items.
 	 */
 	find(query) {}
 
@@ -26,20 +28,20 @@ class Collection {
 	 * Returns the first found item in this collection that matches the specified query. This function is expected to 
 	 * be async.
 	 * @param {Object} query The query to search for.
-	 * @returns {Promise} A promise that is resolved with the found item.
+	 * @returns {Promise<Model>} A promise that is resolved with the found item.
 	 */
 	findOne(query) {}
 
 	/**
 	 * Adds the specified array of items to this collection. This function is expected to be async.
-	 * @param {Array<Object>} items The items to add to the collection.
+	 * @param {Array<Model>} items The items to add to the collection.
 	 * @returns {Promise} A promise that is resolved when the items have been added.
 	 */
 	add(items) {}
 
 	/**
 	 * Adds a single specified item to this collection. This function is expected to be async.
-	 * @param {Object} item The item to add to the collection.
+	 * @param {Model} item The item to add to the collection.
 	 * @returns {Promise} A promise that is resolved when the item has been added.
 	 */
 	addOne(item) {}
@@ -63,7 +65,7 @@ class Collection {
 	 * Replaces all items in this collection that match the specified query with the specified item. This function is 
 	 * expected to be async.
 	 * @param {Object} query The query of items to update.
-	 * @param {Object} item The item to update the found items with.
+	 * @param {Model} item The item to update the found items with.
 	 * @returns {Promise} A promise that is resolved when the items have been updated.
 	 */
 	update(query, item) {}
@@ -72,7 +74,7 @@ class Collection {
 	 * Replaces the first found item from this collection that matches the specified query with the specified item. 
 	 * This function is expected to be async.
 	 * @param {Object} query The query of the item to remove.
-	 * @param {Object} item The item to update the found item with.
+	 * @param {Model} item The item to update the found item with.
 	 * @returns {Promise} A promise that is resolved when the item has been updated.
 	 */
 	updateOne(query, item) {}

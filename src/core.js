@@ -50,7 +50,11 @@ class Core {
 	 */
 	async start() {
 		await this.database.load().catch(e => {throw e});
-		await this.api.startServer({port: this.config.get("api").port}).catch(e => {throw e});
+		await this.api.startServer({
+			port: this.config.get("api").port
+		}, {
+			database: this.database
+		}).catch(e => {throw e});
 		await this.pluginManager.enable();
 	}
 

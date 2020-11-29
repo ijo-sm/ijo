@@ -23,6 +23,10 @@ class JSONCollection extends Collection {
 		return this.config.get(this.name);
 	}
 
+	load() {
+		return this.config.load();
+	}
+
 	matchQuery(item, query) {
 		for(const key of Object.keys[query]) {
 			if(query[key] !== item[key]) return false;
@@ -132,11 +136,13 @@ class JSONDatabase extends Database {
 	}
 
 	async load() {
-		if(fs.existsSync(this.path) && await FSUtils.isFolder(this.path).catch(err => {throw err})) {
-			return;
+		if(!fs.existsSync(this.path) || !(await FSUtils.isFolder(this.path).catch(err => {throw err}))) {
+			await FSUtils.createFolder(this.path).catch(err => {throw err});
 		}
 
-		await FSUtils.createFolder(this.path).catch(err => {throw err});
+		for(const collection of this.collections) {
+			await collection.load();
+		}
 	}
 
 	async close() {
