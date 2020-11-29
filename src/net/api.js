@@ -65,7 +65,9 @@ class Api {
 
 			if(pathData === undefined) continue;
 
-			handler.callback(req, res, pathData);
+			const canContinue = await handler.callback(req, res, pathData);
+
+			if(!canContinue) return;
 		}
 
 		res.statusCode = 404;
