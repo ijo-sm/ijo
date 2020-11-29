@@ -24,13 +24,18 @@ class Core {
 		this.pluginManager = new PluginManager();
 	}
 
-	// TODO: Root will be inaccurate if ijo is not started using npm start.
+	/**
+	 * Returns the root for IJO.
+	 * TODO: Root will be inaccurate if ijo is not started using npm start.
+	 * @returns {String} The root for IJO.
+	 */
 	get root() {
 		return process.cwd();
 	}
 	
 	/**
 	 * Initializes all subsystems for IJO.
+	 * @returns {Promise} A promise that resolves after initialization.
 	 */
 	async initialize() {
 		await this.config.load();
@@ -42,6 +47,7 @@ class Core {
 
 	/**
 	 * Starts IJO.
+	 * @returns {Promise} A promise that resolves when IJO has started.
 	 */
 	async start() {
 		await this.database.load();
@@ -50,6 +56,7 @@ class Core {
 
 	/**
 	 * Stops IJO.
+	 * @returns {Promise} A promise that resolves when IJO has stopped.
 	 */
 	async stop() {
 		await this.api.closeServer();

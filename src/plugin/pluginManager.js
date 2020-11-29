@@ -11,6 +11,12 @@ class PluginManager {
 		this.plugins = [];
 	}
 
+	/**
+	 * Finds the plugins inside the given path. It also parses them and checks if these plugins are correct. It will
+	 * thus only return plugins that can be loaded.
+	 * @param {String} path The path where search plugins.
+	 * @returns {Array<Plugin>} The found plugins.
+	 */
 	async findPlugins(path) {
 		if(!FSUtils.exists(path) || !(await FSUtils.isFolder(path).catch(err => {throw err}))) {
 			await FSUtils.createFolder(path).catch(err => {throw err});
@@ -48,6 +54,11 @@ class PluginManager {
 	 * Finds and loads all plugins in the specified folder, meanwhile checking if the plugin configuration is correct 
 	 * and won't cause any trouble. Also some arguments, like the root location, that are not from the user's 
 	 * configuration should be included.
+	 * @param {Object} userOptions The user defined options.
+	 * @param {String} userOptions.path The path to search for plugins at.
+	 * @param {Object} options The options for initialization.
+	 * @param {String} options.root The root for IJO.
+	 * @returns {Promise} A promise that is resolved when the plugins have been initialized.
 	 */
 	async initialize({path} = {}, {root} = {}) {
 		this.path = nodePath.join(root, path);
@@ -68,6 +79,9 @@ class PluginManager {
 	 * Compares plugin a with plugin b and returns their respective order as -1, 0 or 1. This order is determined based 
 	 * on which plugin depends on which other plugins. Plugins depending on another plugin should of course be loaded 
 	 * after the plugin they depend on.
+	 * @param {Plugin} a The first plugin to compare.
+	 * @param {Plugin} b The second plugin to compare.
+	 * @returns {Number} The relative order of the two plugins.
 	 */
 	compareDependencies(a, b) {
 		const aDependencies = a.trueDependencies || [];

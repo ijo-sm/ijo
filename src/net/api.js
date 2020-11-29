@@ -14,7 +14,11 @@ class Api {
 	 * arguments using ":NAME", which wille be included in the path data object. For example: the request 
 	 * "/user/123/rename" will be matched to the path "/user/:id/rename" and the path data will be: {id: 123}. When an
 	 * asterisk is added to the end of the specified path the handler will match all requests that begin with the text
-	 * before the asterisk. By default the method matches all incoming methods, specified as "*".
+	 * before the asterisk. By default the method matches all incoming methods, specified as "*". The callback may 
+	 * return a boolean, true when the stack may continue and false if the request is finished.
+	 * @param {String} path The path to register.
+	 * @param {String} method The method to register.
+	 * @param {Function} callback The callback to register.
 	 */
 	register(path, method = "*", callback) {
 		this.stack.push({
@@ -24,6 +28,7 @@ class Api {
 
 	/**
 	 * Unregisters the specified path.
+	 * @param {String} path The path to unregister.
 	 */
 	unregister(path) {
 		const handlerIndex = this.stack.findIndex(handler => handler.path === path);
@@ -46,6 +51,9 @@ class Api {
 	/**
 	 * Handles the incoming request. This function may only be used internally as it is called by the server when there 
 	 * is a new incoming request.
+	 * @param {http.IncomingMessage} req The incoming request.
+	 * @param {http.ServerResponse} res The outgoing response.
+	 * @returns {Promise} A promise that resolves when the request and response have been handled.
 	 */
 	async handle(req, res) {
 		const url = new URL(req.url, "http://localhost/");
@@ -68,6 +76,9 @@ class Api {
 	 * Parses the given requested path using the specified template, also retreiving the arguments included in the 
 	 * requested path. If the template does not match the given path it will return undefined. For more information 
 	 * about the parsing see .register().
+	 * @param {String} template The template to match with path to parse.
+	 * @param {String} path The path to parse.
+	 * @returns {Object} The parsed data or undefined if parsing was unsuccessful.
 	 */
 	parsePath(template, path) {
 		const templateParts = template.split("/");
@@ -94,6 +105,7 @@ class Api {
 	/**
 	 * Handles the specified error by throwing it.
 	 * TODO: Less damaging error handling?
+	 * @param {Error} err The error to handle.
 	 */
 	handleError(err) {
 		throw err;
@@ -102,6 +114,9 @@ class Api {
 	/**
 	 * Starts the api server created after initialization on the specified port. This is done async and this function 
 	 * returns a Promise.
+	 * @param {Object} options The options when starting.
+	 * @param {Number} options.port The port to start on.
+	 * @returns {Promise} A promise that is resolved when the server has started.
 	 */
 	startServer({port} = {}) {
 		const options = {
@@ -113,6 +128,7 @@ class Api {
 
 	/**
 	 * Closes the api server. This is done async and this function returns a Promise.
+	 * @returns {Promise} A promise that is resolved when the server has been closed.
 	 */
 	closeServer() {
 		return util.promisify(this.server.close.bind(this.server))().catch(err => this.handleError(err));
