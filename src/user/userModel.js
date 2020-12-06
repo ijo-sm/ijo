@@ -1,4 +1,4 @@
-const CryptoUtils = require("../utils/cryptoUtils");
+const {CryptoUtils} = require("ijo-utils");
 const Model = require("../database/model");
 
 /**

@@ -1,7 +1,6 @@
 const nodePath = require("path");
 const Core = require("../core");
-const ConfigFile = require("../utils/configFile");
-const FSUtils = require("../utils/fsUtils");
+const {ConfigFile, FSUtils} = require("ijo-utils");
 const Plugin = require("./plugin");
 
 /**

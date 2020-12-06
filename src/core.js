@@ -4,7 +4,7 @@ const DatabaseTypes = require("./database/types");
 const Api = require("./net/api");
 const PluginManager = require("./plugin/pluginManager");
 const Users = require("./user/users");
-const ConfigFile = require("./utils/configFile");
+const {ConfigFile} = require("ijo-utils");
 
 /**
  * This core class manages all the subsystems for IJO.

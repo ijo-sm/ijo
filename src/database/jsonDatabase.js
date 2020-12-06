@@ -1,9 +1,8 @@
 const nodePath = require("path");
 const fs = require("fs");
-const ConfigFile = require("../utils/configFile");
+const {ConfigFile, FSUtils} = require("ijo-utils");
 const Collection = require("./collection");
 const Database = require("./database");
-const FSUtils = require("../utils/fsUtils");
 
 class JSONCollection extends Collection {
 	constructor(name, modelClass, path) {

@@ -23,4 +23,4 @@ const stop = event => {
 
 [`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `SIGTERM`].forEach(event => {
     process.on(event, stop.bind(null, event));
-})
+});
