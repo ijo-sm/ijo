@@ -3,6 +3,8 @@ const util = require("util");
 const {URL} = require("url");
 const UserApi = require("../user/userApi");
 const Database = require("../database/database");
+const ApiRequest = require("./apiRequest");
+const ApiResponse = require("./apiResponse");
 
 class Api {
 	constructor() {
@@ -12,13 +14,14 @@ class Api {
 
 	/**
 	 * Registers a new path and matching method to the api. This path will then be checked when handling an incoming 
-	 * request. if the request matches this path and method it will call the method with the request, response and path 
-	 * data as arguments. The path data contains information about the url of the incoming request. The path may add
-	 * arguments using ":NAME", which wille be included in the path data object. For example: the request 
-	 * "/user/123/rename" will be matched to the path "/user/:id/rename" and the path data will be: {id: 123}. When an
-	 * asterisk is added to the end of the specified path the handler will match all requests that begin with the text
-	 * before the asterisk. By default the method matches all incoming methods, specified as "*". The callback may 
-	 * return a boolean, true when the stack may continue and false if the request is finished.
+	 * request. if the request matches this path and method it will call the method with a custom api request class, a 
+	 * custom api response class and the path data as arguments. The path data contains information about the url of 
+	 * the incoming request. The path may add arguments using ":NAME", which wille be included in the path data object. 
+	 * For example: the request "/user/123/rename" will be matched to the path "/user/:id/rename" and the path data 
+	 * will be: {id: 123}. When an asterisk is added to the end of the specified path the handler will match all 
+	 * requests that begin with the text before the asterisk. By default the method matches all incoming methods, 
+	 * specified as "*". The callback may return a boolean, true when the stack may continue and false if the request 
+	 * is finished.
 	 * @param {String} path The path to register.
 	 * @param {String} method The method to register.
 	 * @param {Function} callback The callback to register.
@@ -62,6 +65,8 @@ class Api {
 	 */
 	async handle(req, res) {
 		const url = new URL(req.url, "http://localhost/");
+		const request = new ApiRequest(req);
+		const response = new ApiResponse(res);
 
 		for(let handler of this.stack) {
 			if(handler.method !== "*" && handler.method !== req.method) continue;
@@ -70,7 +75,7 @@ class Api {
 
 			if(pathData === undefined) continue;
 
-			const canContinue = await handler.callback(req, res, pathData);
+			const canContinue = await handler.callback(request, response, pathData);
 
 			if(!canContinue) return;
 		}
