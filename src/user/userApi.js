@@ -1,10 +1,8 @@
-const Database = require("../database/database");
-const Api = require("../net/api");
 const ApiModel = require("../net/apiModel");
 
 class UserApi extends ApiModel {
-    initialize(api) {
-        super.initialize(api);
+    constructor(api, users) {
+        super(api);
 
         api.register("/user/create", "POST", (...args) => this.create(...args));
     }
@@ -17,6 +15,7 @@ class UserApi extends ApiModel {
 
     create(req, res) {
 
+        res.send({data: {message: "Created"}, code: 201});
     }
 }
 

@@ -1,7 +1,6 @@
 const http = require("http");
 const util = require("util");
 const {URL} = require("url");
-const UserApi = require("../user/userApi");
 const Database = require("../database/database");
 const ApiRequest = require("./apiRequest");
 const ApiResponse = require("./apiResponse");
@@ -45,15 +44,13 @@ class Api {
 	}
 
 	/**
-	 * Initializes the api by creating the server, starting error handing and creating all children api's.
+	 * Initializes the api by creating the server and starting error handing.
 	 */
-	initialize({database} = {}) {
+	initialize() {
 		this.server = http.createServer((req, res) => {
 			this.handle(req, res).catch(err => this.handleError(err));
 		});
 		this.server.on("error", err => this.handleError(err));
-		this.apis.user = new UserApi();
-		this.apis.user.initialize(this);
 	}
 
 	/**
@@ -125,18 +122,12 @@ class Api {
 
 	/**
 	 * Starts the api server created after initialization on the specified port. This is done async and this function 
-	 * returns a Promise. It also starts a child api's.
+	 * returns a Promise.
 	 * @param {Object} options The options when starting.
 	 * @param {Number} options.port The port to start on.
-	 * @param {Object} parts The required parts from IJO's core.
-	 * @param {Database} parts.database The database for IJO.
 	 * @returns {Promise} A promise that is resolved when the server has started.
 	 */
-	startServer({port} = {}, {database} = {}) {
-		for(const key of Object.keys(this.apis)) {
-			this.apis[key].start({database});
-		}
-
+	startServer({port} = {}) {
 		const options = {
 			port
 		};
