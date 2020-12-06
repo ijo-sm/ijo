@@ -1,10 +1,10 @@
 const ApiModel = require("../net/apiModel");
 
 class UserApi extends ApiModel {
-    constructor(api, users) {
-        super(api);
+    constructor(apiServer, users) {
+        super(apiServer);
 
-        api.register("/user/create", "POST", (...args) => this.create(users, ...args));
+        apiServer.register("/user/create", "POST", (...args) => this.create(users, ...args));
     }
 
     /**

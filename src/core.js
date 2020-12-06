@@ -1,7 +1,7 @@
 const path = require("path");
 const JSONDatabase = require("./database/jsonDatabase");
 const DatabaseTypes = require("./database/types");
-const Api = require("./net/api");
+const ApiServer = require("./net/apiServer");
 const PluginManager = require("./plugin/pluginManager");
 const Users = require("./user/users");
 const {ConfigFile} = require("ijo-utils");
@@ -15,7 +15,7 @@ class Core {
 	 * the core. For some subsystem static parameters are also supplied.
 	 */
 	constructor() {
-		this.api = new Api();
+		this.apiServer = new ApiServer();
 		this.config = new ConfigFile(path.join(this.root, "./config.json"), {defaults: {
 			api: {port: 8080},
 			database: {type: "json", path: "./data/"},
@@ -40,11 +40,11 @@ class Core {
 	 */
 	async initialize() {
 		await this.config.load().catch(e => {throw e});
-		this.api.initialize();
+		this.apiServer.initialize();
 		await this.pluginManager.initialize(this.config.get("plugins"), {root: this.root}, this).catch(e => {throw e});
 		this.databaseTypes.register("json", JSONDatabase);
 		this.database = this.databaseTypes.getDatabase(this.config.get("database"), {root: this.root});
-		this.users.initialize({database: this.database, api: this.api});
+		this.users.initialize({database: this.database, apiServer: this.apiServer});
 	}
 
 	/**
@@ -54,7 +54,7 @@ class Core {
 	async start() {
 		await this.database.load().catch(e => {throw e});
 		this.users.load({database: this.database});
-		await this.api.startServer({port: this.config.get("api").port}).catch(e => {throw e});
+		await this.apiServer.start({port: this.config.get("api").port}).catch(e => {throw e});
 		await this.pluginManager.enable().catch(e => {throw e});
 	}
 
@@ -64,7 +64,7 @@ class Core {
 	 */
 	async stop() {
 		await this.pluginManager.disable().catch(e => {throw e});
-		await this.api.closeServer().catch(e => {throw e});
+		await this.apiServer.close().catch(e => {throw e});
 		await this.database.close().catch(e => {throw e});
 		await this.pluginManager.unload().catch(e => {throw e});
 	}

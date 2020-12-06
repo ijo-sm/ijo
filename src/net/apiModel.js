@@ -1,4 +1,4 @@
-const Api = require("./api");
+const ApiServer = require("./apiServer");
 
 /**
  * This is the standard model for classes that extend the api.
@@ -6,9 +6,9 @@ const Api = require("./api");
 class ApiModel {
     /**
      * On construction the api is passed to the class to registers new paths to the stack.
-     * @param {Api} api The api handler. 
+     * @param {ApiServer} api The api handler. 
      */
-    constructor(api) {}
+    constructor(apiServer) {}
 }
 
 module.exports = ApiModel;

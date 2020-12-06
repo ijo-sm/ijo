@@ -1,5 +1,5 @@
 const Database = require("../database/database");
-const Api = require("../net/api");
+const ApiServer = require("../net/apiServer");
 const UserApi = require("./userApi");
 const UserModel = require("./userModel");
 
@@ -12,11 +12,11 @@ class Users {
      * api.
      * @param {Object} parts The parts from IJO's core.
      * @param {Database} database The database for IJO.
-     * @param {Api} api The api for IJO.
+     * @param {ApiServer} apiServer The api for IJO.
      */
-    initialize({database, api} = {}) {
+    initialize({database, apiServer} = {}) {
         database.register("users", UserModel);
-        this.api = new UserApi(api, this);
+        this.api = new UserApi(apiServer, this);
     }
 
     /**

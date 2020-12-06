@@ -5,10 +5,9 @@ const Database = require("../database/database");
 const ApiRequest = require("./apiRequest");
 const ApiResponse = require("./apiResponse");
 
-class Api {
+class ApiServer {
 	constructor() {
 		this.stack = [];
-		this.apis = [];
 	}
 
 	/**
@@ -127,7 +126,7 @@ class Api {
 	 * @param {Number} options.port The port to start on.
 	 * @returns {Promise} A promise that is resolved when the server has started.
 	 */
-	startServer({port} = {}) {
+	start({port} = {}) {
 		const options = {
 			port
 		};
@@ -139,9 +138,9 @@ class Api {
 	 * Closes the api server. This is done async and this function returns a Promise.
 	 * @returns {Promise} A promise that is resolved when the server has been closed.
 	 */
-	closeServer() {
+	close() {
 		return util.promisify(this.server.close.bind(this.server))().catch(err => this.handleError(err));
 	}
 }
 
-module.exports = Api;
+module.exports = ApiServer;
