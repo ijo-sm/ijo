@@ -11,16 +11,20 @@ core.initialize()
 	throw err;
 });
 
+let stopped = false;
 const stop = event => {
+	if(stopped) return;
+	stopped = true;
+
 	return core.stop()
 	.then(() => {
 		console.log(`IJO's core has stopped (event: ${event})`);
 	})
 	.catch(err => {
 		throw err;
-	})
+	});
 };
 
-[`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `SIGTERM`].forEach(event => {
-    process.on(event, stop.bind(null, event));
+[`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `SIGTERM`, `uncaughtException`].forEach(event => {
+    process.on(event, () => stop(event));
 });
