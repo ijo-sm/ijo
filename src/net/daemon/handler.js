@@ -47,10 +47,22 @@ class DaemonHandler {
         this.socket.write(JSON.stringify(data));
     }
 
-    onIdentity() {
-        return new Promise(resolve => {
+    async onIdentity() {
+        let timedOut = false;
+
+        setTimeout(() => {
+            if(this.pending || this.isIdentified) return;
+            timedOut = true;
+            this.close();
+        }, 3000);
+
+        const identity = await new Promise(resolve => {
             this.identifyCallback = data => resolve(data);
         });
+
+        if(timedOut) return;
+
+        this.identity = identity;
     }
 
     identified(model) {
@@ -59,8 +71,8 @@ class DaemonHandler {
         this.pending = false;
     }
 
-    close() {
-        this.socket.end();
+    close(data) {
+        this.socket.end(data ? JSON.stringify(data) : undefined);
     }
 }
 

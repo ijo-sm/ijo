@@ -1,3 +1,4 @@
+const {nanoid} = require("nanoid");
 const DaemonApi = require("./api");
 const DaemonEvents = require("./events");
 const DaemonModel = require("./model");
@@ -18,35 +19,66 @@ class Daemons {
         this.collection = database.collection("daemons");
     }
 
-    async addConnection(handler) {
+    create({name}) {
+        const key = nanoid(32);
+        const daemon = new DaemonModel({name, key});
 
-        setTimeout(() => {
-            if(handler.pending || handler.isIdentified) return;
-            handler.close();
-        }, 3000);
+        return daemon;
+    }
 
-        const identity = await handler.onIdentity();
-        const daemon = await this.collection.findOne({name: identity.name});
-        console.log("New connection by", daemon, identity);
+    add(daemon) {
+        return this.collection.addOne(daemon);
+    }
+
+    async newConnection(handler) {
+        await handler.onIdentity(handler);
+
+        if(handler.identity === undefined) return;
+
+        const daemon = await this.collection.findOne({name: handler.identity.name});
+        console.log("New connection by", daemon, handler.identity);
 
         if(daemon) {
-            if(!daemon.isEqualKey(identity.key)) return handler.close();
+            if(!daemon.isEqualKey(handler.identity.key)) return handler.close({event:"error", reason: "identify/incorrect"});
 
-            handler.identified(daemon);
-            this.connectedHandlers.push(handler);
+            this.addConnection(handler, daemon);
         }
         else {
-            handler.pending = true;
-            this.addPending(handler, identity);
+            if(await this.isNameUsed(handler.identity.name)) return handler.close({event: "error", reason: "identify/nameInUse"});
+
+            this.addPending(handler);
         }
     }
 
-    addPending(handler, identity) {
-        this.pending.push({
-            handler,
-            code: identity.code,
-            name: identity.name
-        });
+    async pendingToConnection(handler) {
+        const daemon = this.create({name: handler.identity.name});
+        this.addConnection(handler, daemon);
+        this.removePending(handler);
+        await this.add(daemon);
+        handler.send({event: "key", key: daemon.key});
+    }
+
+    addPending(handler) {
+        handler.pending = true;
+        this.pending.push(handler);
+    }
+
+    removePending(handler) {
+        const handlerIndex = this.pending.find(pendingHandler => pendingHandler === handler);
+
+        if(handlerIndex < 0) return;
+
+        this.pending.splice(handlerIndex);
+    }
+
+    async isNameUsed(name) {
+        return (await this.collection.findOne({name})) !== undefined 
+            || this.pending.find(handler => handler.identity && handler.identity.name === name) !== undefined;
+    }
+
+    addConnection(handler, daemon) {
+        handler.identified(daemon);
+        this.connectedHandlers.push(handler);
     }
 }
 

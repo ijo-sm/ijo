@@ -12,7 +12,8 @@ core.initialize()
 });
 
 let stopped = false;
-const stop = event => {
+const stop = (event, err) => {
+	if(err && err instanceof Error) console.error(err);
 	if(stopped) return;
 	stopped = true;
 
@@ -26,5 +27,5 @@ const stop = event => {
 };
 
 [`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `SIGTERM`, `uncaughtException`].forEach(event => {
-    process.on(event, () => stop(event));
+    process.on(event, err => stop(event, err));
 });

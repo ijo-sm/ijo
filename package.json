@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/ijo-sm/ijo#readme",
   "dependencies": {
-    "ijo-utils": "github:ijo-sm/ijo-utils"
+    "ijo-utils": "github:ijo-sm/ijo-utils",
+    "nanoid": "^3.1.20"
   }
 }

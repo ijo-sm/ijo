@@ -26,7 +26,7 @@ class DaemonServer {
     }
 
     handleConnection(socket) {
-        this.daemons.addConnection(new DaemonHandler(socket));
+        this.daemons.newConnection(new DaemonHandler(socket));
     }
 
     start({port} = {}) {
