@@ -1,9 +1,8 @@
 const http = require("http");
 const util = require("util");
 const {URL} = require("url");
-const Database = require("../database/database");
-const ApiRequest = require("./apiRequest");
-const ApiResponse = require("./apiResponse");
+const ApiRequest = require("./request");
+const ApiResponse = require("./response");
 
 class ApiServer {
 	constructor() {

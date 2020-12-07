@@ -1,12 +1,12 @@
 const path = require("path");
-const JSONDatabase = require("./database/jsonDatabase");
-const DatabaseTypes = require("./database/types");
-const ApiServer = require("./net/apiServer");
-const DaemonServer = require("./net/daemonServer");
-const PluginManager = require("./plugin/pluginManager");
-const Users = require("./user/users");
 const {ConfigFile} = require("ijo-utils");
-const Daemons = require("./daemon/daemons");
+const JSONDatabase = require("./database/json/database");
+const DatabaseTypes = require("./database/types");
+const ApiServer = require("./net/api/server");
+const DaemonServer = require("./net/daemon/server");
+const Plugins = require("./plugin/manager");
+const Users = require("./user/manager");
+const Daemons = require("./daemon/manager");
 
 /**
  * This core class manages all the subsystems for IJO.
@@ -26,7 +26,7 @@ class Core {
 			plugins: {path: "./plugins/"}
 		}});
 		this.databaseTypes = new DatabaseTypes();
-		this.pluginManager = new PluginManager();
+		this.plugins = new Plugins();
 		this.users = new Users();
 		this.daemons = new Daemons();
 	}
@@ -47,7 +47,7 @@ class Core {
 		await this.config.load().catch(e => {throw e});
 		this.apiServer.initialize();
 		this.daemonServer.initialize({daemons: this.daemons});
-		await this.pluginManager.initialize(this.config.get("plugins"), {root: this.root}, this).catch(e => {throw e});
+		await this.plugins.initialize(this.config.get("plugins"), {root: this.root}, this).catch(e => {throw e});
 		this.databaseTypes.register("json", JSONDatabase);
 		this.database = this.databaseTypes.getDatabase(this.config.get("database"), {root: this.root});
 		this.users.initialize({database: this.database, apiServer: this.apiServer});
@@ -64,7 +64,7 @@ class Core {
 		this.daemons.load({database: this.database});
 		await this.daemonServer.start({port: this.config.get("daemon").port}).catch(e => {throw e});
 		await this.apiServer.start({port: this.config.get("api").port}).catch(e => {throw e});
-		await this.pluginManager.enable().catch(e => {throw e});
+		await this.plugins.enable().catch(e => {throw e});
 	}
 
 	/**
@@ -72,11 +72,11 @@ class Core {
 	 * @returns {Promise} A promise that resolves when IJO has stopped.
 	 */
 	async stop() {
-		await this.pluginManager.disable().catch(e => {throw e});
+		await this.plugins.disable().catch(e => {throw e});
 		await this.apiServer.close().catch(e => {throw e});
 		await this.daemonServer.close().catch(e => {throw e});
 		await this.database.close().catch(e => {throw e});
-		await this.pluginManager.unload().catch(e => {throw e});
+		await this.plugins.unload().catch(e => {throw e});
 		await this.config.save().catch(e => {throw e});
 	}
 }

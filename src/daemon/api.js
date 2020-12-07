@@ -5,7 +5,7 @@ class DaemonApi {
 
     pending(daemons, req, res) {
         res.send({
-            data: daemons.pendingDaemons.map(daemon => {return {name: daemon.name, code: daemon.code}})
+            data: daemons.pending.map(daemon => {return {name: daemon.name, code: daemon.code}})
         });
     }
 }

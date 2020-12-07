@@ -1,5 +1,5 @@
 const net = require("net");
-const DaemonHandler = require("./daemonHandler");
+const DaemonHandler = require("./handler");
 
 class DaemonServer {
     constructor() {
@@ -26,8 +26,7 @@ class DaemonServer {
     }
 
     handleConnection(socket) {
-        console.log("Connection");
-        this.daemons.addConnection(socket);
+        this.daemons.addConnection(new DaemonHandler(socket));
     }
 
     start({port} = {}) {

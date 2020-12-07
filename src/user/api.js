@@ -1,4 +1,4 @@
-const ApiModel = require("../net/apiModel");
+const ApiModel = require("../net/api/model");
 
 class UserApi extends ApiModel {
     constructor(apiServer, users) {

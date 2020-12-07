@@ -1,4 +1,4 @@
-const ApiServer = require("./apiServer");
+const ApiServer = require("./server");
 
 /**
  * This is the standard model for classes that extend the api.

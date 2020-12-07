@@ -1,12 +1,11 @@
-const DaemonHandler = require("../net/daemonHandler");
-const DaemonApi = require("./daemonApi");
-const DaemonEvents = require("./daemonEvents");
-const DaemonModel = require("./daemonModel");
+const DaemonApi = require("./api");
+const DaemonEvents = require("./events");
+const DaemonModel = require("./model");
 
 class Daemons {
     constructor() {
-        this.connectedDaemons = [];
-        this.pendingDaemons = [];
+        this.connectedHandlers = [];
+        this.pending = [];
     }
 
     initialize({database, daemonServer, apiServer} = {}) {
@@ -19,8 +18,7 @@ class Daemons {
         this.collection = database.collection("daemons");
     }
 
-    async addConnection(socket) {
-        const handler = new DaemonHandler(socket);
+    async addConnection(handler) {
 
         setTimeout(() => {
             if(handler.pending || handler.isIdentified) return;
@@ -29,22 +27,22 @@ class Daemons {
 
         const identity = await handler.onIdentity();
         const daemon = await this.collection.findOne({name: identity.name});
-        console.log("New connection by", socket.address(), daemon, identity);
+        console.log("New connection by", daemon, identity);
 
         if(daemon) {
             if(!daemon.isEqualKey(identity.key)) return handler.close();
 
             handler.identified(daemon);
-            this.connectedDaemons.push(handler);
+            this.connectedHandlers.push(handler);
         }
         else {
             handler.pending = true;
-            this.addPendingDaemon(handler, identity);
+            this.addPending(handler, identity);
         }
     }
 
-    addPendingDaemon(handler, identity) {
-        this.pendingDaemons.push({
+    addPending(handler, identity) {
+        this.pending.push({
             handler,
             code: identity.code,
             name: identity.name

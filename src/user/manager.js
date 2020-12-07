@@ -1,7 +1,5 @@
-const Database = require("../database/database");
-const ApiServer = require("../net/apiServer");
-const UserApi = require("./userApi");
-const UserModel = require("./userModel");
+const UserApi = require("./api");
+const UserModel = require("./model");
 
 /**
  * This class manages some basic user functionality. 

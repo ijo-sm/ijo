@@ -1,12 +1,11 @@
 const nodePath = require("path");
-const Core = require("../core");
 const {ConfigFile, FSUtils} = require("ijo-utils");
-const Plugin = require("./plugin");
+const Plugin = require("./model");
 
 /**
  * This the class managing all plugins added to this instance of IJO.
  */
-class PluginManager {
+class Plugins {
 	constructor() {
 		this.plugins = [];
 	}
@@ -150,4 +149,4 @@ class PluginManager {
 	}
 }
 
-module.exports = PluginManager;
+module.exports = Plugins;
