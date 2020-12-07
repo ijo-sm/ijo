@@ -2,11 +2,12 @@ const {nanoid} = require("nanoid");
 const DaemonApi = require("./api");
 const DaemonEvents = require("./events");
 const DaemonModel = require("./model");
+const Auth = require("./auth/manager");
 
 class Daemons {
     constructor() {
         this.connectedHandlers = [];
-        this.pending = [];
+        this.auth = new Auth();
     }
 
     initialize({database, daemonServer, apiServer} = {}) {
@@ -30,54 +31,16 @@ class Daemons {
         return this.collection.addOne(daemon);
     }
 
-    async newConnection(handler) {
-        await handler.onIdentity(handler);
-
-        if(handler.identity === undefined) return;
-
-        const daemon = await this.collection.findOne({name: handler.identity.name});
-        console.log("New connection by", daemon, handler.identity);
-
-        if(daemon) {
-            if(!daemon.isEqualKey(handler.identity.key)) return handler.close({event:"error", reason: "identify/incorrect"});
-
-            this.addConnection(handler, daemon);
-        }
-        else {
-            if(await this.isNameUsed(handler.identity.name)) return handler.close({event: "error", reason: "identify/nameInUse"});
-
-            this.addPending(handler);
-        }
-    }
-
-    async pendingToConnection(handler) {
-        const daemon = this.create({name: handler.identity.name});
-        this.addConnection(handler, daemon);
-        this.removePending(handler);
-        await this.add(daemon);
-        handler.send({event: "key", key: daemon.key});
-    }
-
-    addPending(handler) {
-        handler.pending = true;
-        this.pending.push(handler);
-    }
-
-    removePending(handler) {
-        const handlerIndex = this.pending.find(pendingHandler => pendingHandler === handler);
-
-        if(handlerIndex < 0) return;
-
-        this.pending.splice(handlerIndex);
+    newConnection(handler) {
+        this.auth.authenticate(handler);
     }
 
     async isNameUsed(name) {
         return (await this.collection.findOne({name})) !== undefined 
-            || this.pending.find(handler => handler.identity && handler.identity.name === name) !== undefined;
+            || this.auth.pending.find(handler => handler.identity && handler.identity.name === name) !== undefined;
     }
 
-    addConnection(handler, daemon) {
-        handler.identified(daemon);
+    addConnection(handler) {
         this.connectedHandlers.push(handler);
     }
 }

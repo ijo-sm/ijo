@@ -48,21 +48,7 @@ class DaemonHandler {
     }
 
     async onIdentity() {
-        let timedOut = false;
-
-        setTimeout(() => {
-            if(this.pending || this.isIdentified) return;
-            timedOut = true;
-            this.close();
-        }, 3000);
-
-        const identity = await new Promise(resolve => {
-            this.identifyCallback = data => resolve(data);
-        });
-
-        if(timedOut) return;
-
-        this.identity = identity;
+        
     }
 
     identified(model) {
