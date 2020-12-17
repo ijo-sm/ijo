@@ -14,6 +14,7 @@ class Daemons {
         database.register("daemons", DaemonModel);
         this.events = new DaemonEvents(daemonServer);
         this.api = new DaemonApi(apiServer, this);
+        this.auth.initialize({daemons: this});
     }
 
     load({database} = {}) {

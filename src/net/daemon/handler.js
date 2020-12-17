@@ -27,7 +27,7 @@ class DaemonHandler {
     async handle(data) {
         const event = data.event;
 
-        if(event === "identify" && this.identifyCallback && !this.isIdentified) {
+        if(event === "auth/identify" && this.identifyCallback && !this.isIdentified) {
             return this.identifyCallback(data);
         }
         if(!this.isIdentified) return;

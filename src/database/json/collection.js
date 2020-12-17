@@ -24,7 +24,7 @@ class JSONCollection extends Collection {
 	}
 
 	matchQuery(item, query) {
-		for(const key of Object.keys[query]) {
+		for(const key of Object.keys(query)) {
 			if(query[key] !== item[key]) return false;
 		}
 
