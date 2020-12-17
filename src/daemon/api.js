@@ -8,12 +8,25 @@ class DaemonApi extends ApiModel {
         apiServer.register("/daemons/add", "POST", (...args) => this.add(daemons, ...args))
     }
 
+    /**
+     * Returns the list of pending daemons.
+     * @param {Daemons} daemons The daemon manager.
+     * @param {ApiRequest} req The api request.
+     * @param {ApiResponse} res The api response.
+     */
     pending(daemons, req, res) {
         res.send({
             data: daemons.auth.pending.map(handler => {return {name: handler.identity.name, code: handler.identity.code}})
         });
     }
 
+    /**
+     * Adds the specified daemon, using the name property, to the daemon database and to the list of connected daemons.
+     * It will send an error when the specified daemon doesn't exist.
+     * @param {Daemons} daemons The daemon manager.
+     * @param {ApiRequest} req The api request.
+     * @param {ApiResponse} res The api response.
+     */
     async add(daemons, req, res) {
         const data = await req.bodyAsJSON();
         const handler = daemons.auth.pending.find(handler => handler.identity.name === data.name);

@@ -8,8 +8,8 @@ class UserModel extends Model {
     /**
      * Constructs this user from the given data object.
      * @param {Object} data The given user data.
-     * @param {String} username The username of the user.
-     * @param {String} password The hashed password of the user.
+     * @param {String} data.username The username of the user.
+     * @param {String} data.password The hashed password of the user.
      */
     constructor({username, password}) {
         super();
