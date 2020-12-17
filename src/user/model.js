@@ -42,6 +42,8 @@ class UserModel extends Model {
      * Reconstructs this user as an object and returns that object.
      */
     toObject() {
+        super.toObject();
+        
         return {
             username: this.username,
             password: this.password

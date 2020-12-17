@@ -42,13 +42,9 @@ class Auth {
         const daemon = await this.daemons.collection.findOne({name: handler.identity.name});
 
         if(daemon) this.authKnown(handler, daemon);
-        else this.authUnknown(handler);
+        else await this.authUnknown(handler);
     }
 
-    authUnknown(handler) {
-        if(this.pending.find(pending => pending.identity.name === handler.name)) {
-            return handler.send({event: "nameInUse"});
-        }
     /**
      * Adds an as of yet unknown daemon to the list of pending daemons. It will send an error to the daemon if: the 
      * name is already in use, there is no name given by the daemon or when there is no code supplied in the daemon's 
@@ -56,11 +52,15 @@ class Auth {
      * @param {DaemonHandler} handler The daemon handler.
      * @returns {Promise} A promise that resolves when the authentication is finished.
      */
+    async authUnknown(handler) {
         if(typeof(handler.identity.name) !== "string") {
             return handler.send({event: "auth/incorrect"});
         }
         if(typeof(handler.identity.code) !== "string") {
             return handler.send({event: "auth/incorrect"});
+        }
+        if(await this.daemons.isNameUsed(handler.identity.name)) {
+            return handler.send({event: "nameInUse"});
         }
 
         this.addPending(handler);
@@ -74,11 +74,13 @@ class Auth {
      * @param {DaemonModel} daemon The daemon that corresponds to the name given by the handler.
      */
     authKnown(handler, daemon) {
-        if(daemon.key !== handler.identity.key) {
+        if(daemon.isEqualKey(handler.identity.key)) {
             return handler.send({event: "auth/incorrect"});
         }
 
-        this.authenticated(handler, daemon);
+        handler.send({event: "auth/correct"});
+        handler.identified(daemon);
+        this.daemons.addConnection(handler);
     }
 
     /**
@@ -103,11 +105,6 @@ class Auth {
         handler.pending = false;
     }
 
-    authenticated(handler, daemon) {
-        handler.send({event: "auth/correct"});
-        handler.identified(daemon);
-        this.daemons.addConnection(handler);
-    }
     /**
      * Transfers a pending handler into a newly created daemon model. This model is added to the database and the handler 
      * to the list of connected daemons. Lastly, it sends the key of the new of the daemon to the daemon.
