@@ -18,11 +18,13 @@ class ApiRequest {
      * @returns {Promise<Object>} A promise that is resolved when the body is loaded and parsed to an object.
      */
     async bodyAsJSON() {
+        if (this.bodyJSON) return this.bodyJSON
         try {
-            return JSON.parse(await this.body().catch(e => {throw e}));
+            this.bodyJSON = JSON.parse(await this.body().catch(e => {throw e}));
         } catch {
-            return {};
+            this.bodyJSON = {};
         }
+        return this.bodyJSON;
     }
 
     /**
@@ -45,11 +47,11 @@ class ApiRequest {
      * 
      * Return true if the key is valid and matches the type given, otherwise returns false
      * @param {ApiResponse} res The response object
-     * @param {object} body The request body in JSON form
      * @param {string} key The key to validate
      * @param {string} type The expected type of the key (optional)
      */
-    isValidKey(res, body, key, type=undefined) {
+    async isValidKey(res, key, type=undefined) {
+        var body = await this.bodyAsJSON();
         if (body && body[key] != undefined) {
             if (typeof(body[key]) == type || type == undefined) {
                 return true;

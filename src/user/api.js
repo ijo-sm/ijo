@@ -18,8 +18,8 @@ class UserApi extends ApiModel {
         
         // Validate incoming data
         if (
-            !req.isValidKey(res, data, "username", "string") ||
-            !req.isValidKey(res, data, "password", "string")
+            !await req.isValidKey(res, "username", "string") ||
+            !await req.isValidKey(res, "password", "string")
         ) {return}
 
         // TODO: Check if username has already been used.
