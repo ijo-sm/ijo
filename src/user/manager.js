@@ -1,10 +1,15 @@
 const UserApi = require("./api");
 const UserModel = require("./model");
+const Auth = require("./auth/manager");
 
 /**
  * This class manages some basic user functionality. 
  */
 class Users {
+    constructor() {
+        this.auth = new Auth();
+    }
+
     /**
      * Initializes the class with some parts from IJO's core. It registers the users collection and creates the user 
      * api.
@@ -12,9 +17,10 @@ class Users {
      * @param {Database} database The database for IJO.
      * @param {ApiServer} apiServer The api for IJO.
      */
-    initialize({database, apiServer} = {}) {
+    initialize({database, apiServer} = {}, {auth} = {}) {
         database.register("users", UserModel);
         this.api = new UserApi(apiServer, this);
+        this.auth.initialize({auth});
     }
 
     /**
