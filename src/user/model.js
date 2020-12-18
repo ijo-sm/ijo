@@ -8,12 +8,14 @@ class UserModel extends Model {
     /**
      * Constructs this user from the given data object.
      * @param {Object} data The given user data.
+     * @param {Object} id The id of the user.
      * @param {String} data.username The username of the user.
      * @param {String} data.password The hashed password of the user.
      */
-    constructor({username, password}) {
+    constructor({id, username, password}) {
         super();
 
+        this.id = id;
         this.username = username;
         this.password = password;
     }
@@ -45,6 +47,7 @@ class UserModel extends Model {
         super.toObject();
         
         return {
+            id: this.id,
             username: this.username,
             password: this.password
         };

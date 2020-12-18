@@ -1,6 +1,7 @@
 const UserApi = require("./api");
 const UserModel = require("./model");
 const Auth = require("./auth/manager");
+const { nanoid } = require("nanoid");
 
 /**
  * This class manages some basic user functionality. 
@@ -40,7 +41,8 @@ class Users {
      * @returns {UserModel} The newly created user.
      */
     create({username, password} = {}) {
-        const user = new UserModel({username});
+        const id = nanoid(16);
+        const user = new UserModel({id, username});
         user.setPassword(password);
 
         return user;
