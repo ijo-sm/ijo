@@ -17,16 +17,10 @@ class UserApi extends ApiModel {
         const data = await req.bodyAsJSON();
         
         // Validate incoming data
-        if (!data?.username) {res.sendError({message: "Missing required data 'username'", code: 500});return}
-        if (!data?.password) {res.sendError({message: "Missing required data 'password'", code: 500});return}
-        if (typeof(data?.username) != "string") {
-            res.sendError({message: "Invalid Data: 'username' was invalid type", code: 500});
-            return;
-        }
-        if (typeof(data.password) != "string") {
-            res.sendError({message: "Invalid Data: 'password' was invalid type", code: 500});
-            return;
-        }
+        if (
+            !req.isValidKey(res, data, "username", "string") ||
+            !req.isValidKey(res, data, "password", "string")
+        ) {return}
 
         // TODO: Check if username has already been used.
 

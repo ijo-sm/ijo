@@ -1,4 +1,5 @@
 const {IncomingMessage} = require("http");
+const ApiResponse = require("./response");
 
 /**
  * This is a custom api request class, extending the capabilities of an IncomingMessage.
@@ -37,6 +38,28 @@ class ApiRequest {
             this.req.on("data", chunk => data = Buffer.concat([data, chunk]));
             this.req.on("end", () => resolve(data));
         }).catch(e => {throw e});
+    }
+    
+    /**
+     * Test if a given key is valid. 
+     * 
+     * Return true if the key is valid and matches the type given, otherwise returns false
+     * @param {ApiResponse} res The response object
+     * @param {object} body The request body in JSON form
+     * @param {string} key The key to validate
+     * @param {string} type The expected type of the key (optional)
+     */
+    isValidKey(res, body, key, type=undefined) {
+        if (body && body[key] != undefined) {
+            if (typeof(body[key]) == type || type == undefined) {
+                return true;
+            }
+            res.sendError({
+                message: `Invalid Data: '${key}' is of incorrect type; expected '${type}', received '${typeof(body[key])}'`,
+                code: 500
+            });
+        }
+        res.sendError({message: `Missing required key: '${key}'`, code: 500});
     }
 }
 
