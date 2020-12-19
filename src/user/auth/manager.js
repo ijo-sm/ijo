@@ -1,12 +1,12 @@
 const jwt = require("jsonwebtoken");
 
-class Auth {
+class UserAuth {
     initialize({auth} = {}) {
         this.secret = auth.secret;
         this.expiresIn = auth.expiresIn;
     }
 
-    verifyToken(token, userid) {
+    verifyToken(token) {
         return new Promise((resolve, reject) => {
             jwt.verify(token, this.secret, (err, decoded) => {
                 if(err) {
@@ -34,4 +34,4 @@ class Auth {
     }
 }
 
-module.exports = Auth;
+module.exports = UserAuth;

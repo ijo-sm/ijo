@@ -2,7 +2,7 @@ const {nanoid} = require("nanoid");
 const DaemonApi = require("./api");
 const DaemonEvents = require("./events");
 const DaemonModel = require("./model");
-const Auth = require("./auth/manager");
+const DaemonAuth = require("./auth/manager");
 
 /**
  * This class manages all of the daemons.
@@ -13,7 +13,7 @@ class Daemons {
      */
     constructor() {
         this.connectedHandlers = [];
-        this.auth = new Auth();
+        this.auth = new DaemonAuth();
     }
 
     /**

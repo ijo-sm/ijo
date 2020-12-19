@@ -1,7 +1,7 @@
 /**
  * This is the authentication class, that authenticates daemons and is in charge of adding new(/pending) daemons.
  */
-class Auth {
+class DaemonAuth {
     constructor() {
         this.pending = [];
     }
@@ -120,4 +120,4 @@ class Auth {
     }
 }
 
-module.exports = Auth;
+module.exports = DaemonAuth;
