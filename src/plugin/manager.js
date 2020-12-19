@@ -43,11 +43,12 @@ class Plugins {
 				path: pluginPath
 			});
 
-			const indexPath = nodePath.join(plugin.path, plugin.index);
-
 			if(plugin.name === undefined) throw Error(`The plugin configuration at ${configPath} has no name.`);
 			if(plugin.author === undefined) throw Error(`The plugin configuration at ${configPath} has no author.`);
 			if(plugin.index === undefined) throw Error(`The plugin configuration at ${configPath} has no index.`);
+
+			const indexPath = nodePath.join(plugin.path, plugin.index);
+
 			if(!FSUtils.exists(indexPath)) throw Error(`The index file for the plugin configuration at ${configPath} doesn't exist.`);
 
 			plugins.push(plugin);
