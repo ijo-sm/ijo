@@ -40,7 +40,8 @@ class DaemonServer {
     close() {
         return new Promise((resolve, reject) => {
             this.server.close(err => {
-                if(err) reject(err);
+                if(!this.server.listening) resolve();
+                else if(err) reject(err);
                 else resolve();
             });
         });
