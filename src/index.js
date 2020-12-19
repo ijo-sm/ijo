@@ -19,7 +19,7 @@ const stop = (event, err) => {
 
 	return core.stop()
 	.then(() => {
-		console.log(`IJO's core has stopped (event: ${event})`);
+		console.log(`IJO's core has stopped (event: ${event}).`);
 	})
 	.catch(err => {
 		throw err;

@@ -5,6 +5,7 @@ class UserApi extends ApiModel {
         super(apiServer);
 
         apiServer.register("/user/create", "POST", (...args) => this.create(users, ...args));
+        apiServer.register("/user/login", "POST", (...args) => this.login(users, ...args));
     }
 
     /**
@@ -28,6 +29,25 @@ class UserApi extends ApiModel {
         await users.collection.addOne(user).catch(e => res.sendError({message: e.message, code: 500}));
 
         res.send({data: {message: "Created"}, code: 201});
+    }
+
+    /**
+     * Logs the user in by creating and sending a new token.
+     * @param {Users} users The users class.
+     * @param {ApiRequest} req The api request.
+     * @param {ApiResponse} res The api response.
+     */
+    async login(users, req, res) {
+        const data = await req.bodyAsJSON();
+        const user = await users.collection.findOne({username: data.username});
+
+        if(user === undefined || !user.isEqualPassword(data.password)) {
+            res.sendError({message: "The username and/or password is incorrect.", code: 400});
+        }
+
+        const token = await users.auth.createToken(user.id);
+
+        res.send({data: {message: "Logged in", token}});
     }
 }
 

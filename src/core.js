@@ -7,6 +7,7 @@ const DaemonServer = require("./net/daemon/server");
 const Plugins = require("./plugin/manager");
 const Users = require("./user/manager");
 const Daemons = require("./daemon/manager");
+const {nanoid} = require("nanoid");
 
 /**
  * This core class manages all the subsystems for IJO.
@@ -20,7 +21,7 @@ class Core {
 		this.apiServer = new ApiServer();
 		this.daemonServer = new DaemonServer();
 		this.config = new ConfigFile(path.join(this.root, "./config.json"), {defaults: {
-			api: {port: 8080},
+			api: {port: 8080, auth: {secret: nanoid(32), expiresIn: "5d"}},
 			daemon: {port: 8081},
 			database: {type: "json", path: "./data/"},
 			plugins: {path: "./plugins/"}
@@ -50,7 +51,7 @@ class Core {
 		await this.plugins.initialize(this.config.get("plugins"), {root: this.root}, this).catch(e => {throw e});
 		this.databaseTypes.register("json", JSONDatabase);
 		this.database = this.databaseTypes.getDatabase(this.config.get("database"), {root: this.root});
-		this.users.initialize({database: this.database, apiServer: this.apiServer});
+		this.users.initialize({database: this.database, apiServer: this.apiServer}, {auth: this.config.get("api").auth});
 		this.daemons.initialize({database: this.database, daemonServer: this.daemonServer, apiServer: this.apiServer});
 	}
 

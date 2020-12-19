@@ -1,20 +1,27 @@
 const UserApi = require("./api");
 const UserModel = require("./model");
+const UserAuth = require("./auth/manager");
+const { nanoid } = require("nanoid");
 
 /**
  * This class manages some basic user functionality. 
  */
 class Users {
+    constructor() {
+        this.auth = new UserAuth();
+    }
+
     /**
      * Initializes the class with some parts from IJO's core. It registers the users collection and creates the user 
      * api.
      * @param {Object} parts The parts from IJO's core.
-     * @param {Database} database The database for IJO.
-     * @param {ApiServer} apiServer The api for IJO.
+     * @param {Database} parts.database The database for IJO.
+     * @param {ApiServer} parts.apiServer The api for IJO.
      */
-    initialize({database, apiServer} = {}) {
+    initialize({database, apiServer} = {}, {auth} = {}) {
         database.register("users", UserModel);
         this.api = new UserApi(apiServer, this);
+        this.auth.initialize({auth});
     }
 
     /**
@@ -34,7 +41,8 @@ class Users {
      * @returns {UserModel} The newly created user.
      */
     create({username, password} = {}) {
-        const user = new UserModel({username});
+        const id = nanoid(16);
+        const user = new UserModel({id, username});
         user.setPassword(password);
 
         return user;
