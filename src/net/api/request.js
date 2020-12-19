@@ -51,17 +51,17 @@ class ApiRequest {
      * @param {string} type The expected type of the key (optional)
      */
     async isValidKey(res, key, type=undefined) {
-        var body = await this.bodyAsJSON();
+        const body = await this.bodyAsJSON();
         if (body && body[key] != undefined) {
             if (typeof(body[key]) == type || type == undefined) {
                 return true;
             }
             res.sendError({
                 message: `Invalid Data: '${key}' is of incorrect type; expected '${type}', received '${typeof(body[key])}'`,
-                code: 500
+                code: 400
             });
         }
-        res.sendError({message: `Missing required key: '${key}'`, code: 500});
+        res.sendError({message: `Missing required key: '${key}'`, code: 400});
     }
 }
 
