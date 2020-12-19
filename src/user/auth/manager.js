@@ -10,12 +10,11 @@ class UserAuth {
         return new Promise((resolve, reject) => {
             jwt.verify(token, this.secret, (err, decoded) => {
                 if(err) {
-                    if(err.name === "TokenExpiredError") resolve("token-expired");
-                    else if(err.name === "JsonWebTokenError") resolve("incorrect-token");
+                    if(err.name === "TokenExpiredError") reject("token-expired");
+                    else if(err.name === "JsonWebTokenError") reject("incorrect-token");
                     else reject(err);
                 }
-                else if(decoded.user !== userid) resolve("incorrect-user");
-                else resolve("correct");
+                else resolve(decoded.user);
             });
         });
     }
