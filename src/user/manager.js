@@ -47,6 +47,37 @@ class Users {
 
         return user;
     }
+
+    /**
+     * Verifies the user from the token sent with this request and returns the id of that user.
+     * @param {ApiRequest} req The api request.
+     * @param {ApiResponse} res The api response.
+     * @returns {String} The id of the user in the token.
+     */
+    async verifyUser(req, res) {
+        const token = req.getBearerToken();
+
+        if(token === undefined) {
+            res.sendError({message: "The user token is missing.", code: 400});
+            return;
+        }
+
+        return new Promise(resolve => {
+            this.auth.verifyToken(token)
+            .catch(err => {
+                if(err === "token-expired") {
+                    res.sendError({message: "The user token has expired.", code: 400});
+                }
+                else if(err === "incorrect-token") {
+                    res.sendError({message: "The user token was incorrect.", code: 400});
+                }
+                else {
+                    res.sendError({message: "An unexpected error occurred while verifying the user token", code: 500});
+                }
+            })
+            .then(token => resolve(token));
+        });
+    }
 }
 
 module.exports = Users;

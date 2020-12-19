@@ -1,8 +1,7 @@
 const path = require("path");
-const {ConfigFile} = require("ijo-utils");
+const {ConfigFile, ApiServer} = require("ijo-utils");
 const JSONDatabase = require("./database/json/database");
 const DatabaseTypes = require("./database/types");
-const ApiServer = require("./net/api/server");
 const DaemonServer = require("./net/daemon/server");
 const Plugins = require("./plugin/manager");
 const Users = require("./user/manager");

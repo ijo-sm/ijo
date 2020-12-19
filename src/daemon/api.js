@@ -1,4 +1,4 @@
-const ApiModel = require("../net/api/model");
+const {ApiModel} = require("ijo-utils");
 
 class DaemonApi extends ApiModel {
     constructor(apiServer, daemons) {
