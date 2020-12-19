@@ -19,11 +19,13 @@ class ApiRequest {
      * @returns {Promise<Object>} A promise that is resolved when the body is loaded and parsed to an object.
      */
     async bodyAsJSON() {
+        if (this.bodyJSON) return this.bodyJSON
         try {
-            return JSON.parse(await this.body().catch(e => {throw e}));
+            this.bodyJSON = JSON.parse(await this.body().catch(e => {throw e}));
         } catch {
-            return {};
+            this.bodyJSON = {};
         }
+        return this.bodyJSON;
     }
 
     /**
@@ -86,6 +88,28 @@ class ApiRequest {
             this.req.on("data", chunk => data = Buffer.concat([data, chunk]));
             this.req.on("end", () => resolve(data));
         }).catch(e => {throw e});
+    }
+    
+    /**
+     * Test if a given key is valid. 
+     * 
+     * Return true if the key is valid and matches the type given, otherwise returns false
+     * @param {ApiResponse} res The response object
+     * @param {string} key The key to validate
+     * @param {string} type The expected type of the key (optional)
+     */
+    async isValidKey(res, key, type=undefined) {
+        const body = await this.bodyAsJSON();
+        if (body && body[key] != undefined) {
+            if (typeof(body[key]) == type || type == undefined) {
+                return true;
+            }
+            res.sendError({
+                message: `Invalid Data: '${key}' is of incorrect type; expected '${type}', received '${typeof(body[key])}'`,
+                code: 400
+            });
+        }
+        res.sendError({message: `Missing required key: '${key}'`, code: 400});
     }
 }
 

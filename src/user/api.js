@@ -16,8 +16,15 @@ class UserApi extends ApiModel {
      */
     async create(users, req, res) {
         const data = await req.bodyAsJSON();
+        
+        // Validate incoming data
+        if (
+            !await req.isValidKey(res, "username", "string") ||
+            !await req.isValidKey(res, "password", "string")
+        ) {return}
+
         // TODO: Check if username has already been used.
-        // TODO: Check if data is correct (eg username and password are not missing).
+
         const user = users.create({username: data.username, password: data.password});
         await users.collection.addOne(user).catch(e => res.sendError({message: e.message, code: 500}));
 
