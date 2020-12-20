@@ -1,0 +1,31 @@
+{
+  "name": "ijo",
+  "version": "0.0.1",
+  "description": "The IJO server manager",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ijo-sm/ijo.git"
+  },
+  "keywords": [
+    "panel",
+    "ijo",
+    "server-panel",
+    "server-management"
+  ],
+  "author": "ijo-sm",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ijo-sm/ijo/issues"
+  },
+  "homepage": "https://github.com/ijo-sm/ijo#readme",
+  "dependencies": {
+    "ijo-utils": "github:ijo-sm/ijo-utils",
+    "jsonwebtoken": "^8.5.1",
+    "nanoid": "^3.1.20",
+    "semver": "^7.3.4"
+  }
+}
