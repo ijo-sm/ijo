@@ -64,15 +64,15 @@ class DaemonHandler {
     async handle(data) {
         const event = data.event;
 
-        if(event === "auth/identify" && this.identifyCallback && !this.isIdentified) {
+        if (event === "auth/identify" && this.identifyCallback && !this.isIdentified) {
             await this.identifyCallback(data);
 
             return;
         }
-        else if(!this.isIdentified) return;
+        else if (!this.isIdentified) return;
 
-        for(const handler of this.daemonServer.stack) {
-            if(handler.event !== event) continue;
+        for (const handler of this.daemonServer.stack) {
+            if (handler.event !== event) continue;
 
             await handler.callback(data, this.model, this);
 

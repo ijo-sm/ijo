@@ -31,7 +31,7 @@ class DaemonAuth {
         let timedOut = false;
 
         setTimeout(() => {
-            if(handler.pending || handler.isIdentified) return;
+            if (handler.pending || handler.isIdentified) return;
             timedOut = true;
             handler.close();
         }, 3000);
@@ -40,13 +40,13 @@ class DaemonAuth {
             handler.identifyCallback = data => resolve(data);
         });
 
-        if(timedOut) return;
+        if (timedOut) return;
 
         handler.identity = identity;
 
         const daemon = await this.daemons.collection.findOne({name: handler.identity.name});
 
-        if(daemon) this.authKnown(handler, daemon);
+        if (daemon) this.authKnown(handler, daemon);
         else await this.authUnknown(handler);
     }
 
@@ -58,13 +58,13 @@ class DaemonAuth {
      * @returns {Promise} A promise that resolves when the authentication is finished.
      */
     async authUnknown(handler) {
-        if(typeof(handler.identity.name) !== "string") {
+        if (typeof(handler.identity.name) !== "string") {
             return handler.send({event: "auth/incorrect"});
         }
-        if(typeof(handler.identity.code) !== "string") {
+        if (typeof(handler.identity.code) !== "string") {
             return handler.send({event: "auth/incorrect"});
         }
-        if(await this.daemons.isNameUsed(handler.identity.name)) {
+        if (await this.daemons.isNameUsed(handler.identity.name)) {
             return handler.send({event: "nameInUse"});
         }
 
@@ -79,7 +79,7 @@ class DaemonAuth {
      * @param {DaemonModel} daemon The daemon that corresponds to the name given by the handler.
      */
     authKnown(handler, daemon) {
-        if(daemon.isEqualKey(handler.identity.key)) {
+        if (daemon.isEqualKey(handler.identity.key)) {
             return handler.send({event: "auth/incorrect"});
         }
 
@@ -104,15 +104,15 @@ class DaemonAuth {
     removePending(handler) {
         const handlerIndex = this.pending.find(pendingHandler => pendingHandler === handler);
 
-        if(handlerIndex < 0) return;
+        if (handlerIndex < 0) return;
 
         this.pending.splice(handlerIndex);
         handler.pending = false;
     }
 
     /**
-     * Transfers a pending handler into a newly created daemon model. This model is added to the database and the handler 
-     * to the list of connected daemons. Lastly, it sends the key of the new of the daemon to the daemon.
+     * Transfers a pending handler into a newly created daemon model. This model is added to the database and the 
+     * handler to the list of connected daemons. Lastly, it sends the key of the new of the daemon to the daemon.
      * @param {DaemonHandler} handler The daemon handler.
      */
     async pendingToConnection(handler) {

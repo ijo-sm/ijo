@@ -44,7 +44,7 @@ class DaemonModel extends Model {
         return {
             name: this.name,
             key: this.key
-        }
+        };
     }
 }
 
