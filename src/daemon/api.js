@@ -5,12 +5,14 @@ class DaemonApi extends ApiModel {
         super(apiServer);
 
         apiServer.register("/daemons/pending", "GET", (...args) => this.pending(daemons, ...args));
-        apiServer.register("/daemons/add", "POST", (...args) => this.add(daemons, ...args))
+        apiServer.register("/daemons/add", "POST", (...args) => this.add(daemons, ...args));
     }
 
     pending(daemons, req, res) {
         res.send({
-            data: daemons.auth.pending.map(handler => {return {name: handler.identity.name, code: handler.identity.code}})
+            data: daemons.auth.pending.map(handler => {
+                return {name: handler.identity.name, code: handler.identity.code};
+            })
         });
     }
 
@@ -18,7 +20,7 @@ class DaemonApi extends ApiModel {
         const data = await req.bodyAsJSON();
         const handler = daemons.auth.pending.find(handler => handler.identity.name === data.name);
 
-        if(handler === undefined) {
+        if (handler === undefined) {
             return res.sendError({message: "No pending daemon with that name found.", code: 400});
         }
 

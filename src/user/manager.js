@@ -58,18 +58,19 @@ class Users {
     async verifyUser(req, res) {
         const token = req.getBearerToken();
 
-        if(token === undefined) {
+        if (token === undefined) {
             res.sendError({message: "The user token is missing.", code: 400});
+            
             return;
         }
 
         return new Promise(resolve => {
             this.auth.verifyToken(token)
             .catch(err => {
-                if(err === "token-expired") {
+                if (err === "token-expired") {
                     res.sendError({message: "The user token has expired.", code: 400});
                 }
-                else if(err === "incorrect-token") {
+                else if (err === "incorrect-token") {
                     res.sendError({message: "The user token was incorrect.", code: 400});
                 }
                 else {

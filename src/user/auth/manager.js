@@ -13,9 +13,9 @@ class UserAuth {
     verifyToken(token) {
         return new Promise((resolve, reject) => {
             jwt.verify(token, this.secret, (err, decoded) => {
-                if(err) {
-                    if(err.name === "TokenExpiredError") reject("token-expired");
-                    else if(err.name === "JsonWebTokenError") reject("incorrect-token");
+                if (err) {
+                    if (err.name === "TokenExpiredError") reject("token-expired");
+                    else if (err.name === "JsonWebTokenError") reject("incorrect-token");
                     else reject(err);
                 }
                 else resolve(decoded.user);
@@ -30,7 +30,7 @@ class UserAuth {
             }, this.secret, {
                 expiresIn: this.expiresIn
             }, (err, token) => {
-                if(err) reject(err);
+                if (err) reject(err);
                 else resolve(token);
             });
         });

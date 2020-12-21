@@ -41,7 +41,7 @@ class UserApi extends ApiModel {
         const data = await req.bodyAsJSON();
         const user = await users.collection.findOne({username: data.username});
 
-        if(user === undefined || !user.isEqualPassword(data.password)) {
+        if (user === undefined || !user.isEqualPassword(data.password)) {
             return res.sendError({message: "The username and/or password is incorrect.", code: 400});
         }
 

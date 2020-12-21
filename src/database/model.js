@@ -9,7 +9,7 @@ class Model {
      * Constructs the model from the given data.
      * @param {Object} data The data for the model.
      */
-    constructor(data) {}
+    constructor() {}
 
     /**
      * Constructs and returns an object from this model.

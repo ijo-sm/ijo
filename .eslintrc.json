@@ -1,0 +1,25 @@
+{
+    "env": {
+        "node": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 12
+    },
+    "rules": {
+        "camelcase": ["error"],
+        "indent": ["error", 4, {"MemberExpression": 0}],
+        "keyword-spacing": ["warn"],
+        "lines-between-class-members": ["error"],
+        "max-len": ["error", {"code": 120}],
+        "newline-before-return": ["warn"],
+        "no-else-return": ["warn"],
+        "no-eval": ["error"],
+        "no-multi-spaces": ["warn"],
+        "no-var": ["error"],
+        "quotes": ["warn", "double"],
+        "semi": ["error", "always", {"omitLastInOneLineBlock": true}]
+    }
+}

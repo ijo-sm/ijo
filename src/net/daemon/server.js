@@ -35,9 +35,9 @@ class DaemonServer {
     unregister(event) {
         const handlerIndex = this.stack.findIndex(handler => handler.event === event);
 
-		if(handlerIndex < 0) return;
+        if (handlerIndex < 0) return;
 
-		this.stack.splice(handlerIndex);
+        this.stack.splice(handlerIndex);
     }
 
     /**
@@ -86,8 +86,8 @@ class DaemonServer {
     close() {
         return new Promise((resolve, reject) => {
             this.server.close(err => {
-                if(!this.server.listening) resolve();
-                else if(err) reject(err);
+                if (!this.server.listening) resolve();
+                else if (err) reject(err);
                 else resolve();
             });
         });
