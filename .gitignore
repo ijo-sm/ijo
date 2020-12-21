@@ -1,5 +1,6 @@
-/node_modules/
+/.nyc_output/
 /data/
-/plugins/
 /docs/
+/node_modules/
+/plugins/
 config.json

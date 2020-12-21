@@ -7,7 +7,9 @@
     "start": "node ./src/index.js",
     "docs": "./node_modules/.bin/jsdoc -c jsdoc.json",
     "lint": "./node_modules/.bin/eslint ./src",
-    "lint-fix": "./node_modules/.bin/eslint ./src --fix"
+    "lint-fix": "./node_modules/.bin/eslint ./src --fix",
+    "test": "./node_modules/.bin/mocha --reporter spec",
+    "coverage": "./node_modules/.bin/nyc npm test"
   },
   "repository": {
     "type": "git",
@@ -32,8 +34,11 @@
     "semver": "^7.3.4"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "docdash": "^1.2.0",
     "eslint": "^7.16.0",
-    "jsdoc": "^3.6.6"
+    "jsdoc": "^3.6.6",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0"
   }
 }
