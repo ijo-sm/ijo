@@ -1,7 +1,7 @@
 const UserApi = require("./api");
 const UserModel = require("./model");
 const UserAuth = require("./auth/manager");
-const { nanoid } = require("nanoid");
+const {nanoid} = require("nanoid");
 
 /**
  * This class manages some basic user functionality. 
@@ -79,7 +79,7 @@ class Users {
 
                 resolve();
             })
-            .then(token => resolve(token));
+            .then(userid => resolve(userid));
         });
     }
 }
