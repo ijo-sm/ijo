@@ -34,7 +34,7 @@ describe("UserManager", () => {
             const res = {sendError: data => {
                 expect(data.message).to.equal("The user token has expired.");
                 expect(data.code).to.equal(400);
-            }}
+            }};
 
             await manager.verifyUser(req, res);
         });
