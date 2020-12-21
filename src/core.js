@@ -17,23 +17,51 @@ class Core {
 	 * the core. For some subsystem static parameters are also supplied.
 	 */
 	constructor() {
+		/**
+		 * The api server.
+		 * @type {ApiServer}
+		 */
 		this.apiServer = new ApiServer();
+		/**
+		 * The daemon server.
+		 * @type {DaemonServer}
+		 */
 		this.daemonServer = new DaemonServer();
+		/**
+		 * The database types.
+		 * @type {DatabaseTypes}
+		 */
+		this.databaseTypes = new DatabaseTypes();
+		/**
+		 * The plugin manager.
+		 * @type {Plugins}
+		 */
+		this.plugins = new Plugins();
+		/**
+		 * The users manager.
+		 * @type {Users}
+		 */
+		this.users = new Users();
+		/**
+		 * The daemon manager.
+		 * @type {Daemons}
+		 */
+		this.daemons = new Daemons();
+		/**
+		 * The main configuration file.
+		 * @type {ConfigFile}
+		 */
 		this.config = new ConfigFile(path.join(this.root, "./config.json"), {defaults: {
 			api: {port: 8080, auth: {secret: nanoid(32), expiresIn: "5d"}},
 			daemon: {port: 8081},
 			database: {type: "json", path: "./data/"},
 			plugins: {path: "./plugins/"}
 		}});
-		this.databaseTypes = new DatabaseTypes();
-		this.plugins = new Plugins();
-		this.users = new Users();
-		this.daemons = new Daemons();
 	}
 
 	/**
 	 * Returns the root for IJO.
-	 * @returns {String} The root for IJO.
+	 * @type {String}
 	 */
 	get root() {
 		return path.join(path.dirname(require.main.filename), "../");
