@@ -2,23 +2,39 @@ const nodePath = require("path")
 
 /**
  * This is the model class for a plugin.
+ * @memberof plugin
  */
 class Plugin {
     /**
      * Creates the plugin with the specified data.
      * @param {Object} data The data for the plugin.
-     * @param {String} data.name The name of the plugin.
-     * @param {Array<String>} data.dependencies The dependencies for the plugin.
-     * @param {String} author The name of the author of the plugin.
+     * @param {String} data.name {@link plugin.Plugin#name}
+     * @param {Array<String>} data.dependencies {@link plugin.Plugin#dependencies}
+     * @param {String} data.index {@link plugin.Plugin#index}
+     * @param {String} data.author {@link plugin.Plugin#author}
      * @param {String} path The path to the plugin. 
      */
-	constructor({name, dependencies, index, author, path} = {}) {
+	constructor({name, dependencies, index, author} = {}, path) {
+        /** The name of the plugin. 
+         * @type {String} */
         this.name = name;
+        /** The arrry of plugin names this plugin depends on. 
+         * @type {Array.<String>} */
         this.dependencies = dependencies;
+        /** The path to the index file, relative to the path of the plugin.
+         * @type {String} */
         this.index = index;
+        /** The author of the plugin. 
+         * @type {String} */
         this.author = author;
+        /** The path to the plugin.
+         * @type {String} */
         this.path = path;
+        /** If the plugin has been loaded.
+         * @type {boolean} */
         this.loaded = false;
+        /** If the plugin has been enabled. 
+         * @type {boolean} */
         this.enabled = false;
     }
 

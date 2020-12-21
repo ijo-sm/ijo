@@ -5,6 +5,7 @@ const { nanoid } = require("nanoid");
 
 /**
  * This class manages some basic user functionality. 
+ * @memberof user
  */
 class Users {
     constructor() {
@@ -74,6 +75,8 @@ class Users {
                 else {
                     res.sendError({message: "An unexpected error occurred while verifying the user token", code: 500});
                 }
+
+                resolve();
             })
             .then(token => resolve(token));
         });

@@ -2,6 +2,7 @@ const Model = require("../database/model");
 
 /**
  * This is the model for a daemon.
+ * @memberof daemon
  */
 class DaemonModel extends Model {
     /**
@@ -13,7 +14,15 @@ class DaemonModel extends Model {
     constructor({name, key}) {
         super();
 
+        /**
+         * The name of the daemon.
+         * @type {String}
+         */
         this.name = name;
+        /**
+         * The key for the daemon.
+         * @type {String}
+         */
         this.key = key;
     }
 

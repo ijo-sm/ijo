@@ -4,9 +4,14 @@ const Plugin = require("./model");
 
 /**
  * This the class managing all plugins added to this instance of IJO.
+ * @memberof plugin
  */
 class Plugins {
 	constructor() {
+		/**
+		 * The array of plugins.
+		 * @type {Array.<Plugin>}
+		 */
 		this.plugins = [];
 	}
 
@@ -39,9 +44,8 @@ class Plugins {
 				name: config.get("name"),
 				dependencies: config.get("dependencies") || [],
 				author: config.get("author"),
-				index: config.get("index"),
-				path: pluginPath
-			});
+				index: config.get("index")
+			}, pluginPath);
 
 			if(plugin.name === undefined) throw Error(`The plugin configuration at ${configPath} has no name.`);
 			if(plugin.author === undefined) throw Error(`The plugin configuration at ${configPath} has no author.`);

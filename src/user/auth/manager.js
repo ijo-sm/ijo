@@ -1,5 +1,9 @@
 const jwt = require("jsonwebtoken");
 
+/**
+ * This class handles the authentication for users.
+ * @memberof user
+ */
 class UserAuth {
     initialize({auth} = {}) {
         this.secret = auth.secret;

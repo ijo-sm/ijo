@@ -1,8 +1,13 @@
 /**
  * This is the authentication class, that authenticates daemons and is in charge of adding new(/pending) daemons.
+ * @memberof daemon
  */
 class DaemonAuth {
     constructor() {
+        /**
+         * An array of daemon handlers that are still pending, meaning they haven't been added to the panel yet.
+         * @type {Array.<DaemonHander>}
+         */
         this.pending = [];
     }
 

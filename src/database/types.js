@@ -3,12 +3,17 @@ const Database = require("./database");
 /**
  * The DatabaseTypes class manages the available database implementations. Plugins are free to register their own 
  * implementations which a user may then select, keeping IJO open to modularity.
+ * @memberof database
  */
 class DatabaseTypes {
 	/**
 	 * Assign an array to the instance containing the registered types.
 	 */
 	constructor() {
+		/**
+		 * The array of registerd database types.
+		 * @type {Array.<Object>}
+		 */
 		this.types = [];
 	}
 

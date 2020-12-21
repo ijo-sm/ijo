@@ -4,9 +4,15 @@ const Collection = require("./collection");
  * This is the abstract Database class, which can be extendend by implementations. These implementations should then
  * provide the api outlined in this class. This ensure that code using this api in IJO and its plugins can rely on its
  * uniformity.
+ * @memberof database
+ * @abstract
  */
 class Database {
 	constructor() {
+		/**
+		 * An array of registered collections.
+		 * @type {Array.<Collection>}
+		 */
 		this.collections = [];
 	}
 
