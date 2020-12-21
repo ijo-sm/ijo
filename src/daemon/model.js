@@ -14,7 +14,15 @@ class DaemonModel extends Model {
     constructor({name, key}) {
         super();
 
+        /**
+         * The name of the daemon.
+         * @type {String}
+         */
         this.name = name;
+        /**
+         * The key for the daemon.
+         * @type {String}
+         */
         this.key = key;
     }
 

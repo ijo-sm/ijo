@@ -5,6 +5,7 @@ const Model = require("./model");
  * class contains all the required functions for a collection. The code for IJO and its plugins will only call these 
  * functions to create a uniform api.
  * @memberof database
+ * @abstract
  */
 class Collection {
 	/**
@@ -14,7 +15,15 @@ class Collection {
 	 * @param {Class} modelClass The class of the model for this collection. 
 	 */
 	constructor(name, modelClass) {
+		/**
+		 * The name of the collection.
+		 * @type {String}
+		 */
 		this.name = name;
+		/**
+		 * The class of the model.
+		 * @type {Class}
+		 */
 		this.modelClass = modelClass;
 	}
 

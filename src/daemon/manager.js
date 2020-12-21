@@ -9,10 +9,18 @@ const DaemonAuth = require("./auth/manager");
  */
 class Daemons {
     /**
-     * On creation an array containing the connected daemon handlers and the authentication manager are created.
+     * On creation, an array containing the connected daemon handlers and the authentication manager are created.
      */
     constructor() {
+        /**
+         * An array containing the connected daemon handlers.
+         * @type {Array.<DaemonHandler>}
+         */
         this.connectedHandlers = [];
+        /**
+         * The authentication manager for the daemons.
+         * @type {DaemonAuth}
+         */
         this.auth = new DaemonAuth();
     }
 

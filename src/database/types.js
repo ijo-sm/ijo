@@ -10,6 +10,10 @@ class DatabaseTypes {
 	 * Assign an array to the instance containing the registered types.
 	 */
 	constructor() {
+		/**
+		 * The array of registerd database types.
+		 * @type {Array.<Object>}
+		 */
 		this.types = [];
 	}
 
