@@ -2,6 +2,7 @@ const nodePath = require("path")
 
 /**
  * This is the model class for a plugin.
+ * @memberof plugin
  */
 class Plugin {
     /**

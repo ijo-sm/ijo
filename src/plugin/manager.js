@@ -4,6 +4,7 @@ const Plugin = require("./model");
 
 /**
  * This the class managing all plugins added to this instance of IJO.
+ * @memberof plugin
  */
 class Plugins {
 	constructor() {

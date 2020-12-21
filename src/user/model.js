@@ -3,6 +3,7 @@ const Model = require("../database/model");
 
 /**
  * This is the model for a user.
+ * @memberof user
  */
 class UserModel extends Model {
     /**

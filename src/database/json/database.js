@@ -4,10 +4,6 @@ const {FSUtils} = require("ijo-utils");
 const Database = require("../database");
 const JSONCollection = require("./collection");
 
-/**
- * This is the JSON implementation for databasing. As this implementation is relatively small, since it relies on the 
- * ConfigFile class, it is included by default.
- */
 class JSONDatabase extends Database {
 	constructor({path} = {}, {root} = {}) {
 		super();

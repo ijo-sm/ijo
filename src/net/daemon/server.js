@@ -1,6 +1,10 @@
 const net = require("net");
 const DaemonHandler = require("./handler");
 
+/**
+ * This class is in charge of the server which daemons can connect to.
+ * @memberof net
+ */
 class DaemonServer {
     constructor() {
         this.stack = [];

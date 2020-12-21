@@ -1,3 +1,7 @@
+/**
+ * This class handles a request with a daemon.
+ * @memberof net
+ */
 class DaemonHandler {
     constructor(socket, daemonServer) {
         this.socket = socket;

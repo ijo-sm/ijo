@@ -4,6 +4,7 @@ const Model = require("./model");
  * This is the abstract Collection class. Databasing implementations have to create a class extending this one, as this 
  * class contains all the required functions for a collection. The code for IJO and its plugins will only call these 
  * functions to create a uniform api.
+ * @memberof database
  */
 class Collection {
 	/**
@@ -20,7 +21,7 @@ class Collection {
 	/**
 	 * Finds the items in this collection that match the specified query. This function is expected to be async.
 	 * @param {Object} query The query to search for.
-	 * @returns {Promise<Array<Model>} A promise that is resolved with the found items.
+	 * @returns {Promise<Model[]>} A promise that is resolved with the found items.
 	 */
 	find(query) {}
 

@@ -42,7 +42,7 @@ class UserApi extends ApiModel {
         const user = await users.collection.findOne({username: data.username});
 
         if(user === undefined || !user.isEqualPassword(data.password)) {
-            res.sendError({message: "The username and/or password is incorrect.", code: 400});
+            return res.sendError({message: "The username and/or password is incorrect.", code: 400});
         }
 
         const token = await users.auth.createToken(user.id);

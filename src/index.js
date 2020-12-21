@@ -29,3 +29,9 @@ const stop = (event, err) => {
 [`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `SIGTERM`, `uncaughtException`].forEach(event => {
     process.on(event, err => stop(event, err));
 });
+
+/** @namespace daemon */
+/** @namespace database */
+/** @namespace net */
+/** @namespace plugin */
+/** @namespace user */

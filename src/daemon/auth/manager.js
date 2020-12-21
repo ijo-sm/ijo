@@ -1,5 +1,6 @@
 /**
  * This is the authentication class, that authenticates daemons and is in charge of adding new(/pending) daemons.
+ * @memberof daemon
  */
 class DaemonAuth {
     constructor() {

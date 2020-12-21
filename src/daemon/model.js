@@ -2,6 +2,7 @@ const Model = require("../database/model");
 
 /**
  * This is the model for a daemon.
+ * @memberof daemon
  */
 class DaemonModel extends Model {
     /**

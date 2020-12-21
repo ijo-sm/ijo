@@ -3,9 +3,9 @@ const DaemonApi = require("./api");
 const DaemonEvents = require("./events");
 const DaemonModel = require("./model");
 const DaemonAuth = require("./auth/manager");
-
 /**
  * This class manages all of the daemons.
+ * @memberof daemon
  */
 class Daemons {
     /**
