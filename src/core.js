@@ -17,7 +17,6 @@ class Core {
      * the core. For some subsystem static parameters are also supplied.
      */
     constructor() {
-        // TODO: Add control over log level using cli args
         /** The core log
          * @type {Logger} */
         this.log = new Logger();
@@ -62,6 +61,7 @@ class Core {
      * @returns {Promise} A promise that resolves after initialization.
      */
     async initialize() {
+        // TODO: Add control over log level using cli args
         await this.log.initialize({folder: path.join(this.root, "./logs"), name: "core", logLevel: 2});
         await this.config.load().catch(e => {throw e});
         this.apiServer.initialize();
