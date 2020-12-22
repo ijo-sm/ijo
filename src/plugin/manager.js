@@ -22,8 +22,11 @@ class Plugins {
      * @returns {Array<Plugin>} The found plugins.
      */
     async findPlugins(path) {
+        this.log.trace("Finding plugins");
         if (!FSUtils.exists(path) || !(await FSUtils.isFolder(path).catch(e => {throw e}))) {
+            this.log.debug("No plugins folder found; creating one instead");
             await FSUtils.createFolder(path).catch(e => {throw e});
+            this.log.trace("Created folder for plugins");
         }
 
         const folders = await FSUtils.readdir(path).catch(e => {throw e});
@@ -133,7 +136,9 @@ class Plugins {
      */
     async execute(event, args = []) {
         for (const plugin of this.plugins) {
+            this.log.trace(`Running event '${event}' for plugin '${plugin.name}'`);
             await plugin[event](...args).catch(e => {throw e});
+            this.log.trace(`Completed event '${event}' for plugin '${plugin.name}'`);
         }
     }
 
