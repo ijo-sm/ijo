@@ -4,9 +4,6 @@ core.initialize()
 .then(() => {
     return core.start();
 })
-.then(() => {
-    console.log("IJO's core has started.");
-})
 .catch(err => {
     throw err;
 });
@@ -17,10 +14,7 @@ const stop = (event, err) => {
     if (stopped) return;
     stopped = true;
 
-    return core.stop()
-    .then(() => {
-        console.log(`IJO's core has stopped (event: ${event}).`);
-    })
+    return core.stop(event)
     .catch(err => {
         throw err;
     });

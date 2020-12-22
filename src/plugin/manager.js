@@ -75,6 +75,7 @@ class Plugins {
      * @returns {Promise} A promise that is resolved when the plugins have been initialized.
      */
     async initialize({path} = {}, {root} = {}, core) {
+        this.log = core.log;
         this.path = nodePath.join(root, path);
 
         // Check if folder exists and create it if it doesn't.
@@ -88,6 +89,7 @@ class Plugins {
         this.plugins.push(...plugins.sort((a, b) => this.compareDependencies(a, b)));
 
         await this.load(core).catch(e => {throw e});
+        this.log.info("Loaded plugins");
     }
 
     /**

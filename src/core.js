@@ -1,5 +1,5 @@
 const path = require("path");
-const {ConfigFile, ApiServer} = require("ijo-utils");
+const {Logger, ConfigFile, ApiServer} = require("ijo-utils");
 const JSONDatabase = require("./database/json/database");
 const DatabaseTypes = require("./database/types");
 const DaemonServer = require("./net/daemon/server");
@@ -17,6 +17,10 @@ class Core {
      * the core. For some subsystem static parameters are also supplied.
      */
     constructor() {
+        // TODO: Add control over log level using cli args
+        /** The core log
+         * @type {Logger} */
+        this.log = new Logger();
         /** The api server.
          * @type {ApiServer} */
         this.apiServer = new ApiServer();
@@ -58,6 +62,7 @@ class Core {
      * @returns {Promise} A promise that resolves after initialization.
      */
     async initialize() {
+        await this.log.initialize({folder: path.join(this.root, "./logs"), name: "core", logLevel: 2});
         await this.config.load().catch(e => {throw e});
         this.apiServer.initialize();
         this.daemonServer.initialize({daemons: this.daemons});
@@ -82,19 +87,23 @@ class Core {
         await this.daemonServer.start({port: this.config.get("daemon").port}).catch(e => {throw e});
         await this.apiServer.start({port: this.config.get("api").port}).catch(e => {throw e});
         await this.plugins.enable().catch(e => {throw e});
+        this.log.info("IJO's core has started");
     }
 
     /**
      * Stops IJO.
+     * @param {string} event The event that caused IJO to stop.
      * @returns {Promise} A promise that resolves when IJO has stopped.
      */
-    async stop() {
+    async stop(event) {
         await this.plugins.disable().catch(e => {throw e});
         await this.apiServer.close().catch(e => {throw e});
         await this.daemonServer.close().catch(e => {throw e});
         await this.database.close().catch(e => {throw e});
         await this.plugins.unload().catch(e => {throw e});
         await this.config.save().catch(e => {throw e});
+        this.log.info(`IJO's core has stopped (event: ${event})`);
+        await this.log.close();
     }
 }
 
