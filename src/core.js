@@ -87,7 +87,7 @@ class Core {
         await this.daemonServer.start({port: this.config.get("daemon").port}).catch(e => {throw e});
         await this.apiServer.start({port: this.config.get("api").port}).catch(e => {throw e});
         await this.plugins.enable().catch(e => {throw e});
-        this.log.info("IJO's core has started");
+        this.log.info("IJO's core has started", "core");
     }
 
     /**
@@ -102,7 +102,7 @@ class Core {
         await this.database.close().catch(e => {throw e});
         await this.plugins.unload().catch(e => {throw e});
         await this.config.save().catch(e => {throw e});
-        this.log.info(`IJO's core has stopped (event: ${event})`);
+        this.log.info(`IJO's core has stopped (event: ${event})`, "core");
         await this.log.close();
     }
 }
