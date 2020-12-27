@@ -19,10 +19,12 @@ class Users {
      * @param {Database} parts.database The database for IJO.
      * @param {ApiServer} parts.apiServer The api for IJO.
      */
-    initialize({database, apiServer} = {}, {auth} = {}) {
+    initialize({database, apiServer, log} = {}, {auth} = {}) {
+        this.log = log;
         database.register("users", UserModel);
         this.api = new UserApi(apiServer, this);
         this.auth.initialize({auth});
+        this.log.trace("Initialized user manager", "users");
     }
 
     /**

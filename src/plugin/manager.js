@@ -22,7 +22,7 @@ class Plugins {
      * @returns {Array<Plugin>} The found plugins.
      */
     async findPlugins(path) {
-        this.log.trace("Finding plugins", "plugin");
+        this.log.trace("Finding plugins", "plugins");
         if (!FSUtils.exists(path) || !(await FSUtils.isFolder(path).catch(e => {throw e}))) {
             this.log.debug("No plugins folder found; creating one instead", "plugins");
             await FSUtils.createFolder(path).catch(e => {throw e});
@@ -58,12 +58,14 @@ class Plugins {
             const indexPath = nodePath.join(plugin.path, plugin.index);
 
             if (!FSUtils.exists(indexPath)) {
-                this.log.fatal(`No index file for plugin '${plugin.name}' at ${indexPath}`, "plugin");
+                this.log.fatal(`No index file for plugin '${plugin.name}' at ${indexPath}`, "plugins");
                 throw Error(`The index file for the plugin configuration at ${configPath} doesn't exist.`);
             }
 
             plugins.push(plugin);
         }
+
+        this.log.trace(`Found ${plugins.length} plugins`, "plugins");
 
         return plugins;
     }

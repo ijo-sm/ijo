@@ -1,8 +1,14 @@
 const {ApiModel} = require("ijo-utils");
 
 class UserApi extends ApiModel {
+    /**
+     * Create an instance of UserAPI
+     * @param {ApiServer} apiServer The API server instance to use
+     * @param {Users} users The parent user manager
+     */
     constructor(apiServer, users) {
         super(apiServer);
+        this.log = users.log;
 
         apiServer.register("/user/create", "POST", (...args) => this.create(users, ...args));
         apiServer.register("/user/login", "POST", (...args) => this.login(users, ...args));
@@ -27,6 +33,7 @@ class UserApi extends ApiModel {
 
         const user = users.create({username: data.username, password: data.password});
         await users.collection.addOne(user).catch(e => res.sendError({message: e.message, code: 500}));
+        this.log.debug(`New user created: ${user.id}`, "user-api");
 
         res.send({data: {message: "Created"}, code: 201});
     }
@@ -44,6 +51,8 @@ class UserApi extends ApiModel {
         if (user === undefined || !user.isEqualPassword(data.password)) {
             return res.sendError({message: "The username and/or password is incorrect.", code: 400});
         }
+
+        this.log.trace(`User logged in: ${user.id}`, "user-api");
 
         const token = await users.auth.createToken(user.id);
 

@@ -71,7 +71,8 @@ class Core {
         this.database = this.databaseTypes.getDatabase(this.config.get("database"), {root: this.root});
         this.users.initialize({
             database: this.database, 
-            apiServer: this.apiServer
+            apiServer: this.apiServer,
+            log: this.log
         }, {auth: this.config.get("api").auth});
         this.daemons.initialize({database: this.database, daemonServer: this.daemonServer, apiServer: this.apiServer});
     }
