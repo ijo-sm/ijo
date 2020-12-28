@@ -64,7 +64,7 @@ class Core {
         // TODO: Add control over log level using cli args
         await this.log.initialize({folder: path.join(this.root, "./logs"), name: "core", logLevel: 2});
         await this.config.load().catch(e => {throw e});
-        this.apiServer.initialize();
+        this.apiServer.initialize(this.log);
         this.daemonServer.initialize({daemons: this.daemons});
         await this.plugins.initialize(this.config.get("plugins"), {root: this.root}, this).catch(e => {throw e});
         this.databaseTypes.register("json", JSONDatabase);
