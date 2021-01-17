@@ -79,7 +79,7 @@ class DaemonAuth {
      * @param {DaemonModel} daemon The daemon that corresponds to the name given by the handler.
      */
     authKnown(handler, daemon) {
-        if (daemon.isEqualKey(handler.identity.key)) {
+        if (!daemon.isEqualKey(handler.identity.key)) {
             return handler.send({event: "auth/incorrect"});
         }
 
