@@ -1,5 +1,5 @@
 const path = require("path");
-const {ConfigFile, ApiServer} = require("ijo-utils");
+const {Logger, ConfigFile, ApiServer} = require("ijo-utils");
 const JSONDatabase = require("./database/json/database");
 const DatabaseTypes = require("./database/types");
 const DaemonServer = require("./net/daemon/server");
@@ -17,6 +17,9 @@ class Core {
      * the core. For some subsystem static parameters are also supplied.
      */
     constructor() {
+        /** The core log
+         * @type {Logger} */
+        this.log = new Logger();
         /** The api server.
          * @type {ApiServer} */
         this.apiServer = new ApiServer();
@@ -58,15 +61,18 @@ class Core {
      * @returns {Promise} A promise that resolves after initialization.
      */
     async initialize() {
+        // TODO: Add control over log level using cli args
+        await this.log.initialize({folder: path.join(this.root, "./logs"), name: "core", logLevel: 2});
         await this.config.load().catch(e => {throw e});
-        this.apiServer.initialize();
+        this.apiServer.initialize(this.log);
         this.daemonServer.initialize({daemons: this.daemons});
         await this.plugins.initialize(this.config.get("plugins"), {root: this.root}, this).catch(e => {throw e});
         this.databaseTypes.register("json", JSONDatabase);
         this.database = this.databaseTypes.getDatabase(this.config.get("database"), {root: this.root});
         this.users.initialize({
             database: this.database, 
-            apiServer: this.apiServer
+            apiServer: this.apiServer,
+            log: this.log
         }, {auth: this.config.get("api").auth});
         this.daemons.initialize({database: this.database, daemonServer: this.daemonServer, apiServer: this.apiServer});
     }
@@ -82,19 +88,23 @@ class Core {
         await this.daemonServer.start({port: this.config.get("daemon").port}).catch(e => {throw e});
         await this.apiServer.start({port: this.config.get("api").port}).catch(e => {throw e});
         await this.plugins.enable().catch(e => {throw e});
+        this.log.info("IJO's core has started", "core");
     }
 
     /**
      * Stops IJO.
+     * @param {string} event The event that caused IJO to stop.
      * @returns {Promise} A promise that resolves when IJO has stopped.
      */
-    async stop() {
+    async stop(event) {
         await this.plugins.disable().catch(e => {throw e});
         await this.apiServer.close().catch(e => {throw e});
         await this.daemonServer.close().catch(e => {throw e});
         await this.database.close().catch(e => {throw e});
         await this.plugins.unload().catch(e => {throw e});
         await this.config.save().catch(e => {throw e});
+        this.log.info(`IJO's core has stopped (event: ${event})`, "core");
+        await this.log.close();
     }
 }
 

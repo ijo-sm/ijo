@@ -22,8 +22,11 @@ class Plugins {
      * @returns {Array<Plugin>} The found plugins.
      */
     async findPlugins(path) {
+        this.log.trace("Finding plugins", "plugins");
         if (!FSUtils.exists(path) || !(await FSUtils.isFolder(path).catch(e => {throw e}))) {
+            this.log.debug("No plugins folder found; creating one instead", "plugins");
             await FSUtils.createFolder(path).catch(e => {throw e});
+            this.log.trace("Created folder for plugins", "plugins");
         }
 
         const folders = await FSUtils.readdir(path).catch(e => {throw e});
@@ -34,6 +37,7 @@ class Plugins {
             const configPath = nodePath.join(pluginPath, "plugin.json");
 
             if (!FSUtils.exists(configPath) || !(await FSUtils.isFile(configPath).catch(e => {throw e}))) {
+                this.log.fatal(`No plugin configuration file found for ${configPath}`, "plugins");
                 throw Error(`There is no plugin configuration file for ${configPath}.`);
             }
 
@@ -54,11 +58,14 @@ class Plugins {
             const indexPath = nodePath.join(plugin.path, plugin.index);
 
             if (!FSUtils.exists(indexPath)) {
+                this.log.fatal(`No index file for plugin '${plugin.name}' at ${indexPath}`, "plugins");
                 throw Error(`The index file for the plugin configuration at ${configPath} doesn't exist.`);
             }
 
             plugins.push(plugin);
         }
+
+        this.log.trace(`Found ${plugins.length} plugins`, "plugins");
 
         return plugins;
     }
@@ -75,6 +82,7 @@ class Plugins {
      * @returns {Promise} A promise that is resolved when the plugins have been initialized.
      */
     async initialize({path} = {}, {root} = {}, core) {
+        this.log = core.log;
         this.path = nodePath.join(root, path);
 
         // Check if folder exists and create it if it doesn't.
@@ -88,6 +96,7 @@ class Plugins {
         this.plugins.push(...plugins.sort((a, b) => this.compareDependencies(a, b)));
 
         await this.load(core).catch(e => {throw e});
+        this.log.info(`Loaded ${this.plugins.length} plugins`, "plugins");
     }
 
     /**
@@ -131,7 +140,9 @@ class Plugins {
      */
     async execute(event, args = []) {
         for (const plugin of this.plugins) {
+            this.log.trace(`Running event '${event}' for plugin '${plugin.name}'`, "plugins");
             await plugin[event](...args).catch(e => {throw e});
+            this.log.trace(`Completed event '${event}' for plugin '${plugin.name}'`, "plugins");
         }
     }
 
@@ -148,6 +159,7 @@ class Plugins {
         const bDependencies = b.trueDependencies || [];
 
         if (aDependencies.includes(b.name) && bDependencies.includes(a.name)) {
+            this.log.fatal(`Plugins '${a.name}' & ${b.name} depend on eachother`, "plugins");
             throw Error("Two plugins cannot depend on eachother.");
         }
 
