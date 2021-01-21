@@ -14,13 +14,16 @@ class Plugin {
      * @param {String} data.author {@link plugin.Plugin#author}
      * @param {String} path The path to the plugin. 
      */
-    constructor({name, dependencies, index, author} = {}, path) {
+    constructor({name, dependencies, npmDependencies, index, author} = {}, path) {
         /** The name of the plugin. 
          * @type {String} */
         this.name = name;
         /** The arrry of plugin names this plugin depends on. 
          * @type {Array.<String>} */
         this.dependencies = dependencies;
+        /** The npm packages this plugin depends on. 
+         * @type {Array.<String>} */
+        this.npmDependencies = npmDependencies;
         /** The path to the index file, relative to the path of the plugin.
          * @type {String} */
         this.index = index;
