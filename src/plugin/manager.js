@@ -1,8 +1,12 @@
-const { execSync } = require("child_process");
+const childProcess = require("child_process");
+const util = require("util");
 const fs = require("fs");
 const nodePath = require("path");
 const { ConfigFile, FSUtils } = require("ijo-utils");
 const Plugin = require("./model");
+
+const exec = util.promisify(childProcess.exec);
+const writeFile = util.promisify(fs.writeFile);
 
 /**
  * This the class managing all plugins added to this instance of IJO.
@@ -192,12 +196,12 @@ class Plugins {
             author: plugin.author,
             dependencies: plugin.npmDependencies
         };
-        fs.writeFileSync(configPath, JSON.stringify(config, { space: "  " }));
+        writeFile(configPath, JSON.stringify(config, { space: "  " }));
 
         // get dependencies with `npm install`
         this.log.trace(`Installing dependencies for '${plugin.name}'`, "plugins");
         try {
-            execSync("npm install", { cwd: plugin.path, stdio: "ignore" });
+            exec("npm install", { cwd: plugin.path, stdio: "ignore" });
         } catch (err) {
             this.log.fatal(`Failed to install dependencies for '${plugin.name}'`, "plugins");
             process.exit(1);
