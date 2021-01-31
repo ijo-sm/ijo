@@ -156,9 +156,7 @@ class Plugins {
      */
     async execute(event, args = []) {
         for (const plugin of this.plugins) {
-            this.log.trace(`Running event '${event}' for plugin '${plugin.name}'`, "plugins");
             await plugin[event](...args).catch(e => { throw e });
-            this.log.trace(`Completed event '${event}' for plugin '${plugin.name}'`, "plugins");
         }
     }
 
