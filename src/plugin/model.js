@@ -14,7 +14,7 @@ class Plugin {
      * @param {String} data.author {@link plugin.Plugin#author}
      * @param {String} path The path to the plugin. 
      */
-    constructor({name, dependencies, npmDependencies, index, author} = {}, path) {
+    constructor({name, dependencies, npmDependencies, index, author, log} = {}, path) {
         /** The name of the plugin. 
          * @type {String} */
         this.name = name;
@@ -45,6 +45,8 @@ class Plugin {
         /** If the plugin's dependencies are available (plugins)
          * @type {boolean} */
         this.ready = false;
+
+        this.log = log;
     }
 
     /**
@@ -54,7 +56,7 @@ class Plugin {
      * @returns {Promise} A promise that resolves when the plugin is loaded.
      */
     async load(core) {
-        if (this.loaded) return;
+        if (this.loaded || !this.npmReady || !this.ready) return;
 
         try {
             const indexPath = nodePath.join(this.path, this.index);
@@ -137,7 +139,12 @@ class Plugin {
      * @param {Array<Plugin>} plugins The array of possible dependencies.
      */
     addTrueDependencies(plugins) {
-        this.trueDependencies = this.getTrueDependencies(plugins);
+        try {
+            this.trueDependencies = this.getTrueDependencies(plugins);
+            this.ready = true;
+        } catch (err) {
+            this.log.error(`Failed to locate dependency '${err.message}' for plugin '${this.name}'`, "plugins");
+        }
     }
 
     /**
@@ -151,7 +158,11 @@ class Plugin {
 
         for (const dependency of this.dependencies) {
             trueDependencies.push(dependency);
-            trueDependencies.push(...plugins.find(plugin => plugin.name === dependency).getTrueDependencies(plugins));
+            try {
+                trueDependencies.push(...plugins.find(plugin => plugin.name === dependency).getTrueDependencies(plugins));
+            } catch {
+                throw Error(dependency);
+            }
         }
 
         return trueDependencies;

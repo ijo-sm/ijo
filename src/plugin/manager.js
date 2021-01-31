@@ -55,7 +55,8 @@ class Plugins {
                 dependencies: config.get("dependencies") || [],
                 npmDependencies: config.get("npmDependencies") ?? {},
                 author: config.get("author"),
-                index: config.get("index")
+                index: config.get("index"),
+                log: this.log
             }, pluginPath);
 
             if (plugin.name === undefined) throw Error(`The plugin configuration at ${configPath} has no name.`);
@@ -96,10 +97,10 @@ class Plugins {
         const plugins = await this.findPlugins(this.path).catch(e => { throw e });
 
         // Add npm dependencies for each plugin.
-        for (let i = 0; i < this.plugins.length; i++) {
-            const plugin = this.plugins[i];
+        for (let i = 0; i < plugins.length; i++) {
+            const plugin = plugins[i];
             if (Object.keys(plugin.npmDependencies).length != 0) {
-                this.npmInstall(plugin);
+                await this.npmInstall(plugin);
             }
         }
 
