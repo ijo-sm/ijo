@@ -39,6 +39,12 @@ class Plugin {
         /** If the plugin has been enabled. 
          * @type {boolean} */
         this.enabled = false;
+        /** If the plugins dependencies are installed (npm)
+         * @type {boolean} */
+        this.npmReady = false;
+        /** If the plugin's dependencies are available (plugins)
+         * @type {boolean} */
+        this.ready = false;
     }
 
     /**

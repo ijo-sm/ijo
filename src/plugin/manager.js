@@ -95,13 +95,6 @@ class Plugins {
         // Check if folder exists and create it if it doesn't.
         const plugins = await this.findPlugins(this.path).catch(e => { throw e });
 
-        // Add the true plugin dependencies, meaning all recursively found children dependencies are included.
-        plugins.forEach(plugin => plugin.addTrueDependencies(plugins));
-
-        // Sorts all the plugins depending on which plugins depends on eachother. This enables them to be loaded in the 
-        // correct order.
-        this.plugins.push(...plugins.sort((a, b) => this.compareDependencies(a, b)));
-
         // Add npm dependencies for each plugin.
         for (let i = 0; i < this.plugins.length; i++) {
             const plugin = this.plugins[i];
@@ -109,6 +102,13 @@ class Plugins {
                 this.npmInstall(plugin);
             }
         }
+
+        // Add the true plugin dependencies, meaning all recursively found children dependencies are included.
+        plugins.forEach(plugin => plugin.addTrueDependencies(plugins));
+
+        // Sorts all the plugins depending on which plugins depends on eachother. This enables them to be loaded in the 
+        // correct order.
+        this.plugins.push(...plugins.sort((a, b) => this.compareDependencies(a, b)));
 
         await this.load(core).catch(e => { throw e });
         this.log.info(`Loaded ${this.plugins.length} plugins`, "plugins");
@@ -196,12 +196,13 @@ class Plugins {
             author: plugin.author,
             dependencies: plugin.npmDependencies
         };
-        writeFile(configPath, JSON.stringify(config, { space: "  " }));
+        await writeFile(configPath, JSON.stringify(config, { space: "  " }));
 
         // get dependencies with `npm install`
         this.log.trace(`Installing dependencies for '${plugin.name}'`, "plugins");
         try {
-            exec("npm install", { cwd: plugin.path, stdio: "ignore" });
+            await exec("npm install", { cwd: plugin.path, stdio: "ignore" });
+            plugin.npmReady = true;
         } catch (err) {
             this.log.fatal(`Failed to install dependencies for '${plugin.name}'`, "plugins");
             process.exit(1);
