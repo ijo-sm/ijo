@@ -14,7 +14,7 @@ class Plugin {
      * @param {String} data.author {@link plugin.Plugin#author}
      * @param {String} path The path to the plugin. 
      */
-    constructor({name, dependencies, npmDependencies, index, author, log} = {}, path) {
+    constructor({ name, dependencies, npmDependencies, index, author, log } = {}, path) {
         /** The name of the plugin. 
          * @type {String} */
         this.name = name;
@@ -62,7 +62,7 @@ class Plugin {
             const indexPath = nodePath.join(this.path, this.index);
 
             this.loadedIndex = require(indexPath);
-            await this.execute("load", [core]).catch(e => {throw e});
+            await this.execute("load", [core]).catch(e => { throw e });
             this.loaded = true;
         }
         catch (err) {
@@ -77,7 +77,7 @@ class Plugin {
     async enable() {
         if (this.enabled || !this.loaded) return;
 
-        await this.execute("enable").catch(e => {throw e});
+        await this.execute("enable").catch(e => { throw e });
         this.enabled = true;
     }
 
@@ -88,7 +88,7 @@ class Plugin {
     async disable() {
         if (!this.enabled || !this.loaded) return;
 
-        await this.execute("disable").catch(e => {throw e});
+        await this.execute("disable").catch(e => { throw e });
         this.enabled = false;
     }
 
@@ -99,7 +99,7 @@ class Plugin {
     async unload() {
         if (this.enabled || !this.loaded) return;
 
-        await this.execute("unload").catch(e => {throw e});
+        await this.execute("unload").catch(e => { throw e });
         this.loaded = false;
     }
 
@@ -121,7 +121,7 @@ class Plugin {
      */
     execute(event, args = []) {
         if (!this.canExecute(event)) return Promise.resolve();
-        
+
         try {
             this.log.trace(`Running event '${event}' for plugin '${this.name}'`, "plugins");
             const promise = this.loadedIndex[event](...args);
@@ -129,7 +129,7 @@ class Plugin {
 
             if (!(promise instanceof Promise)) return Promise.resolve(promise);
 
-            return promise.catch(e => {throw e});
+            return promise.catch(e => { throw e });
         }
         catch (err) {
             throw Error(`There was an error while executing the event ${event} for ${this.name}: ${err.message}`);
@@ -161,7 +161,9 @@ class Plugin {
         for (const dependency of this.dependencies) {
             trueDependencies.push(dependency);
             try {
-                trueDependencies.push(...plugins.find(plugin => plugin.name === dependency).getTrueDependencies(plugins));
+                trueDependencies.push(
+                    ...plugins.find(plugin => plugin.name === dependency).getTrueDependencies(plugins)
+                );
             } catch {
                 throw Error(dependency);
             }
