@@ -123,9 +123,9 @@ class Plugin {
         if (!this.canExecute(event)) return Promise.resolve();
         
         try {
-            this.log.trace(`Running event '${event}' for plugin '${plugin.name}'`, "plugins");
+            this.log.trace(`Running event '${event}' for plugin '${this.name}'`, "plugins");
             const promise = this.loadedIndex[event](...args);
-            this.log.trace(`Completed event '${event}' for plugin '${plugin.name}'`, "plugins");
+            this.log.trace(`Completed event '${event}' for plugin '${this.name}'`, "plugins");
 
             if (!(promise instanceof Promise)) return Promise.resolve(promise);
 
