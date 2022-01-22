@@ -30,7 +30,7 @@
   "dependencies": {
     "ijo-utils": "github:ijo-sm/ijo-utils",
     "jsonwebtoken": "^8.5.1",
-    "nanoid": "^3.1.20",
+    "nanoid": "^3.1.31",
     "semver": "^7.3.4"
   },
   "devDependencies": {
